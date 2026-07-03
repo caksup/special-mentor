@@ -3,60 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Mentor</title>
+    <title>Portal Mentor Special</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .digital-clock { font-family: 'Share Tech Mono', monospace; }
+    </style>
 </head>
-<body class="bg-gray-100 p-4 font-sans">
-    <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md mt-4">
-        <h1 class="text-2xl font-bold text-center mb-6 text-blue-800">Portal Mentor</h1>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between p-4 selection:bg-blue-600">
 
-        <!-- 1. HALAMAN PILIH NAMA -->
-        <div id="loginView">
-            <h2 class="text-lg font-semibold mb-4 text-center">Pilih Akun Anda</h2>
-            <select id="userSelect" class="w-full border p-2 mb-4 rounded bg-gray-50">
-                <option value="mentor_anam">Mentor: Anam</option>
-                <option value="mentor_rizal">Mentor: Rizal</option>
-                <option value="mentor_budi">Mentor: Budi</option>
-                <option value="admin_afif">Direktur: Afif</option>
-                <option value="admin_sup">Superadmin: Sup</option>
-            </select>
-            <button id="btnMasuk" class="w-full bg-blue-600 text-white p-2 rounded font-bold hover:bg-blue-700">Masuk</button>
+    <div class="max-w-md w-full mx-auto my-auto bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden shadow-blue-950/30">
+        
+        <div class="bg-gradient-to-r from-blue-900 to-indigo-950 p-4 border-b border-slate-800 text-center">
+            <h1 class="text-xl font-bold tracking-wide text-blue-400">SPECIAL MENTOR PORTAL</h1>
+            <p class="text-xs text-slate-400 mt-0.5 font-medium tracking-wider">JATIROGO CREATIVE HUB</p>
         </div>
 
-        <!-- 2. HALAMAN MENTOR (ISI LOGBOOK) -->
-        <div id="mentorView" class="hidden">
-            <p id="mentorName" class="font-bold mb-4 text-center text-gray-700 bg-blue-50 p-2 rounded"></p>
-            <div class="bg-gray-50 p-4 rounded-lg border mb-4">
-                <h3 class="font-semibold mb-2 text-sm text-gray-600">Pilih Materi Hari Ini:</h3>
-                <div class="space-y-2 mb-4">
-                    <label class="flex items-center text-sm"><input type="checkbox" value="Greeting & Ice Breaking" class="mr-2 w-5 h-5"> Greeting & Ice Breaking</label>
-                    <label class="flex items-center text-sm"><input type="checkbox" value="Review Materi" class="mr-2 w-5 h-5"> Review Materi</label>
-                    <label class="flex items-center text-sm"><input type="checkbox" value="Sesi Praktik" class="mr-2 w-5 h-5"> Sesi Praktik</label>
+        <div id="loginView" class="p-6 space-y-6">
+            <div class="text-center bg-slate-950/50 py-4 px-2 rounded-xl border border-slate-800/60 shadow-inner">
+                <div id="txtClock" class="digital-clock text-4xl font-bold tracking-normal text-blue-500 drop-shadow-[0_0_10px_rgba(59,130,246,0.3)]">00:00:00</div>
+                <div id="txtDate" class="text-xs font-semibold text-slate-400 tracking-wider uppercase mt-1">Jumat, 03 Juli 2026</div>
+            </div>
+
+            <div class="space-y-2">
+                <div class="flex items-center justify-between text-xs font-bold text-slate-400 tracking-wider uppercase px-1">
+                    <span>Jadwal Sesi Aktif</span>
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
                 </div>
-                <textarea id="notes" class="w-full border p-2 mb-4 rounded text-sm" rows="3" placeholder="Catatan atau kendala siswa hari ini..."></textarea>
-                <button id="btnSave" class="w-full bg-green-600 text-white p-2 rounded font-bold hover:bg-green-700">Kirim Logbook</button>
+                <div class="bg-slate-950/40 rounded-xl border border-slate-800 p-3 space-y-2 text-xs">
+                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                        <span class="text-slate-300 font-medium">Sesi Pagi (08:00 - 11:00)</span>
+                        <span class="px-2 py-0.5 bg-blue-950 text-blue-400 rounded-full font-bold border border-blue-900/40">Greeting & Materi</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-300 font-medium">Sesi Siang (13:00 - 16:00)</span>
+                        <span class="px-2 py-0.5 bg-indigo-950 text-indigo-400 rounded-full font-bold border border-indigo-900/40">Praktik & Evaluasi</span>
+                    </div>
+                </div>
             </div>
-            <button class="btnLogout w-full bg-red-500 text-white p-2 rounded font-bold">Keluar / Ganti Akun</button>
+
+            <div class="space-y-4 pt-2">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-slate-400 tracking-wide uppercase px-1">Pilih Identitas</label>
+                    <select id="userSelect" class="w-full bg-slate-950 border border-slate-800 text-slate-200 p-2.5 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition-colors font-medium">
+                        <option value="mentor_anam">Mentor: Anam</option>
+                        <option value="mentor_rizal">Mentor: Rizal</option>
+                        <option value="mentor_budi">Mentor: Budi</option>
+                        <option value="admin_afif">Direktur: Afif</option>
+                        <option value="admin_sup">Superadmin: Sup</option>
+                    </select>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-slate-400 tracking-wide uppercase px-1">PIN Otorisasi</label>
+                    <input type="password" id="pinInput" class="w-full bg-slate-950 border border-slate-800 text-slate-200 p-2.5 rounded-xl text-center text-lg tracking-widest font-bold focus:outline-none focus:border-blue-500 transition-colors placeholder:text-slate-700" placeholder="••••" pattern="[0-9]*" inputmode="numeric">
+                </div>
+
+                <button id="btnMasuk" class="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white p-3 rounded-xl font-bold tracking-wider text-sm shadow-lg shadow-blue-950 transition-all transform active:scale-[0.99] mt-2">MASUK DASBOARD</button>
+            </div>
         </div>
 
-        <!-- 3. HALAMAN ADMIN (LIHAT DATA) -->
-        <div id="adminView" class="hidden">
-            <h2 class="text-lg font-bold text-red-600 text-center mb-2">Data Logbook Masuk</h2>
-            <p class="text-xs text-center text-gray-500 mb-4">Memantau rekap data secara real-time</p>
-            <div id="logbookList" class="bg-gray-50 p-3 rounded border h-80 overflow-y-auto mb-4 text-sm shadow-inner">
-                <!-- Data otomatis muncul di sini -->
-                <p class="text-gray-500 text-center mt-10">Memuat data...</p>
+        <div id="mentorView" class="p-6 space-y-5 hidden">
+            <div class="flex items-center justify-between bg-slate-950/60 p-3 rounded-xl border border-slate-800">
+                <span id="mentorName" class="font-bold text-sm text-blue-400"></span>
+                <span class="text-[10px] font-bold px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-900/60 rounded-full">MENTOR ACTIVE</span>
             </div>
-            <button class="btnLogout w-full bg-red-500 text-white p-2 rounded font-bold">Keluar / Ganti Akun</button>
+            
+            <div class="bg-slate-950/20 border border-slate-800 rounded-xl p-4 space-y-4">
+                <h3 class="font-bold text-xs tracking-wider uppercase text-slate-400">Laporan Progres Harian:</h3>
+                
+                <div class="space-y-2.5">
+                    <label class="flex items-center text-sm p-2 bg-slate-950/40 border border-slate-800/60 rounded-lg hover:border-slate-700 cursor-pointer transition-colors"><input type="checkbox" value="Greeting & Ice Breaking" class="mr-3 w-5 h-5 rounded border-slate-800 bg-slate-950 text-blue-600 focus:ring-0"> Greeting & Ice Breaking</label>
+                    <label class="flex items-center text-sm p-2 bg-slate-950/40 border border-slate-800/60 rounded-lg hover:border-slate-700 cursor-pointer transition-colors"><input type="checkbox" value="Review Materi" class="mr-3 w-5 h-5 rounded border-slate-800 bg-slate-950 text-blue-600 focus:ring-0"> Review Materi Sebelumnya</label>
+                    <label class="flex items-center text-sm p-2 bg-slate-950/40 border border-slate-800/60 rounded-lg hover:border-slate-700 cursor-pointer transition-colors"><input type="checkbox" value="Sesi Praktik" class="mr-3 w-5 h-5 rounded border-slate-800 bg-slate-950 text-blue-600 focus:ring-0"> Sesi Praktik Terbimbing</label>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase px-0.5">Catatan Kendala / Progres Siswa</label>
+                    <textarea id="notes" class="w-full bg-slate-950 border border-slate-800 text-slate-200 p-3 rounded-xl text-sm focus:outline-none focus:border-blue-500 transition-colors placeholder:text-slate-700" rows="3" placeholder="Tulis catatan penting di sini..."></textarea>
+                </div>
+
+                <button id="btnSave" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white p-3 rounded-xl font-bold tracking-wider text-sm transition-all">KIRIM LAPORAN LOGBOOK</button>
+            </div>
+            
+            <button class="btnLogout w-full bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-400 p-2.5 rounded-xl text-xs font-semibold tracking-wider transition-colors">KELUAR PORTAL</button>
+        </div>
+
+        <div id="adminView" class="p-6 space-y-4 hidden">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                <div>
+                    <h2 class="text-base font-bold text-red-400">Monitoring Logbook</h2>
+                    <p class="text-[10px] text-slate-500 font-medium">Rekapitulasi progres aktivitas mentor</p>
+                </div>
+                <span class="text-[10px] font-bold px-2 py-0.5 bg-red-950/60 text-red-400 border border-red-900/50 rounded-full tracking-wider">SUPERVISOR</span>
+            </div>
+
+            <div id="logbookList" class="bg-slate-950/40 border border-slate-800 rounded-xl h-96 overflow-y-auto p-3 space-y-3 shadow-inner scrollbar-thin scrollbar-thumb-slate-800">
+                <p class="text-slate-600 text-center text-xs mt-20">Sinkronisasi data database...</p>
+            </div>
+
+            <button class="btnLogout w-full bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-400 p-2.5 rounded-xl text-xs font-semibold tracking-wider transition-colors">KELUAR PORTAL</button>
         </div>
     </div>
 
-    <!-- SCRIPT FIREBASE -->
+    <div class="text-center text-[10px] text-slate-600 font-medium tracking-wide py-2">
+        &copy; 2026 Special Mentor System. Powered by Javanese Developer Network.
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Konfigurasi Firebase Proyek Anda
         const firebaseConfig = {
             apiKey: "AIzaSyCgXGAww1dMu4eWzA1clUiOQht1DzxHl4A",
             authDomain: "special-mentor.firebaseapp.com",
@@ -69,64 +130,76 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Navigasi Tampilan
-        const views = { 
-            login: document.getElementById('loginView'), 
-            mentor: document.getElementById('mentorView'), 
-            admin: document.getElementById('adminView') 
+        // DATABASE PIN VALIDASI
+        const userPins = {
+            "mentor_anam": "1111",
+            "mentor_rizal": "2222",
+            "mentor_budi": "3333",
+            "admin_afif": "4444",
+            "admin_sup": "5555"
         };
 
-        function show(viewName) { 
-            Object.values(views).forEach(v => v.classList.add('hidden')); 
-            views[viewName].classList.remove('hidden'); 
-        }
+        const views = { login: document.getElementById('loginView'), mentor: document.getElementById('mentorView'), admin: document.getElementById('adminView') };
+        function show(viewName) { Object.values(views).forEach(v => v.classList.add('hidden')); views[viewName].classList.remove('hidden'); }
 
-        // Aksi Tombol Masuk
+        // ENGINE LIVE JAM & TANGGAL
+        function startClock() {
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById("txtClock").innerText = now.toLocaleTimeString('id-ID', { hour12: false });
+            }, 1000);
+
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById("txtDate").innerText = new Date().toLocaleDateString('id-ID', options);
+        }
+        startClock();
+
+        // VALIDASI OTORISASI LOGIN
         document.getElementById("btnMasuk").onclick = () => {
             const user = document.getElementById("userSelect").value;
-            const isMentor = user.startsWith("mentor_");
+            const enteredPin = document.getElementById("pinInput").value;
             
+            if (enteredPin !== userPins[user]) {
+                alert("Otorisasi Gagal! PIN Kunci Salah.");
+                return;
+            }
+
+            const isMentor = user.startsWith("mentor_");
             if (isMentor) {
                 const nama = user.split("_")[1].toUpperCase();
-                document.getElementById("mentorName").innerText = "Halo Mentor: " + nama;
+                document.getElementById("mentorName").innerText = "OPERATOR: " + nama;
                 show('mentor');
             } else {
                 show('admin');
-                loadData(); // Jalankan sinkronisasi data Firestore
+                loadData();
             }
         };
 
-        // Aksi Tombol Kirim Logbook (Mentor)
+        // SUBMIT DATA LOGBOOK
         document.getElementById("btnSave").onclick = async () => {
             const materi = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
             const notes = document.getElementById("notes").value;
             const nama = document.getElementById("userSelect").value.split("_")[1];
 
             if (materi.length === 0 && notes === "") {
-                return alert("Pilih materi atau isi catatan dulu!");
+                return alert("Peringatan: Isi data progres atau catatan materi!");
             }
 
             try {
-                document.getElementById("btnSave").innerText = "Menyimpan...";
-                await addDoc(collection(db, "logbooks"), { 
-                    nama: nama, 
-                    materi: materi, 
-                    catatan: notes, 
-                    waktu: serverTimestamp() 
-                });
-                alert("Logbook Berhasil Dikirim!");
+                document.getElementById("btnSave").innerText = "Mengirim...";
+                await addDoc(collection(db, "logbooks"), { nama: nama, materi: materi, catatan: notes, waktu: serverTimestamp() });
+                alert("Sukses: Laporan logbook berhasil dikirim!");
                 
-                // Reset Form
                 document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
                 document.getElementById("notes").value = "";
-                document.getElementById("btnSave").innerText = "Kirim Logbook";
+                document.getElementById("btnSave").innerText = "KIRIM LAPORAN LOGBOOK";
             } catch (e) { 
-                alert("Gagal kirim data! Pastikan tab 'Rules' di Firestore sudah disetel 'true'."); 
-                document.getElementById("btnSave").innerText = "Kirim Logbook"; 
+                alert("Error: Database terblokir!"); 
+                document.getElementById("btnSave").innerText = "KIRIM LAPORAN LOGBOOK"; 
             }
         };
 
-        // Sinkronisasi Data Real-time (Admin / Direktur)
+        // FEED DATA REALTIME KE SUPERVISOR
         function loadData() {
             const q = query(collection(db, "logbooks"), orderBy("waktu", "desc"));
             onSnapshot(q, (snap) => {
@@ -134,7 +207,7 @@
                 list.innerHTML = "";
                 
                 if (snap.empty) {
-                    list.innerHTML = "<p class='text-center mt-5 text-gray-500'>Belum ada data logbook.</p>";
+                    list.innerHTML = "<p class='text-center mt-20 text-slate-600 text-xs'>Tidak ada data logbook hari ini.</p>";
                     return;
                 }
                 
@@ -143,22 +216,25 @@
                     const waktu = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', { hour: '2-digit', minute: '2-digit' }) : 'Baru saja';
                     
                     list.innerHTML += `
-                        <div class="mb-3 p-3 bg-white rounded shadow-sm border-l-4 border-blue-500">
-                            <div class="flex justify-between font-bold text-gray-800 mb-1">
-                                <span>${d.nama.toUpperCase()}</span>
-                                <span class="text-xs text-gray-400 font-normal">${waktu}</span>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded-xl space-y-1.5 shadow-sm">
+                            <div class="flex justify-between items-center border-b border-slate-800/80 pb-1.5">
+                                <span class="font-bold text-xs text-slate-200 tracking-wide">${d.nama.toUpperCase()}</span>
+                                <span class="text-[10px] text-slate-500 font-mono">${waktu}</span>
                             </div>
-                            <div class="text-xs text-green-600 font-medium mb-1">✔ Materi: ${d.materi.join(', ') || '-'}</div>
-                            <div class="text-xs text-gray-600 bg-yellow-50 p-1 rounded italic">📝 ${d.catatan || 'Tidak ada catatan.'}</div>
+                            <div class="text-[11px] text-blue-400 font-medium">✔ Materi: ${d.materi.join(', ') || '-'}</div>
+                            <div class="text-[11px] text-slate-400 bg-slate-950 p-2 rounded-lg italic border border-slate-800/40">📝 ${d.catatan || 'Tidak ada catatan khusus.'}</div>
                         </div>
                     `;
                 });
             });
         }
 
-        // Aksi Tombol Keluar / Log Out
+        // KELUAR SISTEM
         document.querySelectorAll('.btnLogout').forEach(btn => {
-            btn.onclick = () => show('login');
+            btn.onclick = () => {
+                document.getElementById("pinInput").value = "";
+                show('login');
+            };
         });
     </script>
 </body>
