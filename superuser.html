@@ -23,33 +23,43 @@
 
         <div class="container pb-5">
             <div class="row">
-                <div class="col-12 col-lg-5 mb-4">
-                    <div class="card card-custom p-4 shadow-lg bg-white h-100">
-                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-broadcast text-danger me-2"></i> Konsol Sistem AEC</h5>
-                        <div class="mb-3"><label class="form-label fw-bold text-primary small">1. JADWAL FULL</label><textarea id="inputJadwal" class="form-control bg-light text-xs" rows="2"></textarea></div>
-                        <div class="mb-3"><label class="form-label fw-bold text-info small">2. NOTIF BRIEFING</label><textarea id="inputBriefing" class="form-control bg-light text-xs" rows="2"></textarea></div>
-                        <div class="mb-3"><label class="form-label fw-bold text-warning small">3. CATATAN PENTING</label><textarea id="inputCatatan" class="form-control bg-light text-xs" rows="2"></textarea></div>
-                        <div class="mb-3"><label class="form-label fw-bold text-success small">4. GOAL HARIAN</label><textarea id="inputGoal" class="form-control bg-light text-xs" rows="2"></textarea></div>
-                        <div class="mb-3"><label class="form-label fw-bold text-secondary small">5. MASTER MATERI (Pisahkan dgn Enter)</label><textarea id="inputMasterMateri" class="form-control bg-light text-xs" rows="3"></textarea></div>
+                <!-- Kolom Kiri KONSOL -->
+                <div class="col-12 col-lg-4 mb-4">
+                    <div class="card card-custom p-3 shadow-lg bg-white h-100">
+                        <h6 class="fw-bold text-dark mb-3"><i class="bi bi-broadcast text-danger me-2"></i> Konsol Sistem AEC</h6>
+                        <div class="mb-2"><label class="form-label fw-bold text-primary text-xs mb-1">1. JADWAL FULL</label><textarea id="inputJadwal" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                        <div class="mb-2"><label class="form-label fw-bold text-info text-xs mb-1">2. NOTIF BRIEFING</label><textarea id="inputBriefing" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                        <div class="mb-2"><label class="form-label fw-bold text-warning text-xs mb-1">3. CATATAN PENTING</label><textarea id="inputCatatan" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                        <div class="mb-2"><label class="form-label fw-bold text-success text-xs mb-1">4. GOAL HARIAN</label><textarea id="inputGoal" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                        <div class="mb-2"><label class="form-label fw-bold text-secondary text-xs mb-1">5. MASTER MATERI (Pisahkan dgn Enter)</label><textarea id="inputMasterMateri" class="form-control bg-light text-xs" rows="2"></textarea></div>
                         
-                        <!-- FUNGSI BARU: MASTER SISWA -->
-                        <div class="mb-4">
-                            <label class="form-label fw-bold text-danger small">6. MASTER DATA SISWA PER KELAS</label>
-                            <p class="text-xs text-muted mt-0 mb-1">Format: <b>Nama Kelas: Nama Anak, Nama Anak</b> (Pisahkan baris tiap kelas)</p>
-                            <textarea id="inputMasterSiswa" class="form-control bg-light text-xs border-danger border-opacity-25" rows="4" placeholder="Kelas A: Budi, Citra, Andi&#10;Kelas B: Doni, Eka&#10;Kelas C: Fani, Gilang"></textarea>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-danger text-xs mb-0">6. MASTER DATA SISWA PER KELAS</label>
+                            <p class="text-xs text-muted mb-1" style="font-size: 10px;">Cth: <b>Kelas A: Budi, Citra</b></p>
+                            <textarea id="inputMasterSiswa" class="form-control bg-light text-xs border-danger border-opacity-25" rows="4"></textarea>
                         </div>
-
-                        <button id="btnSaveGlobal" class="btn btn-primary w-100 fw-bold shadow-sm py-2"><i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI SISTEM</button>
+                        <button id="btnSaveGlobal" class="btn btn-primary w-100 fw-bold shadow-sm py-2 mt-auto"><i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI SISTEM</button>
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-7">
+                <!-- Kolom Kanan MODERASI & HISTORY -->
+                <div class="col-12 col-lg-8">
                     <div class="card card-custom p-4 shadow-lg bg-white h-100">
-                        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
-                            <div><h5 class="fw-bold text-primary mb-1"><i class="bi bi-server me-2"></i> Moderasi & Data Nilai</h5></div>
-                            <button id="btnExportPDF" class="btn btn-danger fw-bold shadow-sm"><i class="bi bi-file-earmark-pdf-fill me-1"></i> Export PDF</button>
+                        
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                            <div><h5 class="fw-bold text-primary mb-1"><i class="bi bi-server me-2"></i> History & Moderasi Harian</h5></div>
+                            <button id="btnExportPDF" class="btn btn-danger fw-bold shadow-sm"><i class="bi bi-file-earmark-pdf-fill me-1"></i> Export PDF Harian</button>
                         </div>
-                        <div id="adminLogbookList" class="overflow-auto pe-1" style="max-height: 580px;">Memuat...</div>
+
+                        <!-- FILTER HARI UNTUK SUPERADMIN -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-secondary text-xs mb-1">PILIH HISTORY HARI:</label>
+                            <select id="filterHari" class="form-select form-select-sm border-2 fw-bold text-danger">
+                                <option value="SEMUA">Memuat Hari...</option>
+                            </select>
+                        </div>
+
+                        <div id="adminLogbookList" class="overflow-auto pe-1" style="max-height: 520px;">Memuat...</div>
                     </div>
                 </div>
             </div>
@@ -83,12 +93,48 @@
             } catch (e) { alert("Gagal update."); }
         };
 
-        let dataLaporan = [];
-        listenToLogbooks((logData) => {
-            dataLaporan = logData; const container = document.getElementById("adminLogbookList"); container.innerHTML = "";
-            logData.forEach(d => {
+        // KUMPULAN DATA
+        let dataLengkap = [];
+        listenToLogbooks((logData) => { 
+            dataLengkap = logData; 
+            ekstrakHari();
+            renderListAdmin(); 
+        });
+
+        document.getElementById('filterHari').onchange = () => renderListAdmin();
+
+        function ekstrakHari() {
+            const daysMap = new Map();
+            dataLengkap.forEach(d => {
+                if(d.waktu) {
+                    const dObj = d.waktu.toDate();
+                    const dStr = dObj.toLocaleDateString('id-ID');
+                    if(!daysMap.has(dStr)) daysMap.set(dStr, dObj);
+                }
+            });
+            const sortedDays = Array.from(daysMap.entries()).sort((a,b) => a[1] - b[1]);
+            const selHari = document.getElementById("filterHari");
+            const valSkg = selHari.value;
+            
+            selHari.innerHTML = '<option value="SEMUA">Semua Data (Global)</option>';
+            sortedDays.forEach((entry, idx) => { selHari.innerHTML += `<option value="${entry[0]}">Hari ke-${idx+1} (${entry[0]})</option>`; });
+
+            if (Array.from(selHari.options).some(o=>o.value===valSkg) && valSkg !== "SEMUA") { selHari.value = valSkg; } 
+            else if (sortedDays.length > 0 && valSkg === "SEMUA" && selHari.options.length <= 2) { selHari.value = sortedDays[sortedDays.length-1][0]; }
+        }
+
+        function renderListAdmin() {
+            const container = document.getElementById("adminLogbookList"); container.innerHTML = "";
+            const fHari = document.getElementById("filterHari").value;
+            
+            let dataTampil = dataLengkap;
+            if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari);
+            
+            if(dataTampil.length === 0) { container.innerHTML = `<div class="alert alert-secondary text-center small">Kosong di tanggal ini.</div>`; return; }
+
+            dataTampil.forEach(d => {
                 const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-';
-                let txtNilai = d.dataSiswa && d.dataSiswa.length > 0 ? d.dataSiswa.map(s => `${s.nama}(${s.kehadiran}, N:${s.nilai})`).join(' | ') : 'Belum ada data absensi';
+                let txtNilai = d.dataSiswa && d.dataSiswa.length > 0 ? d.dataSiswa.map(s => `<b>${s.nama}</b>(${s.kehadiran.toUpperCase()}, ${s.nilai})`).join(' | ') : 'Belum ada data';
                 
                 container.innerHTML += `
                     <div class="p-3 bg-light rounded-3 border mb-3 shadow-sm">
@@ -96,25 +142,36 @@
                         <div class="mb-1"><span class="badge bg-primary text-xs me-1">${d.kelas}</span><span class="badge bg-dark text-xs">${d.jamKe}</span></div>
                         <div class="text-xs mb-1">✔ Materi: ${d.materi.join(', ')}</div>
                         <div class="text-xs mb-1 p-1 bg-white border">📝 Lap: ${d.laporanSiswa}</div>
-                        <div class="text-xs p-1 bg-warning bg-opacity-10 border border-warning">📊 <b>Nilai & Absen:</b> ${txtNilai}</div>
-                        <div class="text-end mt-2"><button class="btn btn-xs btn-danger py-0" onclick="aksidminHapus('${d.id}')">Hapus</button></div>
+                        <div class="text-xs p-1 bg-warning bg-opacity-10 border border-warning mb-2" style="line-height: 1.5;">📊 <b>Rapor Siswa:</b> <br> ${txtNilai}</div>
+                        <div class="text-end mt-2"><button class="btn btn-xs btn-danger py-0" onclick="aksidminHapus('${d.id}')">Hapus Sesi</button></div>
                     </div>`;
             });
-        });
+        }
 
-        window.aksidminHapus = async function(id) { if (confirm(`Hapus permanen?`)) await deleteLogbook(id); };
+        window.aksidminHapus = async function(id) { if (confirm(`Hapus permanen sesi ini?`)) await deleteLogbook(id); };
 
+        // EXPORT PDF HARIAN SESUAI FILTER
         document.getElementById("btnExportPDF").onclick = () => {
-            const printDiv = document.createElement("div"); printDiv.style.padding = "20px"; printDiv.style.fontFamily = "Arial, sans-serif";
-            let htmlString = `<h2 style="text-align:center;">LAPORAN SUPER CREATIVE HUB AEC</h2><table style="width: 100%; border-collapse: collapse; font-size: 11px;" border="1">
-            <tr style="background:#ddd;"><th>Waktu</th><th>Mentor</th><th>Kelas</th><th>Materi</th><th>Lap. Siswa</th><th>Data Siswa (Hadir/Nilai)</th></tr>`;
-            dataLaporan.forEach(d => {
-                const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID') : '-';
-                let ds = d.dataSiswa ? d.dataSiswa.map(s=>`${s.nama}: ${s.kehadiran}(${s.nilai})`).join('<br>') : '-';
-                htmlString += `<tr><td>${w}</td><td>${d.nama}</td><td>${d.kelas} ${d.jamKe}</td><td>${d.materi.join(', ')}</td><td>${d.laporanSiswa}</td><td>${ds}</td></tr>`;
+            const fHari = document.getElementById("filterHari").value;
+            let dataTampil = dataLengkap;
+            let titleTgl = fHari !== "SEMUA" ? `TANGGAL: ${fHari}` : "SEMUA DATA GLOBAL";
+
+            if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari);
+
+            if(dataTampil.length === 0) return alert("Tidak ada data untuk di-export di hari ini.");
+
+            const printDiv = document.createElement("div"); printDiv.style.padding = "10px"; printDiv.style.fontFamily = "Arial, sans-serif";
+            let htmlString = `<h3 style="text-align:center; margin-bottom: 5px;">LAPORAN SUPER CREATIVE HUB AEC</h3><p style="text-align:center; margin-top:0; font-size: 14px;"><b>${titleTgl}</b></p><table style="width: 100%; border-collapse: collapse; font-size: 11px;" border="1">
+            <tr style="background:#ddd;"><th>Waktu</th><th>Tutor</th><th>Kelas</th><th>Materi</th><th>Lap. Umum</th><th>Absensi & Nilai Siswa (H/S/I/A)</th></tr>`;
+            
+            dataTampil.forEach(d => {
+                const w = d.waktu ? d.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '-';
+                let ds = d.dataSiswa ? d.dataSiswa.map(s=>`<b>${s.nama}</b>: ${s.kehadiran.toUpperCase()} (${s.nilai || '-'}) <i style="color:#555">${s.catatan || ''}</i>`).join('<br>') : '-';
+                htmlString += `<tr><td style="text-align:center;">${w}</td><td><b>${d.nama}</b></td><td style="text-align:center;">${d.kelas}<br>${d.jamKe}</td><td>${d.materi.join(', ')}</td><td>${d.laporanSiswa}</td><td>${ds}</td></tr>`;
             });
+            
             htmlString += `</table>`; printDiv.innerHTML = htmlString;
-            html2pdf().set({ margin: 0.3, filename: 'Laporan_AEC.pdf', jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }}).from(printDiv).save();
+            html2pdf().set({ margin: 0.3, filename: `AEC_${fHari.replace(/\//g, "-")}.pdf`, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }}).from(printDiv).save();
         };
         document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); window.location.href = "index.html"; };
     </script>
