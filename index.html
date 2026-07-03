@@ -6,35 +6,57 @@
     <title>Portal Mentor</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-4">
-    <div id="app" class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md">
-        <!-- Login Form -->
-        <div id="loginSection">
-            <h2 class="text-xl font-bold mb-4">Login Mentor</h2>
-            <input type="email" id="email" class="w-full border p-2 mb-2" placeholder="Email">
-            <input type="password" id="pass" class="w-full border p-2 mb-4" placeholder="Password">
-            <button id="btnLogin" class="w-full bg-blue-600 text-white p-2 rounded">Login</button>
+<body class="bg-gray-100 p-4 font-sans">
+    <div class="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md mt-4">
+        <h1 class="text-2xl font-bold text-center mb-6 text-blue-800">Portal Mentor</h1>
+
+        <!-- 1. HALAMAN PILIH NAMA -->
+        <div id="loginView">
+            <h2 class="text-lg font-semibold mb-4 text-center">Pilih Akun Anda</h2>
+            <select id="userSelect" class="w-full border p-2 mb-4 rounded bg-gray-50">
+                <option value="mentor_anam">Mentor: Anam</option>
+                <option value="mentor_rizal">Mentor: Rizal</option>
+                <option value="mentor_budi">Mentor: Budi</option>
+                <option value="admin_afif">Direktur: Afif</option>
+                <option value="admin_sup">Superadmin: Sup</option>
+            </select>
+            <button id="btnMasuk" class="w-full bg-blue-600 text-white p-2 rounded font-bold hover:bg-blue-700">Masuk</button>
         </div>
 
-        <!-- Logbook Form (Disembunyikan saat awal) -->
-        <div id="logbookSection" class="hidden">
-            <h2 class="text-xl font-bold mb-4">Logbook Harian</h2>
-            <div class="space-y-2 mb-4">
-                <label class="block"><input type="checkbox" value="Greeting" class="mr-2"> Greeting & Ice Breaking</label>
-                <label class="block"><input type="checkbox" value="Review" class="mr-2"> Review Materi</label>
-                <label class="block"><input type="checkbox" value="Praktik" class="mr-2"> Sesi Praktik</label>
+        <!-- 2. HALAMAN MENTOR (ISI LOGBOOK) -->
+        <div id="mentorView" class="hidden">
+            <p id="mentorName" class="font-bold mb-4 text-center text-gray-700 bg-blue-50 p-2 rounded"></p>
+            <div class="bg-gray-50 p-4 rounded-lg border mb-4">
+                <h3 class="font-semibold mb-2 text-sm text-gray-600">Pilih Materi Hari Ini:</h3>
+                <div class="space-y-2 mb-4">
+                    <label class="flex items-center text-sm"><input type="checkbox" value="Greeting & Ice Breaking" class="mr-2 w-5 h-5"> Greeting & Ice Breaking</label>
+                    <label class="flex items-center text-sm"><input type="checkbox" value="Review Materi" class="mr-2 w-5 h-5"> Review Materi</label>
+                    <label class="flex items-center text-sm"><input type="checkbox" value="Sesi Praktik" class="mr-2 w-5 h-5"> Sesi Praktik</label>
+                </div>
+                <textarea id="notes" class="w-full border p-2 mb-4 rounded text-sm" rows="3" placeholder="Catatan atau kendala siswa hari ini..."></textarea>
+                <button id="btnSave" class="w-full bg-green-600 text-white p-2 rounded font-bold hover:bg-green-700">Kirim Logbook</button>
             </div>
-            <textarea id="notes" class="w-full border p-2 mb-4" placeholder="Catatan tambahan..."></textarea>
-            <button id="btnSave" class="w-full bg-green-600 text-white p-2 rounded">Simpan Logbook</button>
+            <button class="btnLogout w-full bg-red-500 text-white p-2 rounded font-bold">Keluar / Ganti Akun</button>
+        </div>
+
+        <!-- 3. HALAMAN ADMIN (LIHAT DATA) -->
+        <div id="adminView" class="hidden">
+            <h2 class="text-lg font-bold text-red-600 text-center mb-2">Data Logbook Masuk</h2>
+            <p class="text-xs text-center text-gray-500 mb-4">Memantau rekap data secara real-time</p>
+            <div id="logbookList" class="bg-gray-50 p-3 rounded border h-80 overflow-y-auto mb-4 text-sm shadow-inner">
+                <!-- Data otomatis muncul di sini -->
+                <p class="text-gray-500 text-center mt-10">Memuat data...</p>
+            </div>
+            <button class="btnLogout w-full bg-red-500 text-white p-2 rounded font-bold">Keluar / Ganti Akun</button>
         </div>
     </div>
 
+    <!-- SCRIPT FIREBASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // GANTI DENGAN CONFIG ANDA
+        // Konfigurasi Firebase Proyek Anda
         const firebaseConfig = {
             apiKey: "AIzaSyCgXGAww1dMu4eWzA1clUiOQht1DzxHl4A",
             authDomain: "special-mentor.firebaseapp.com",
@@ -45,32 +67,99 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Login Logic
-        document.getElementById("btnLogin").onclick = async () => {
-            const email = document.getElementById("email").value;
-            const pass = document.getElementById("pass").value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-                document.getElementById("loginSection").classList.add("hidden");
-                document.getElementById("logbookSection").classList.remove("hidden");
-            } catch(e) { alert("Login Gagal!"); }
+        // Navigasi Tampilan
+        const views = { 
+            login: document.getElementById('loginView'), 
+            mentor: document.getElementById('mentorView'), 
+            admin: document.getElementById('adminView') 
         };
 
-        // Save Logic
-        document.getElementById("btnSave").onclick = async () => {
-            const checked = Array.from(document.querySelectorAll('input:checked')).map(el => el.value);
-            const notes = document.getElementById("notes").value;
-            await addDoc(collection(db, "logbooks"), {
-                materi: checked,
-                notes: notes,
-                mentor: auth.currentUser.email,
-                date: new Date().toLocaleDateString()
-            });
-            alert("Berhasil!");
+        function show(viewName) { 
+            Object.values(views).forEach(v => v.classList.add('hidden')); 
+            views[viewName].classList.remove('hidden'); 
+        }
+
+        // Aksi Tombol Masuk
+        document.getElementById("btnMasuk").onclick = () => {
+            const user = document.getElementById("userSelect").value;
+            const isMentor = user.startsWith("mentor_");
+            
+            if (isMentor) {
+                const nama = user.split("_")[1].toUpperCase();
+                document.getElementById("mentorName").innerText = "Halo Mentor: " + nama;
+                show('mentor');
+            } else {
+                show('admin');
+                loadData(); // Jalankan sinkronisasi data Firestore
+            }
         };
+
+        // Aksi Tombol Kirim Logbook (Mentor)
+        document.getElementById("btnSave").onclick = async () => {
+            const materi = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+            const notes = document.getElementById("notes").value;
+            const nama = document.getElementById("userSelect").value.split("_")[1];
+
+            if (materi.length === 0 && notes === "") {
+                return alert("Pilih materi atau isi catatan dulu!");
+            }
+
+            try {
+                document.getElementById("btnSave").innerText = "Menyimpan...";
+                await addDoc(collection(db, "logbooks"), { 
+                    nama: nama, 
+                    materi: materi, 
+                    catatan: notes, 
+                    waktu: serverTimestamp() 
+                });
+                alert("Logbook Berhasil Dikirim!");
+                
+                // Reset Form
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+                document.getElementById("notes").value = "";
+                document.getElementById("btnSave").innerText = "Kirim Logbook";
+            } catch (e) { 
+                alert("Gagal kirim data! Pastikan tab 'Rules' di Firestore sudah disetel 'true'."); 
+                document.getElementById("btnSave").innerText = "Kirim Logbook"; 
+            }
+        };
+
+        // Sinkronisasi Data Real-time (Admin / Direktur)
+        function loadData() {
+            const q = query(collection(db, "logbooks"), orderBy("waktu", "desc"));
+            onSnapshot(q, (snap) => {
+                const list = document.getElementById("logbookList");
+                list.innerHTML = "";
+                
+                if (snap.empty) {
+                    list.innerHTML = "<p class='text-center mt-5 text-gray-500'>Belum ada data logbook.</p>";
+                    return;
+                }
+                
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    const waktu = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', { hour: '2-digit', minute: '2-digit' }) : 'Baru saja';
+                    
+                    list.innerHTML += `
+                        <div class="mb-3 p-3 bg-white rounded shadow-sm border-l-4 border-blue-500">
+                            <div class="flex justify-between font-bold text-gray-800 mb-1">
+                                <span>${d.nama.toUpperCase()}</span>
+                                <span class="text-xs text-gray-400 font-normal">${waktu}</span>
+                            </div>
+                            <div class="text-xs text-green-600 font-medium mb-1">✔ Materi: ${d.materi.join(', ') || '-'}</div>
+                            <div class="text-xs text-gray-600 bg-yellow-50 p-1 rounded italic">📝 ${d.catatan || 'Tidak ada catatan.'}</div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        // Aksi Tombol Keluar / Log Out
+        document.querySelectorAll('.btnLogout').forEach(btn => {
+            btn.onclick = () => show('login');
+        });
     </script>
 </body>
 </html>
