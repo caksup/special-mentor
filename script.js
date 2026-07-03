@@ -1,5 +1,5 @@
 /* ==================================================
-   script.js - Super Creative Hub AEC (V6 - Sistem Tugas WA & Estafet)
+   script.js - Super Creative Hub AEC (V7 - Kurikulum & Pencapaian)
    ================================================== */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -35,7 +35,12 @@ export function startClock(clockId, dateId) {
 
 export function listenToGlobalInfo(callback) {
     onSnapshot(doc(db, "settings", "global_info"), (docSnap) => {
-        callback(docSnap.exists() ? docSnap.data() : { jadwal: "-", briefing: "-", catatan: "-", goal: "-", masterMateri: [], masterSiswa: "" });
+        // UPDATE V7: Menambahkan struktur default untuk kurikulum 3 pilar
+        callback(docSnap.exists() ? docSnap.data() : { 
+            jadwal: "-", briefing: "-", catatan: "-", goal: "-", 
+            kurikulum: { vocab: [], speaking: [], grammar: [] },
+            masterSiswa: "", hariKe: "" 
+        });
     });
 }
 
@@ -44,10 +49,12 @@ export async function updateGlobalInfo(dataData) {
     return await addDoc(collection(db, "riwayat_info"), { ...dataData, waktu: serverTimestamp() });
 }
 
-// UPDATE: Tambah Parameter tugasSiswa di Logbook
-export async function sendLogbook(mentorId, namaMentor, kelas, jamKe, materiArray, laporanSiswa, catatanKendala, arraySiswa, tugasSiswa) {
+// UPDATE V7: Parameter logbook kini menerima materiGroup (dipisah per pilar) dan flatMateri (digabung untuk history)
+export async function sendLogbook(mentorId, namaMentor, kelas, jamKe, materiGroup, flatMateri, laporanSiswa, catatanKendala, arraySiswa, tugasSiswa) {
     return await addDoc(collection(db, "logbooks"), {
-        mentorId, nama: namaMentor, kelas, jamKe, materi: materiArray, 
+        mentorId, nama: namaMentor, kelas, jamKe, 
+        materiGroup: materiGroup || { vocab:[], speaking:[], grammar:[] },
+        materi: flatMateri || [], 
         laporanSiswa, catatanKendala, dataSiswa: arraySiswa || [], tugasSiswa: tugasSiswa || "", waktu: serverTimestamp()
     });
 }
@@ -61,7 +68,6 @@ export function listenToLogbooks(callback) {
     });
 }
 
-// FUNGSI BARU: Sistem Tugas WA Sore (Jam 16.00)
 export async function sendTugasWA(targetKelas, linkGambar, instruksi) {
     return await addDoc(collection(db, "tugas_wa"), { targetKelas, linkGambar, instruksi, waktu: serverTimestamp() });
 }
