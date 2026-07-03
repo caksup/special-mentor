@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Admin - Jatirogo Creative Hub</title>
+    <title>Portal Admin - Super Creative Hub AEC</title>
     
     <!-- Bootstrap 5 CSS & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-dark"> <!-- Tema gelap biar beda dengan mentor -->
+<body class="bg-dark">
 
     <div class="login-wrapper container">
         <div class="row w-100 justify-content-center">
@@ -49,24 +49,23 @@
 
     <!-- Panggil File Logika -->
     <script type="module">
-        import { userPins } from './script.js';
+        import { mentorData } from './script.js';
 
         document.getElementById('btnMasuk').onclick = () => {
             const userVal = document.getElementById('userSelect').value;
-            const userText = document.getElementById('userSelect').options[document.getElementById('userSelect').selectedIndex].text;
             const pin = document.getElementById('pinInput').value;
 
-            // Cek PIN
-            if (pin !== userPins[userVal]) {
+            // Cek PIN pakai data baru di database mentorData
+            if (pin !== mentorData[userVal].pin) {
                 alert("Akses Ditolak! PIN Keamanan Salah.");
                 return;
             }
 
-            // Simpan Sesi (Session)
+            // Simpan Sesi (Session) dengan Julukan Baru
             sessionStorage.setItem("loggedInUser", userVal);
-            sessionStorage.setItem("loggedInName", userText);
+            sessionStorage.setItem("loggedInName", mentorData[userVal].julukan);
 
-            // Karena dua-duanya admin, lempar ke Ruang Kendali
+            // Lempar ke Ruang Kendali VIP
             window.location.href = "superuser.html"; 
         };
     </script>
