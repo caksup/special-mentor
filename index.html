@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Masuk - Jatirogo Creative Hub</title>
     
+    <!-- Bootstrap 5 CSS & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -15,26 +15,24 @@
     <div class="login-wrapper container">
         <div class="row w-100 justify-content-center">
             
+            <!-- Kolom Info & Jadwal Depan -->
             <div class="col-12 col-md-5 mb-4 mb-md-0">
                 <div class="card card-custom p-4 h-100 bg-primary text-white shadow-lg">
                     <div class="text-center mb-4">
                         <div id="txtClockLogin" class="digital-clock-login text-white mb-0">00:00:00</div>
                         <div id="txtDateLogin" class="small fw-bold text-uppercase opacity-75">Memuat Waktu...</div>
                     </div>
-                    
                     <hr class="border-white opacity-25">
-                    
                     <div class="mt-2">
                         <h6 class="fw-bold"><i class="bi bi-calendar-event me-2"></i> Jadwal & Info Hari Ini:</h6>
                         <div class="bg-white text-dark p-3 rounded-3 mt-3 shadow-sm" style="min-height: 100px;">
-                            <p id="displayJadwal" class="mb-0 small fw-medium" style="white-space: pre-line;">
-                                Sedang memuat sinkronisasi jadwal...
-                            </p>
+                            <p id="displayJadwal" class="mb-0 small fw-medium" style="white-space: pre-line;">Sedang memuat sinkronisasi jadwal...</p>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Kolom Login Form (HANYA MENTOR) -->
             <div class="col-12 col-md-4">
                 <div class="card card-custom p-4 h-100 shadow-sm">
                     <div class="text-center mb-4 mt-2">
@@ -44,11 +42,10 @@
 
                     <div class="mb-3">
                         <select id="userSelect" class="form-select form-select-lg bg-light border-0 fw-bold text-center">
+                            <!-- HANYA MENTOR, ADMIN DIHAPUS DARI SINI -->
                             <option value="anam">Anam</option>
                             <option value="rizal">Rizal</option>
                             <option value="budi">Budi</option>
-                            <option value="afif">Afif</option>
-                            <option value="sup">Sup</option>
                         </select>
                     </div>
 
@@ -59,48 +56,42 @@
                     <button id="btnMasuk" class="btn btn-dark btn-lg w-100 fw-bold shadow-sm mt-auto">
                         MASUK <i class="bi bi-arrow-right-circle ms-2"></i>
                     </button>
+                    
+                    <!-- TOMBOL RAHASIA MENUJU LOGIN ADMIN -->
+                    <div class="text-center mt-3">
+                        <a href="admin.html" class="text-muted small text-decoration-none opacity-25 hover-opacity-100"><i class="bi bi-shield-lock"></i></a>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 
+    <!-- Panggil File Logika Kita -->
     <script type="module">
-        // Import fungsi-fungsi dari script.js
         import { startClock, listenToGlobalInfo, userPins } from './script.js';
 
-        // 1. Jalankan Jam Digital
         startClock('txtClockLogin', 'txtDateLogin');
 
-        // 2. Tarik Jadwal dari Superadmin secara Real-time
         listenToGlobalInfo((data) => {
             document.getElementById('displayJadwal').innerText = data.jadwal;
         });
 
-        // 3. Logika Login & Pengalihan Halaman (Redirect)
         document.getElementById('btnMasuk').onclick = () => {
             const userVal = document.getElementById('userSelect').value;
             const userText = document.getElementById('userSelect').options[document.getElementById('userSelect').selectedIndex].text;
             const pin = document.getElementById('pinInput').value;
 
-            // Cek PIN
             if (pin !== userPins[userVal]) {
                 alert("Gagal masuk! PIN Anda salah.");
                 return;
             }
 
-            // Simpan Sesi (Session) ke browser, biar waktu pindah halaman sistem tahu siapa yang login
             sessionStorage.setItem("loggedInUser", userVal);
             sessionStorage.setItem("loggedInName", userText);
 
-            // TENDANG KE HALAMAN MASING-MASING SESUAI AKUN
-            if (userVal === "sup") {
-                // Kalau yang login 'Sup', arahkan ke markas Superadmin
-                window.location.href = "superuser.html"; 
-            } else {
-                // Kalau yang login Mentor / Afif, arahkan ke halaman normal Mentor
-                window.location.href = "mentor.html"; 
-            }
+            // Karena di sini cuma ada Mentor, langsung lempar ke mentor.html
+            window.location.href = "mentor.html"; 
         };
     </script>
 </body>
