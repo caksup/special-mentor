@@ -3,21 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Pengendali Admin - Jatirogo Creative Hub</title>
-    
+    <title>Panel Pengendali - Super Creative Hub AEC</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body style="background-color: #1e293b;">
-
     <div class="app-wrapper">
         <nav class="navbar navbar-expand navbar-dark bg-dark shadow-sm mb-4 border-bottom border-secondary">
             <div class="container-fluid px-3">
-                <a class="navbar-brand fw-bold text-white" href="#">
-                    <i class="bi bi-shield-fill-check text-warning me-2"></i> PANEL KONTROL MANAJEMEN
-                </a>
+                <a class="navbar-brand fw-bold text-white" href="#"><i class="bi bi-shield-fill-check text-warning me-2"></i> KONTROL SUPER CREATIVE HUB AEC</a>
                 <div class="d-flex align-items-center">
                     <span id="userNameDisplay" class="fw-bold me-3 text-light" style="font-size: 0.9rem;">Otoritas...</span>
                     <button id="btnLogout" class="btn btn-outline-danger btn-sm fw-bold"><i class="bi bi-power"></i> Keluar</button>
@@ -27,56 +23,33 @@
 
         <div class="container pb-5">
             <div class="row">
-                <!-- Kolom Kiri: Papan Siaran & Master Materi -->
                 <div class="col-12 col-lg-5 mb-4">
                     <div class="card card-custom p-4 shadow-lg bg-white h-100">
-                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-broadcast text-danger me-2"></i> Konsol Siaran Real-Time</h5>
+                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-broadcast text-danger me-2"></i> Konsol Sistem AEC</h5>
+                        <div class="mb-3"><label class="form-label fw-bold text-primary small">1. JADWAL FULL</label><textarea id="inputJadwal" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                        <div class="mb-3"><label class="form-label fw-bold text-info small">2. NOTIF BRIEFING</label><textarea id="inputBriefing" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                        <div class="mb-3"><label class="form-label fw-bold text-warning small">3. CATATAN PENTING</label><textarea id="inputCatatan" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                        <div class="mb-3"><label class="form-label fw-bold text-success small">4. GOAL HARIAN</label><textarea id="inputGoal" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                        <div class="mb-3"><label class="form-label fw-bold text-secondary small">5. MASTER MATERI (Pisahkan dgn Enter)</label><textarea id="inputMasterMateri" class="form-control bg-light text-xs" rows="3"></textarea></div>
                         
-                        <div class="mb-3">
-                            <label class="form-label fw-bold text-primary small">1. PAPAN JADWAL FULL</label>
-                            <textarea id="inputJadwal" class="form-control bg-light text-xs" rows="4" placeholder="Ketik master schedule lengkap..."></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold text-info small">2. NOTIF BRIEFING MENTOR</label>
-                            <textarea id="inputBriefing" class="form-control bg-light text-xs" rows="2" placeholder="Instruksi briefing..."></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold text-warning small">3. CATATAN PENTING & EVALUASI</label>
-                            <textarea id="inputCatatan" class="form-control bg-light text-xs" rows="2" placeholder="Catatan khusus..."></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold text-success small">4. TARGET / GOAL HARIAN</label>
-                            <textarea id="inputGoal" class="form-control bg-light text-xs" rows="2" placeholder="Target wajib hari ini..."></textarea>
-                        </div>
-                        
-                        <!-- FUNGSI BARU: MASTER MATERI -->
+                        <!-- FUNGSI BARU: MASTER SISWA -->
                         <div class="mb-4">
-                            <label class="form-label fw-bold text-secondary small">5. MASTER CHECKLIST MATERI (Untuk Logbook Mentor)</label>
-                            <p class="text-xs text-muted mt-0 mb-1">Ketik daftar materi, pisahkan setiap item dengan <b>"Enter" (Baris Baru)</b>.</p>
-                            <textarea id="inputMasterMateri" class="form-control bg-light text-xs border-secondary border-opacity-25" rows="4" placeholder="Contoh:&#10;Greeting & Ice Breaking&#10;Senam Otak&#10;Praktik Utama"></textarea>
+                            <label class="form-label fw-bold text-danger small">6. MASTER DATA SISWA PER KELAS</label>
+                            <p class="text-xs text-muted mt-0 mb-1">Format: <b>Nama Kelas: Nama Anak, Nama Anak</b> (Pisahkan baris tiap kelas)</p>
+                            <textarea id="inputMasterSiswa" class="form-control bg-light text-xs border-danger border-opacity-25" rows="4" placeholder="Kelas A: Budi, Citra, Andi&#10;Kelas B: Doni, Eka&#10;Kelas C: Fani, Gilang"></textarea>
                         </div>
 
-                        <button id="btnSaveGlobal" class="btn btn-primary w-100 fw-bold shadow-sm py-2">
-                            <i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI SISTEM
-                        </button>
+                        <button id="btnSaveGlobal" class="btn btn-primary w-100 fw-bold shadow-sm py-2"><i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI SISTEM</button>
                     </div>
                 </div>
 
-                <!-- Kolom Kanan: Moderasi Data & Export PDF -->
                 <div class="col-12 col-lg-7">
                     <div class="card card-custom p-4 shadow-lg bg-white h-100">
-                        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center border-bottom pb-3 mb-3 gap-2">
-                            <div>
-                                <h5 class="fw-bold text-primary mb-1"><i class="bi bi-server me-2"></i> Moderasi Logbook</h5>
-                                <p class="text-muted small mb-0">Kelola aktivitas mentor atau unduh PDF.</p>
-                            </div>
-                            <button id="btnExportPDF" class="btn btn-danger fw-bold shadow-sm">
-                                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Export PDF
-                            </button>
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+                            <div><h5 class="fw-bold text-primary mb-1"><i class="bi bi-server me-2"></i> Moderasi & Data Nilai</h5></div>
+                            <button id="btnExportPDF" class="btn btn-danger fw-bold shadow-sm"><i class="bi bi-file-earmark-pdf-fill me-1"></i> Export PDF</button>
                         </div>
-                        <div id="adminLogbookList" class="overflow-auto pe-1" style="max-height: 580px;">
-                            <p class="text-center text-muted small mt-5">Sinkronisasi data aktivitas...</p>
-                        </div>
+                        <div id="adminLogbookList" class="overflow-auto pe-1" style="max-height: 580px;">Memuat...</div>
                     </div>
                 </div>
             </div>
@@ -85,101 +58,64 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
-        import { listenToGlobalInfo, updateGlobalInfo, listenToLogbooks, updateLogbook, deleteLogbook } from './script.js';
-
-        const userVal = sessionStorage.getItem("loggedInUser");
-        if (userVal !== "sup" && userVal !== "afif") { window.location.href = "index.html"; }
+        import { listenToGlobalInfo, updateGlobalInfo, listenToLogbooks, deleteLogbook } from './script.js';
+        if (sessionStorage.getItem("loggedInUser") !== "sup" && sessionStorage.getItem("loggedInUser") !== "afif") window.location.href = "index.html";
         document.getElementById("userNameDisplay").innerText = "Otoritas: " + sessionStorage.getItem("loggedInName");
 
-        // Load Info & Daftar Materi
         listenToGlobalInfo((data) => {
             if (data) {
-                document.getElementById('inputJadwal').value = data.jadwal || "";
-                document.getElementById('inputBriefing').value = data.briefing || "";
-                document.getElementById('inputCatatan').value = data.catatan || "";
-                document.getElementById('inputGoal').value = data.goal || "";
-                // Render Array Materi ke Textarea (Dipisah baris baru)
-                document.getElementById('inputMasterMateri').value = data.masterMateri ? data.masterMateri.join('\n') : "Greeting & Ice Breaking\nReview Materi\nSesi Praktik Terbimbing";
+                document.getElementById('inputJadwal').value = data.jadwal || ""; document.getElementById('inputBriefing').value = data.briefing || "";
+                document.getElementById('inputCatatan').value = data.catatan || ""; document.getElementById('inputGoal').value = data.goal || "";
+                document.getElementById('inputMasterMateri').value = data.masterMateri ? data.masterMateri.join('\n') : "";
+                document.getElementById('inputMasterSiswa').value = data.masterSiswa || "";
             }
         });
 
         document.getElementById("btnSaveGlobal").onclick = async () => {
+            const materiArray = document.getElementById('inputMasterMateri').value.split('\n').map(i => i.trim()).filter(i => i !== "");
             try {
-                // Ubah Textarea menjadi Array
-                const materiRaw = document.getElementById('inputMasterMateri').value;
-                const materiArray = materiRaw.split('\n').map(i => i.trim()).filter(i => i !== "");
-
                 await updateGlobalInfo({
-                    jadwal: document.getElementById('inputJadwal').value,
-                    briefing: document.getElementById('inputBriefing').value,
-                    catatan: document.getElementById('inputCatatan').value,
-                    goal: document.getElementById('inputGoal').value,
-                    masterMateri: materiArray // Simpan array checklist ke database
+                    jadwal: document.getElementById('inputJadwal').value, briefing: document.getElementById('inputBriefing').value,
+                    catatan: document.getElementById('inputCatatan').value, goal: document.getElementById('inputGoal').value,
+                    masterMateri: materiArray, masterSiswa: document.getElementById('inputMasterSiswa').value
                 });
-                alert("Sukses: Pembaruan seluruh sistem dan materi berhasil disiarkan!");
-            } catch (e) { alert("Gagal memperbarui database."); }
+                alert("Sukses diperbarui!");
+            } catch (e) { alert("Gagal update."); }
         };
 
-        let dataLaporanLengkap = [];
+        let dataLaporan = [];
         listenToLogbooks((logData) => {
-            dataLaporanLengkap = logData;
-            const container = document.getElementById("adminLogbookList");
-            container.innerHTML = "";
-            if (logData.length === 0) { container.innerHTML = `<p class="text-center text-muted small mt-5">Kosong.</p>`; return; }
-
+            dataLaporan = logData; const container = document.getElementById("adminLogbookList"); container.innerHTML = "";
             logData.forEach(d => {
-                const waktu = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle: 'short', timeStyle: 'short'}) : 'Baru saja';
-                const box = document.createElement('div');
-                box.className = "p-3 bg-light rounded-3 border mb-3 position-relative shadow-sm";
-                box.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-center border-bottom pb-1 mb-2">
-                        <span class="fw-bold text-dark small"><i class="bi bi-person-fill"></i> ${d.nama.toUpperCase()}</span>
-                        <span class="text-muted font-monospace" style="font-size: 0.7rem;">${waktu}</span>
-                    </div>
-                    <div class="mb-1"><span class="badge bg-primary text-xs me-1">${d.kelas}</span><span class="badge bg-dark text-xs">${d.jamKe}</span></div>
-                    <div class="text-xs text-success fw-bold mb-1">✔ Materi: ${d.materi.join(', ')}</div>
-                    <div class="text-xs text-muted mb-1 bg-white p-1.5 rounded border">📝 <b>Lap:</b> ${d.laporanSiswa}</div>
-                    ${d.catatanKendala ? `<div class="text-xs text-danger mb-2 bg-danger bg-opacity-10 p-1.5 rounded border border-danger border-opacity-10">⚠️ <b>Kendala:</b> ${d.catatanKendala}</div>` : ''}
-                `;
-                const btnContainer = document.createElement('div'); btnContainer.className = "d-flex gap-1 justify-content-end mt-2";
-                const btnEdit = document.createElement('button'); btnEdit.className = "btn btn-xs btn-outline-primary fw-bold text-xs px-2 py-0.5"; btnEdit.innerHTML = `<i class="bi bi-pencil"></i> Edit Sesi`; btnEdit.onclick = () => aksidminEdit(d);
-                const btnHapus = document.createElement('button'); btnHapus.className = "btn btn-xs btn-danger fw-bold text-xs px-2 py-0.5 text-white"; btnHapus.innerHTML = `<i class="bi bi-trash"></i> Hapus`; btnHapus.onclick = () => aksidminHapus(d.id, d.nama, d.kelas, d.jamKe);
-                btnContainer.appendChild(btnEdit); btnContainer.appendChild(btnHapus); box.appendChild(btnContainer); container.appendChild(box);
+                const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-';
+                let txtNilai = d.dataSiswa && d.dataSiswa.length > 0 ? d.dataSiswa.map(s => `${s.nama}(${s.kehadiran}, N:${s.nilai})`).join(' | ') : 'Belum ada data absensi';
+                
+                container.innerHTML += `
+                    <div class="p-3 bg-light rounded-3 border mb-3 shadow-sm">
+                        <div class="d-flex justify-content-between border-bottom pb-1 mb-2"><span class="fw-bold small">${d.nama.toUpperCase()}</span><span class="text-muted text-xs">${w}</span></div>
+                        <div class="mb-1"><span class="badge bg-primary text-xs me-1">${d.kelas}</span><span class="badge bg-dark text-xs">${d.jamKe}</span></div>
+                        <div class="text-xs mb-1">✔ Materi: ${d.materi.join(', ')}</div>
+                        <div class="text-xs mb-1 p-1 bg-white border">📝 Lap: ${d.laporanSiswa}</div>
+                        <div class="text-xs p-1 bg-warning bg-opacity-10 border border-warning">📊 <b>Nilai & Absen:</b> ${txtNilai}</div>
+                        <div class="text-end mt-2"><button class="btn btn-xs btn-danger py-0" onclick="aksidminHapus('${d.id}')">Hapus</button></div>
+                    </div>`;
             });
         });
 
-        // Script PDF Export (Tetap Sama)
+        window.aksidminHapus = async function(id) { if (confirm(`Hapus permanen?`)) await deleteLogbook(id); };
+
         document.getElementById("btnExportPDF").onclick = () => {
-            const btn = document.getElementById("btnExportPDF");
-            btn.innerHTML = 'Merakit PDF...'; btn.disabled = true;
             const printDiv = document.createElement("div"); printDiv.style.padding = "20px"; printDiv.style.fontFamily = "Arial, sans-serif";
-            const tgl = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-            let htmlString = `<div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;"><h2 style="margin: 0;">LAPORAN LOGBOOK HARIAN MENTOR</h2><h4 style="margin: 5px 0 0 0;">Jatirogo Creative Hub</h4><p style="margin: 5px 0 0 0; font-size: 14px;">Tanggal Cetak: ${tgl}</p></div><table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px;"><thead><tr style="background-color: #f2f2f2;"><th style="border: 1px solid #000; padding: 8px; width: 10%;">Waktu</th><th style="border: 1px solid #000; padding: 8px; width: 12%;">Mentor</th><th style="border: 1px solid #000; padding: 8px; width: 10%;">Sesi</th><th style="border: 1px solid #000; padding: 8px; width: 20%;">Materi</th><th style="border: 1px solid #000; padding: 8px; width: 30%;">Laporan Siswa</th><th style="border: 1px solid #000; padding: 8px; width: 18%;">Catatan Kendala</th></tr></thead><tbody>`;
-            
-            if (dataLaporanLengkap.length === 0) { htmlString += `<tr><td colspan="6" style="text-align:center; padding: 15px; border: 1px solid #000;">Belum ada data aktivitas.</td></tr>`; } 
-            else {
-                dataLaporanLengkap.forEach(d => {
-                    const waktu = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : '-';
-                    htmlString += `<tr><td style="border: 1px solid #000; padding: 8px; text-align: center;">${waktu}</td><td style="border: 1px solid #000; padding: 8px; font-weight: bold;">${d.nama}</td><td style="border: 1px solid #000; padding: 8px; text-align: center;">${d.kelas}<br>${d.jamKe}</td><td style="border: 1px solid #000; padding: 8px;">${d.materi.join(', ')}</td><td style="border: 1px solid #000; padding: 8px;">${d.laporanSiswa || '-'}</td><td style="border: 1px solid #000; padding: 8px; color: ${d.catatanKendala ? 'red' : 'black'};">${d.catatanKendala || '-'}</td></tr>`;
-                });
-            }
-            htmlString += `</tbody></table>`; printDiv.innerHTML = htmlString;
-            const opt = { margin: 0.4, filename: `Logbook_JCH_${tgl.replace(/ /g, "_")}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }};
-            html2pdf().set(opt).from(printDiv).save().then(() => { btn.innerHTML = '<i class="bi bi-file-earmark-pdf-fill me-1"></i> Export PDF'; btn.disabled = false; }).catch(err => { alert("Error PDF"); btn.innerHTML = '<i class="bi bi-file-earmark-pdf-fill me-1"></i> Export PDF'; btn.disabled = false; });
+            let htmlString = `<h2 style="text-align:center;">LAPORAN SUPER CREATIVE HUB AEC</h2><table style="width: 100%; border-collapse: collapse; font-size: 11px;" border="1">
+            <tr style="background:#ddd;"><th>Waktu</th><th>Mentor</th><th>Kelas</th><th>Materi</th><th>Lap. Siswa</th><th>Data Siswa (Hadir/Nilai)</th></tr>`;
+            dataLaporan.forEach(d => {
+                const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID') : '-';
+                let ds = d.dataSiswa ? d.dataSiswa.map(s=>`${s.nama}: ${s.kehadiran}(${s.nilai})`).join('<br>') : '-';
+                htmlString += `<tr><td>${w}</td><td>${d.nama}</td><td>${d.kelas} ${d.jamKe}</td><td>${d.materi.join(', ')}</td><td>${d.laporanSiswa}</td><td>${ds}</td></tr>`;
+            });
+            htmlString += `</table>`; printDiv.innerHTML = htmlString;
+            html2pdf().set({ margin: 0.3, filename: 'Laporan_AEC.pdf', jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }}).from(printDiv).save();
         };
-
-        window.aksidminEdit = async function(data) {
-            const kl = prompt(`Kelas:`, data.kelas); if (kl === null) return; 
-            const jm = prompt(`Jam Sesi:`, data.jamKe); if (jm === null) return;
-            const ls = prompt(`Laporan:`, data.laporanSiswa); if (ls === null) return;
-            const kd = prompt(`Kendala:`, data.catatanKendala || ""); if (kd === null) return;
-            try { await updateLogbook(data.id, { kelas: kl, jamKe: jm, laporanSiswa: ls, catatanKendala: kd }); alert("Diperbarui!"); } catch (e) { alert("Error"); }
-        };
-
-        window.aksidminHapus = async function(id, nama, kelas, jam) {
-            if (confirm(`Hapus permanen ${nama} di ${kelas} (${jam})?`)) { await deleteLogbook(id); }
-        };
-
         document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); window.location.href = "index.html"; };
     </script>
 </body>
