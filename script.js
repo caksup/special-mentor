@@ -1,5 +1,5 @@
 /* ==================================================
-   script.js - Super Creative Hub AEC (V4 - Sistem Nilai & Absensi)
+   script.js - Super Creative Hub AEC (V5 - Julukan Mentor)
    ================================================== */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -17,7 +17,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
-export const userPins = { "anam": "1111", "rizal": "2222", "budi": "3333", "afif": "4444", "sup": "5555" };
+// 2. Database Kunci PIN & Julukan Mentor
+export const mentorData = {
+    "anam": { pin: "1111", julukan: "Mr. Anam" },
+    "rizal": { pin: "2222", julukan: "Mr. Rizal" },
+    "budi": { pin: "3333", julukan: "Mr. Budi" },
+    "nandika": { pin: "4444", julukan: "Mr. Nandika" },
+    "huda": { pin: "5555", julukan: "Mr. Huda" },
+    "afif": { pin: "6666", julukan: "Mr. Afif" },
+    "sup": { pin: "7777", julukan: "Mr. Sup" }
+};
 
 export function startClock(clockId, dateId) {
     function update() {
@@ -45,7 +54,6 @@ export async function updateGlobalInfo(dataData) {
     return await addDoc(collection(db, "riwayat_info"), { ...dataData, waktu: serverTimestamp() });
 }
 
-// UPDATE: Tambahan parameter arraySiswa untuk Absensi & Penilaian
 export async function sendLogbook(mentorId, namaMentor, kelas, jamKe, materiArray, laporanSiswa, catatanKendala, arraySiswa) {
     return await addDoc(collection(db, "logbooks"), {
         mentorId, nama: namaMentor, kelas, jamKe, materi: materiArray, 
@@ -53,7 +61,6 @@ export async function sendLogbook(mentorId, namaMentor, kelas, jamKe, materiArra
     });
 }
 
-// UPDATE: Update logbook juga bisa mengedit nilai
 export async function updateLogbook(docId, dataBaru) {
     return await updateDoc(doc(db, "logbooks", docId), dataBaru);
 }
