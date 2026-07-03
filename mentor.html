@@ -12,7 +12,7 @@
     <div class="app-wrapper">
         <nav class="navbar navbar-expand bg-white shadow-sm mb-4">
             <div class="container-fluid px-3">
-                <a class="navbar-brand fw-bold text-primary" href="#"><i class="bi bi-layers-half me-1"></i> Area Mentor AEC</a>
+                <a class="navbar-brand fw-bold text-primary" href="#"><i class="bi bi-layers-half me-1"></i> Area Tutor AEC</a>
                 <div class="d-flex align-items-center">
                     <span id="userNameDisplay" class="fw-bold me-3 text-secondary" style="font-size: 0.9rem;">Memuat...</span>
                     <button id="btnLogout" class="btn btn-outline-danger btn-sm fw-bold"><i class="bi bi-power"></i> Keluar</button>
@@ -22,46 +22,38 @@
 
         <div class="container pb-5">
             <div class="row">
+                <!-- MENU SAMPING MENTOR -->
                 <div class="col-12 col-md-3 mb-4">
-                    <div class="card card-custom p-2">
+                    <div class="card card-custom p-2 shadow-sm border-0">
                         <ul class="nav nav-pills flex-row flex-md-column nav-fill gap-1" id="menuTabs">
-                            <li class="nav-item"><button class="nav-link active w-100" id="tab-beranda" data-bs-toggle="pill" data-bs-target="#beranda"><i class="bi bi-house-door me-1"></i> Info AEC</button></li>
-                            <li class="nav-item"><button class="nav-link w-100" id="tab-logbook" data-bs-toggle="pill" data-bs-target="#logbook"><i class="bi bi-pencil-square me-1"></i> Logbook & Nilai</button></li>
-                            <li class="nav-item"><button class="nav-link w-100" id="tab-rekap" data-bs-toggle="pill" data-bs-target="#rekap"><i class="bi bi-clock-history me-1"></i> History Harian</button></li>
+                            <li class="nav-item"><button class="nav-link active w-100 fw-bold text-start" id="tab-beranda" data-bs-toggle="pill" data-bs-target="#beranda"><i class="bi bi-house-door me-2"></i> Info AEC</button></li>
+                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start" id="tab-logbook" data-bs-toggle="pill" data-bs-target="#logbook"><i class="bi bi-pencil-square me-2"></i> Logbook & Estafet</button></li>
+                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start" id="tab-rekap" data-bs-toggle="pill" data-bs-target="#rekap"><i class="bi bi-clock-history me-2"></i> History Kelas</button></li>
+                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start text-success bg-success bg-opacity-10" id="tab-tugaswa" data-bs-toggle="pill" data-bs-target="#tugaswa"><i class="bi bi-whatsapp me-2"></i> Tugas WA (16:00)</button></li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="col-12 col-md-9">
                     <div class="tab-content">
-                        
-                        <!-- TAB 1: INFORMASI -->
+                        <!-- TAB 1: INFO -->
                         <div class="tab-pane fade show active" id="beranda">
                             <div class="card card-custom p-4 text-center mb-4 shadow-sm">
-                                <h1 id="txtClockDash" class="digital-clock-dash mb-0">00:00:00</h1>
+                                <h1 id="txtClockDash" class="digital-clock-dash mb-0 text-primary">00:00:00</h1>
                                 <p id="txtDateDash" class="text-muted fw-bold text-uppercase mb-0">Tanggal</p>
-                            </div>
-                            <div class="card card-custom p-4 shadow-sm border-0 mb-4 bg-light">
-                                <h5 class="fw-bold text-primary mb-3">Target Hari Ini</h5>
-                                <div class="info-box"><div class="info-box-title">📢 Briefing</div><div id="displayBriefing">Arahan...</div></div>
-                                <div class="info-box warning"><div class="info-box-title">⚠️ Catatan</div><div id="displayCatatan">Catatan...</div></div>
-                                <div class="info-box success"><div class="info-box-title">🎯 Goal</div><div id="displayGoal">Target...</div></div>
                             </div>
                         </div>
 
-                        <!-- TAB 2: LOGBOOK & NILAI -->
+                        <!-- TAB 2: LOGBOOK & TUGAS ESTAFET -->
                         <div class="tab-pane fade" id="logbook">
-                            <div class="card card-custom p-4 shadow-sm">
-                                <h5 class="fw-bold mb-3 border-bottom pb-2">Formulir Logbook & Penilaian Kelas</h5>
+                            <div class="card card-custom p-4 shadow-sm border-top border-primary border-4">
+                                <h5 class="fw-bold mb-3 border-bottom pb-2">Formulir Sesi & Estafet Kelas</h5>
                                 <input type="hidden" id="editDocId" value="">
 
                                 <div class="row mb-3">
                                     <div class="col-12 col-md-6 mb-3 mb-md-0">
-                                        <label class="form-label fw-bold text-secondary small">NAMA KELAS</label>
-                                        <select id="inputKelas" class="form-select border fw-bold text-primary">
-                                            <option value="">-- Pilih Kelas --</option>
-                                            <option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option>
-                                        </select>
+                                        <label class="form-label fw-bold text-secondary small">PILIH KELAS</label>
+                                        <select id="inputKelas" class="form-select border fw-bold text-primary"><option value="">-- Pilih --</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option></select>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label class="form-label fw-bold text-secondary small">JAM SESI</label>
@@ -74,53 +66,49 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold text-secondary small">MATERI SESI</label>
-                                    <div class="bg-light p-3 rounded-3 border" id="containerChecklistMateri"></div>
-                                </div>
+                                <div class="mb-3"><label class="form-label fw-bold text-secondary small">MATERI SESI (Pilih yang diajarkan)</label><div class="bg-light p-3 rounded-3 border" id="containerChecklistMateri"></div></div>
 
-                                <!-- TABEL ABSENSI (SINGKAT) & NILAI -->
                                 <div class="mb-3" id="areaSiswa" style="display: none;">
                                     <label class="form-label fw-bold text-danger small">ABSENSI (h/s/i/a) & PENILAIAN</label>
                                     <div class="table-responsive bg-light p-2 rounded border">
-                                        <table class="table table-sm table-bordered mb-0 align-middle text-xs">
-                                            <thead class="table-secondary text-center">
-                                                <tr><th>Siswa</th><th style="width: 70px;">Abs</th><th style="width: 70px;">Nilai</th><th>Catatan Mentor</th></tr>
-                                            </thead>
-                                            <tbody id="tabelSiswaBody"></tbody>
-                                        </table>
+                                        <table class="table table-sm table-bordered mb-0 align-middle text-xs"><thead class="table-secondary text-center"><tr><th>Siswa</th><th style="width: 70px;">Abs</th><th style="width: 70px;">Nilai</th><th>Catatan Mentor</th></tr></thead><tbody id="tabelSiswaBody"></tbody></table>
                                     </div>
                                 </div>
 
+                                <!-- FUNGSI BARU: ESTAFET TUGAS -->
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold text-secondary small">LAPORAN UMUM KELAS</label>
-                                    <textarea id="notesSiswa" class="form-control bg-light border" rows="2"></textarea>
+                                    <label class="form-label fw-bold text-success small">CATATAN & TUGAS ESTAFET UNTUK SISWA</label>
+                                    <textarea id="notesTugasSiswa" class="form-control bg-success bg-opacity-10 border-success border-opacity-50" rows="2" placeholder="Tulis tugas estafet yang harus dilanjut ke jam berikutnya atau PR..."></textarea>
                                 </div>
+                                <div class="mb-3"><label class="form-label fw-bold text-secondary small">LAPORAN UMUM / KENDALA KELAS</label><textarea id="notesSiswa" class="form-control bg-light border" rows="2"></textarea></div>
 
-                                <button id="btnSave" class="btn btn-success btn-lg w-100 fw-bold shadow-sm mt-2"><i class="bi bi-send-check me-2"></i> KIRIM LOGBOOK & NILAI</button>
+                                <button id="btnSave" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm mt-2"><i class="bi bi-send-check me-2"></i> SIMPAN LOGBOOK SESI INI</button>
                                 <button id="btnBatalEdit" class="btn btn-secondary w-100 fw-bold mt-2 d-none">Batal Edit</button>
                             </div>
                         </div>
 
-                        <!-- TAB 3: HISTORY HARIAN (Monitor Global) -->
+                        <!-- TAB 3: HISTORY -->
                         <div class="tab-pane fade" id="rekap">
-                            <div class="card card-custom p-4 shadow-sm">
-                                <h5 class="fw-bold text-primary mb-3">History Harian AEC</h5>
-                                
-                                <div class="row g-2 mb-3">
-                                    <div class="col-6">
-                                        <select id="filterHari" class="form-select form-select-sm bg-light border fw-bold text-danger">
-                                            <option value="SEMUA">Memuat Hari...</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-6">
-                                        <select id="filterKelas" class="form-select form-select-sm bg-light border fw-bold text-secondary">
-                                            <option value="SEMUA">Semua Kelas</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option>
-                                        </select>
-                                    </div>
-                                </div>
-
+                            <div class="card card-custom p-4 shadow-sm"><h5 class="fw-bold text-primary mb-3">History Harian AEC</h5>
+                                <div class="row g-2 mb-3"><div class="col-6"><select id="filterHari" class="form-select form-select-sm bg-light fw-bold text-danger"><option value="SEMUA">Memuat...</option></select></div><div class="col-6"><select id="filterKelas" class="form-select form-select-sm bg-light fw-bold text-secondary"><option value="SEMUA">Semua Kelas</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option></select></div></div>
                                 <div id="logbookList" class="overflow-auto pe-2" style="max-height: 500px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 4 BARU: TUGAS WA (16:00) -->
+                        <div class="tab-pane fade" id="tugaswa">
+                            <div class="card card-custom p-4 shadow-sm border-top border-success border-4">
+                                <h5 class="fw-bold text-success mb-1"><i class="bi bi-whatsapp me-2"></i> Penugasan WhatsApp</h5>
+                                <p class="small text-muted mb-3">Tugas harian yang siap didistribusikan ke grup wali murid / siswa.</p>
+                                
+                                <div class="mb-3">
+                                    <select id="filterWA" class="form-select bg-light fw-bold text-dark border-success">
+                                        <option value="SEMUA">Lihat Semua Tugas WA</option>
+                                        <option value="GLOBAL (Semua Ruang A-D)">GLOBAL (Semua Ruang A-D)</option>
+                                        <option value="Kelas A">Khusus Kelas A</option><option value="Kelas B">Khusus Kelas B</option><option value="Kelas C">Khusus Kelas C</option><option value="Kelas D">Khusus Kelas D</option>
+                                    </select>
+                                </div>
+                                <div id="listTugasWAMentor" class="space-y-3">Memuat instruksi dari Admin...</div>
                             </div>
                         </div>
                     </div>
@@ -131,7 +119,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
-        import { startClock, listenToGlobalInfo, sendLogbook, listenToLogbooks, updateLogbook } from './script.js';
+        import { startClock, listenToGlobalInfo, sendLogbook, listenToLogbooks, updateLogbook, listenToTugasWA } from './script.js';
 
         const userVal = sessionStorage.getItem("loggedInUser");
         if (!userVal || userVal === "sup") window.location.href = "index.html";
@@ -139,159 +127,100 @@
         startClock('txtClockDash', 'txtDateDash');
 
         let rawMasterSiswa = "";
-
         listenToGlobalInfo((data) => {
-            document.getElementById('displayBriefing').innerText = data.briefing;
-            document.getElementById('displayCatatan').innerText = data.catatan;
-            document.getElementById('displayGoal').innerText = data.goal;
             rawMasterSiswa = data.masterSiswa || ""; 
-            
             const containerMateri = document.getElementById("containerChecklistMateri"); containerMateri.innerHTML = "";
-            (data.masterMateri || []).forEach((materi, i) => {
-                containerMateri.innerHTML += `<div class="form-check mb-1"><input class="form-check-input check-materi" type="checkbox" value="${materi}" id="m_${i}"><label class="form-check-label text-sm fw-bold" for="m_${i}">${materi}</label></div>`;
-            });
+            (data.masterMateri || []).forEach((materi, i) => { containerMateri.innerHTML += `<div class="form-check mb-1"><input class="form-check-input check-materi" type="checkbox" value="${materi}" id="m_${i}"><label class="form-check-label text-sm fw-bold" for="m_${i}">${materi}</label></div>`; });
         });
 
         document.getElementById('inputKelas').onchange = (e) => {
-            const kls = e.target.value;
-            const area = document.getElementById('areaSiswa'); const tbody = document.getElementById('tabelSiswaBody');
-            tbody.innerHTML = "";
-            if(!kls) { area.style.display = 'none'; return; }
-            area.style.display = 'block';
-
-            const lines = rawMasterSiswa.split('\n');
-            let foundSiswa = [];
-            lines.forEach(line => {
-                if(line.includes(':') && line.startsWith(kls)) { foundSiswa = line.split(':')[1].split(',').map(s => s.trim()).filter(s => s !== ""); }
-            });
-
+            const kls = e.target.value; const area = document.getElementById('areaSiswa'); const tbody = document.getElementById('tabelSiswaBody'); tbody.innerHTML = "";
+            if(!kls) { area.style.display = 'none'; return; } area.style.display = 'block';
+            const lines = rawMasterSiswa.split('\n'); let foundSiswa = [];
+            lines.forEach(line => { if(line.includes(':') && line.startsWith(kls)) foundSiswa = line.split(':')[1].split(',').map(s => s.trim()).filter(s => s !== ""); });
             if(foundSiswa.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Belum ada siswa terdaftar.</td></tr>`; } 
-            else {
-                foundSiswa.forEach((nama, i) => {
-                    tbody.innerHTML += `
-                        <tr class="baris-siswa" data-nama="${nama}">
-                            <td class="fw-bold">${nama}</td>
-                            <td><select class="form-select form-select-sm sel-hadir fw-bold text-center px-1"><option value="h">h</option><option value="i">i</option><option value="s">s</option><option value="a">a</option></select></td>
-                            <td><input type="text" class="form-control form-control-sm in-nilai text-center px-1" placeholder="..."></td>
-                            <td><input type="text" class="form-control form-control-sm in-catatan" placeholder="Catatan..."></td>
-                        </tr>
-                    `;
-                });
-            }
+            else { foundSiswa.forEach(nama => { tbody.innerHTML += `<tr class="baris-siswa" data-nama="${nama}"><td class="fw-bold">${nama}</td><td><select class="form-select form-select-sm sel-hadir fw-bold text-center px-1"><option value="h">h</option><option value="i">i</option><option value="s">s</option><option value="a">a</option></select></td><td><input type="text" class="form-control form-control-sm in-nilai text-center px-1" placeholder="..."></td><td><input type="text" class="form-control form-control-sm in-catatan" placeholder="Catatan..."></td></tr>`; }); }
         };
 
-        // Render History Harian
+        // Render History
         let masterLogData = [];
-        listenToLogbooks((logData) => { 
-            masterLogData = logData; 
-            ekstrakHari();
-            renderLogbookList(); 
-        });
-
-        document.getElementById('filterKelas').onchange = () => renderLogbookList();
-        document.getElementById('filterHari').onchange = () => renderLogbookList();
-
+        listenToLogbooks((logData) => { masterLogData = logData; ekstrakHari(); renderLogbookList(); });
+        document.getElementById('filterKelas').onchange = () => renderLogbookList(); document.getElementById('filterHari').onchange = () => renderLogbookList();
+        
         function ekstrakHari() {
-            const daysMap = new Map();
-            masterLogData.forEach(d => {
-                if(d.waktu) {
-                    const dObj = d.waktu.toDate();
-                    const dStr = dObj.toLocaleDateString('id-ID');
-                    if(!daysMap.has(dStr)) daysMap.set(dStr, dObj);
-                }
-            });
-            const sortedDays = Array.from(daysMap.entries()).sort((a,b) => a[1] - b[1]);
-            const selHari = document.getElementById("filterHari");
-            const valSkg = selHari.value;
-            
+            const daysMap = new Map(); masterLogData.forEach(d => { if(d.waktu) { const dStr = d.waktu.toDate().toLocaleDateString('id-ID'); if(!daysMap.has(dStr)) daysMap.set(dStr, d.waktu.toDate()); } });
+            const sortedDays = Array.from(daysMap.entries()).sort((a,b) => a[1] - b[1]); const selHari = document.getElementById("filterHari"); const valSkg = selHari.value;
             selHari.innerHTML = '<option value="SEMUA">Semua History</option>';
-            sortedDays.forEach((entry, idx) => {
-                selHari.innerHTML += `<option value="${entry[0]}">Hari ke-${idx+1} (${entry[0]})</option>`;
-            });
-
-            // Default selalu ke Hari Terbaru jika baru di-load, atau pertahankan pilihan
-            if (Array.from(selHari.options).some(o=>o.value===valSkg) && valSkg !== "SEMUA") { selHari.value = valSkg; } 
-            else if (sortedDays.length > 0 && valSkg === "SEMUA" && selHari.options.length <= 2) { selHari.value = sortedDays[sortedDays.length-1][0]; }
+            sortedDays.forEach((entry, idx) => { selHari.innerHTML += `<option value="${entry[0]}">Hari ke-${idx+1} (${entry[0]})</option>`; });
+            if (Array.from(selHari.options).some(o=>o.value===valSkg) && valSkg !== "SEMUA") selHari.value = valSkg; else if (sortedDays.length > 0 && valSkg === "SEMUA" && selHari.options.length <= 2) selHari.value = sortedDays[sortedDays.length-1][0];
         }
 
         function renderLogbookList() {
-            const list = document.getElementById("logbookList"); 
-            const fKelas = document.getElementById("filterKelas").value;
-            const fHari = document.getElementById("filterHari").value;
-            list.innerHTML = "";
-            
-            let dataTampil = masterLogData;
-            if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari);
-            if (fKelas !== "SEMUA") dataTampil = dataTampil.filter(d => d.kelas === fKelas);
-            
-            if (dataTampil.length === 0) { list.innerHTML = `<div class="alert alert-secondary text-center border-0 mt-4">Belum ada history di filter ini.</div>`; return; }
-            
-            dataTampil.forEach((d, i) => {
+            const list = document.getElementById("logbookList"); const fKls = document.getElementById("filterKelas").value; const fHari = document.getElementById("filterHari").value; list.innerHTML = "";
+            let dt = masterLogData; if (fHari !== "SEMUA") dt = dt.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari); if (fKls !== "SEMUA") dt = dt.filter(d => d.kelas === fKls);
+            if (dt.length === 0) { list.innerHTML = `<div class="alert text-center border-0 mt-4">Belum ada history.</div>`; return; }
+            dt.forEach((d, i) => {
                 const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'Baru saja';
-                
-                let tabelHtml = "";
-                if (d.dataSiswa && d.dataSiswa.length > 0) {
-                    tabelHtml = `<table class="table table-bordered text-xs mt-2 mb-0 text-center"><tr class="bg-light"><th>Siswa</th><th>Abs</th><th>Nilai</th><th>Catatan</th></tr>`;
-                    d.dataSiswa.forEach(s => { tabelHtml += `<tr><td class="text-start">${s.nama}</td><td class="text-uppercase fw-bold">${s.kehadiran}</td><td class="fw-bold">${s.nilai || '-'}</td><td class="text-start">${s.catatan || '-'}</td></tr>`; });
-                    tabelHtml += `</table>`;
-                }
-
-                list.innerHTML += `
-                    <div class="p-3 bg-white border rounded-3 mb-3 shadow-sm">
-                        <div class="d-flex justify-content-between border-bottom pb-1 mb-2"><span class="fw-bold text-primary"><i class="bi bi-person-fill"></i> ${d.nama}</span><span class="text-muted text-xs">${w}</span></div>
-                        <div><span class="badge bg-primary me-1">${d.kelas}</span><span class="badge bg-dark">${d.jamKe}</span></div>
-                        <div class="text-xs fw-bold text-success mt-1">✔ ${d.materi.join(', ') || '-'}</div>
-                        <div class="text-xs mt-1 p-2 bg-light border">📝 Umum: ${d.laporanSiswa || '-'}</div>
-                        <button class="btn btn-sm btn-outline-secondary w-100 mt-2 text-xs fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#col_${i}">Lihat Rapor Sesi Ini ▼</button>
-                        <div class="collapse" id="col_${i}">${tabelHtml}</div>
-                        ${d.mentorId === userVal ? `<button class="btn btn-sm btn-warning mt-2 w-100 fw-bold" onclick='window.editPersonal(${JSON.stringify(d).replace(/'/g, "\\'")})'>Edit Sesi Saya</button>` : ''}
-                    </div>`;
+                let tb = ""; if (d.dataSiswa && d.dataSiswa.length > 0) { tb = `<table class="table table-bordered text-xs mt-2 mb-0 text-center"><tr class="bg-light"><th>Siswa</th><th>Abs</th><th>Nilai</th></tr>`; d.dataSiswa.forEach(s => { tb += `<tr><td class="text-start">${s.nama}</td><td class="text-uppercase fw-bold">${s.kehadiran}</td><td class="fw-bold">${s.nilai || '-'}</td></tr>`; }); tb += `</table>`; }
+                list.innerHTML += `<div class="p-3 bg-white border rounded-3 mb-3 shadow-sm"><div class="d-flex justify-content-between border-bottom pb-1 mb-2"><span class="fw-bold text-primary"><i class="bi bi-person-fill"></i> ${d.nama}</span><span class="text-muted text-xs">${w}</span></div><div><span class="badge bg-primary me-1">${d.kelas}</span><span class="badge bg-dark">${d.jamKe}</span></div><div class="text-xs fw-bold mt-2 text-dark">📖 Materi: ${d.materi.join(', ') || '-'}</div><div class="text-xs fw-bold mt-1 text-success">🎯 Tugas Estafet: ${d.tugasSiswa || '-'}</div><button class="btn btn-sm btn-outline-secondary w-100 mt-2 text-xs fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#col_${i}">Lihat Rapor ▼</button><div class="collapse" id="col_${i}">${tb}</div>${d.mentorId === userVal ? `<button class="btn btn-sm btn-warning mt-2 w-100 fw-bold" onclick='window.editPersonal(${JSON.stringify(d).replace(/'/g, "\\'")})'>Edit Sesi Saya</button>` : ''}</div>`;
             });
         }
 
         window.editPersonal = function(data) {
-            document.getElementById("editDocId").value = data.id; document.getElementById("inputKelas").value = data.kelas;
-            document.getElementById("inputKelas").dispatchEvent(new Event('change')); 
-            
+            document.getElementById("editDocId").value = data.id; document.getElementById("inputKelas").value = data.kelas; document.getElementById("inputKelas").dispatchEvent(new Event('change')); 
             setTimeout(() => {
                 document.querySelectorAll('input[name="jamSesi"]').forEach(r => r.checked = r.value === data.jamKe);
                 document.querySelectorAll('.check-materi').forEach(cb => cb.checked = data.materi.includes(cb.value));
-                document.getElementById("notesSiswa").value = data.laporanSiswa;
-                const baris = document.querySelectorAll('.baris-siswa');
-                baris.forEach(b => {
-                    const nm = b.dataset.nama; const cari = (data.dataSiswa || []).find(s => s.nama === nm);
+                document.getElementById("notesTugasSiswa").value = data.tugasSiswa || ""; document.getElementById("notesSiswa").value = data.laporanSiswa || "";
+                document.querySelectorAll('.baris-siswa').forEach(b => {
+                    const cari = (data.dataSiswa || []).find(s => s.nama === b.dataset.nama);
                     if(cari) { b.querySelector('.sel-hadir').value = cari.kehadiran; b.querySelector('.in-nilai').value = cari.nilai; b.querySelector('.in-catatan').value = cari.catatan; }
                 });
-                document.getElementById("btnSave").innerHTML = 'SIMPAN PERUBAHAN'; document.getElementById("btnBatalEdit").classList.remove("d-none");
-                new bootstrap.Tab(document.getElementById('tab-logbook')).show();
+                document.getElementById("btnSave").innerHTML = 'SIMPAN PERUBAHAN'; document.getElementById("btnBatalEdit").classList.remove("d-none"); new bootstrap.Tab(document.getElementById('tab-logbook')).show();
             }, 300);
         }
 
-        document.getElementById("btnBatalEdit").onclick = () => {
-            document.getElementById("editDocId").value = ""; document.getElementById("inputKelas").value = ""; 
-            document.getElementById("inputKelas").dispatchEvent(new Event('change'));
-            document.getElementById("btnSave").innerHTML = '<i class="bi bi-send-check me-2"></i> KIRIM LOGBOOK & NILAI';
-            document.getElementById("btnBatalEdit").classList.add("d-none");
-        };
+        document.getElementById("btnBatalEdit").onclick = () => { document.getElementById("editDocId").value = ""; document.getElementById("inputKelas").value = ""; document.getElementById("inputKelas").dispatchEvent(new Event('change')); document.getElementById("btnSave").innerHTML = '<i class="bi bi-send-check me-2"></i> SIMPAN LOGBOOK SESI INI'; document.getElementById("btnBatalEdit").classList.add("d-none"); };
 
         document.getElementById("btnSave").onclick = async () => {
-            const kls = document.getElementById("inputKelas").value; if(!kls) return alert("Pilih Kelas dulu!");
-            const jam = document.querySelector('input[name="jamSesi"]:checked').value;
-            const mat = Array.from(document.querySelectorAll('.check-materi:checked')).map(c => c.value);
-            const not = document.getElementById("notesSiswa").value; const edId = document.getElementById("editDocId").value;
-            let arraySiswa = [];
-            document.querySelectorAll('.baris-siswa').forEach(b => {
-                arraySiswa.push({ nama: b.dataset.nama, kehadiran: b.querySelector('.sel-hadir').value, nilai: b.querySelector('.in-nilai').value, catatan: b.querySelector('.in-catatan').value });
-            });
-
+            const kls = document.getElementById("inputKelas").value; if(!kls) return alert("Pilih Kelas!");
+            const jam = document.querySelector('input[name="jamSesi"]:checked').value; const mat = Array.from(document.querySelectorAll('.check-materi:checked')).map(c => c.value);
+            const tg = document.getElementById("notesTugasSiswa").value; const not = document.getElementById("notesSiswa").value; const edId = document.getElementById("editDocId").value;
+            let arraySiswa = []; document.querySelectorAll('.baris-siswa').forEach(b => { arraySiswa.push({ nama: b.dataset.nama, kehadiran: b.querySelector('.sel-hadir').value, nilai: b.querySelector('.in-nilai').value, catatan: b.querySelector('.in-catatan').value }); });
             try {
                 document.getElementById("btnSave").disabled = true;
-                if (edId) await updateLogbook(edId, { kelas: kls, jamKe: jam, materi: mat, laporanSiswa: not, dataSiswa: arraySiswa });
-                else await sendLogbook(userVal, sessionStorage.getItem("loggedInName"), kls, jam, mat, not, "", arraySiswa);
-                alert("Sukses Tersimpan!"); document.getElementById("btnBatalEdit").click(); document.getElementById("btnSave").disabled = false;
-                new bootstrap.Tab(document.getElementById('tab-rekap')).show();
+                if (edId) await updateLogbook(edId, { kelas: kls, jamKe: jam, materi: mat, laporanSiswa: not, dataSiswa: arraySiswa, tugasSiswa: tg });
+                else await sendLogbook(userVal, sessionStorage.getItem("loggedInName"), kls, jam, mat, not, "", arraySiswa, tg);
+                alert("Tersimpan!"); document.getElementById("btnBatalEdit").click(); document.getElementById("btnSave").disabled = false; new bootstrap.Tab(document.getElementById('tab-rekap')).show();
             } catch (error) { alert("Error database!"); document.getElementById("btnSave").disabled = false; }
         };
+
+        // RENDER TUGAS WA
+        let masterTugasWA = [];
+        listenToTugasWA((data) => { masterTugasWA = data; renderTugasWA(); });
+        document.getElementById("filterWA").onchange = () => renderTugasWA();
+        
+        function renderTugasWA() {
+            const list = document.getElementById("listTugasWAMentor"); const fil = document.getElementById("filterWA").value; list.innerHTML = "";
+            let dt = masterTugasWA; if(fil !== "SEMUA") dt = dt.filter(d => d.targetKelas === fil);
+            if(dt.length === 0) { list.innerHTML = `<div class="alert text-center border-0 text-muted">Belum ada tugas WA dari admin untuk kategori ini.</div>`; return; }
+            dt.forEach((d, i) => {
+                const w = d.waktu ? d.waktu.toDate().toLocaleDateString('id-ID', { dateStyle: 'long'}) : 'Baru Saja';
+                let imgTag = d.linkGambar ? `<img src="${d.linkGambar}" class="img-fluid rounded mb-2 border w-100" style="max-height: 200px; object-fit: cover;" alt="Gambar Tugas">` : '';
+                list.innerHTML += `
+                    <div class="p-3 bg-white border border-success border-opacity-50 rounded-3 shadow-sm mb-3">
+                        <div class="d-flex justify-content-between mb-2"><span class="badge bg-success">${d.targetKelas}</span><span class="text-xs text-muted">${w}</span></div>
+                        ${imgTag}
+                        <div class="p-2 bg-light rounded text-sm mb-2 font-monospace" id="txtWA_${i}" style="white-space: pre-line;">${d.instruksi}</div>
+                        <button class="btn btn-outline-success btn-sm w-100 fw-bold" onclick="copyWA('txtWA_${i}')"><i class="bi bi-copy me-1"></i> Salin Instruksi Tugas</button>
+                    </div>`;
+            });
+        }
+
+        window.copyWA = function(idDiv) {
+            const txt = document.getElementById(idDiv).innerText;
+            navigator.clipboard.writeText(txt).then(() => { alert("Teks instruksi berhasil disalin! Tinggal Paste di Grup WA."); }).catch(err => { alert("Gagal menyalin teks."); });
+        }
 
         document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); window.location.href = "index.html"; };
     </script>
