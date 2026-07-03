@@ -27,7 +27,7 @@
                         <ul class="nav nav-pills flex-row flex-md-column nav-fill gap-1" id="menuTabs">
                             <li class="nav-item"><button class="nav-link active w-100" id="tab-beranda" data-bs-toggle="pill" data-bs-target="#beranda"><i class="bi bi-house-door me-1"></i> Info AEC</button></li>
                             <li class="nav-item"><button class="nav-link w-100" id="tab-logbook" data-bs-toggle="pill" data-bs-target="#logbook"><i class="bi bi-pencil-square me-1"></i> Logbook & Nilai</button></li>
-                            <li class="nav-item"><button class="nav-link w-100" id="tab-rekap" data-bs-toggle="pill" data-bs-target="#rekap"><i class="bi bi-globe me-1"></i> Monitor Global</button></li>
+                            <li class="nav-item"><button class="nav-link w-100" id="tab-rekap" data-bs-toggle="pill" data-bs-target="#rekap"><i class="bi bi-clock-history me-1"></i> History Harian</button></li>
                         </ul>
                     </div>
                 </div>
@@ -79,17 +79,15 @@
                                     <div class="bg-light p-3 rounded-3 border" id="containerChecklistMateri"></div>
                                 </div>
 
-                                <!-- FUNGSI BARU: TABEL ABSENSI & NILAI SISWA -->
+                                <!-- TABEL ABSENSI (SINGKAT) & NILAI -->
                                 <div class="mb-3" id="areaSiswa" style="display: none;">
-                                    <label class="form-label fw-bold text-danger small">ABSENSI & PENILAIAN SISWA</label>
+                                    <label class="form-label fw-bold text-danger small">ABSENSI (h/s/i/a) & PENILAIAN</label>
                                     <div class="table-responsive bg-light p-2 rounded border">
                                         <table class="table table-sm table-bordered mb-0 align-middle text-xs">
                                             <thead class="table-secondary text-center">
-                                                <tr><th>Nama Siswa</th><th style="width: 120px;">Kehadiran</th><th style="width: 80px;">Nilai</th><th>Catatan Mentor</th></tr>
+                                                <tr><th>Siswa</th><th style="width: 70px;">Abs</th><th style="width: 70px;">Nilai</th><th>Catatan Mentor</th></tr>
                                             </thead>
-                                            <tbody id="tabelSiswaBody">
-                                                <!-- Baris siswa digenerate otomatis disini -->
-                                            </tbody>
+                                            <tbody id="tabelSiswaBody"></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -104,13 +102,24 @@
                             </div>
                         </div>
 
-                        <!-- TAB 3: MONITOR GLOBAL -->
+                        <!-- TAB 3: HISTORY HARIAN (Monitor Global) -->
                         <div class="tab-pane fade" id="rekap">
                             <div class="card card-custom p-4 shadow-sm">
-                                <h5 class="fw-bold text-primary mb-3">Monitor Global AEC</h5>
-                                <select id="filterKelas" class="form-select form-select-sm bg-light border fw-bold text-secondary mb-3">
-                                    <option value="SEMUA">Semua Kelas</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option>
-                                </select>
+                                <h5 class="fw-bold text-primary mb-3">History Harian AEC</h5>
+                                
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <select id="filterHari" class="form-select form-select-sm bg-light border fw-bold text-danger">
+                                            <option value="SEMUA">Memuat Hari...</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select id="filterKelas" class="form-select form-select-sm bg-light border fw-bold text-secondary">
+                                            <option value="SEMUA">Semua Kelas</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option>
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <div id="logbookList" class="overflow-auto pe-2" style="max-height: 500px;"></div>
                             </div>
                         </div>
@@ -131,116 +140,131 @@
 
         let rawMasterSiswa = "";
 
-        // Terima Info Global dari Superadmin
         listenToGlobalInfo((data) => {
             document.getElementById('displayBriefing').innerText = data.briefing;
             document.getElementById('displayCatatan').innerText = data.catatan;
             document.getElementById('displayGoal').innerText = data.goal;
-            rawMasterSiswa = data.masterSiswa || ""; // Simpan string siswa
+            rawMasterSiswa = data.masterSiswa || ""; 
             
-            // Render Materi
             const containerMateri = document.getElementById("containerChecklistMateri"); containerMateri.innerHTML = "";
             (data.masterMateri || []).forEach((materi, i) => {
                 containerMateri.innerHTML += `<div class="form-check mb-1"><input class="form-check-input check-materi" type="checkbox" value="${materi}" id="m_${i}"><label class="form-check-label text-sm fw-bold" for="m_${i}">${materi}</label></div>`;
             });
         });
 
-        // Event saat Mentor merubah pilihan Dropdown Kelas
         document.getElementById('inputKelas').onchange = (e) => {
             const kls = e.target.value;
-            const area = document.getElementById('areaSiswa');
-            const tbody = document.getElementById('tabelSiswaBody');
+            const area = document.getElementById('areaSiswa'); const tbody = document.getElementById('tabelSiswaBody');
             tbody.innerHTML = "";
-            
             if(!kls) { area.style.display = 'none'; return; }
             area.style.display = 'block';
 
-            // Logika Membaca Database Master Siswa dari Superadmin
             const lines = rawMasterSiswa.split('\n');
             let foundSiswa = [];
             lines.forEach(line => {
-                if(line.includes(':') && line.startsWith(kls)) {
-                    foundSiswa = line.split(':')[1].split(',').map(s => s.trim()).filter(s => s !== "");
-                }
+                if(line.includes(':') && line.startsWith(kls)) { foundSiswa = line.split(':')[1].split(',').map(s => s.trim()).filter(s => s !== ""); }
             });
 
-            if(foundSiswa.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Belum ada data siswa didaftarkan admin untuk kelas ini.</td></tr>`;
-            } else {
+            if(foundSiswa.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">Belum ada siswa terdaftar.</td></tr>`; } 
+            else {
                 foundSiswa.forEach((nama, i) => {
                     tbody.innerHTML += `
                         <tr class="baris-siswa" data-nama="${nama}">
                             <td class="fw-bold">${nama}</td>
-                            <td><select class="form-select form-select-sm sel-hadir"><option value="Hadir">Hadir</option><option value="Izin">Izin</option><option value="Sakit">Sakit</option><option value="Alpa">Alpa</option></select></td>
-                            <td><input type="text" class="form-control form-control-sm in-nilai" placeholder="Nilai"></td>
-                            <td><input type="text" class="form-control form-control-sm in-catatan" placeholder="Catatan anak..."></td>
+                            <td><select class="form-select form-select-sm sel-hadir fw-bold text-center px-1"><option value="h">h</option><option value="i">i</option><option value="s">s</option><option value="a">a</option></select></td>
+                            <td><input type="text" class="form-control form-control-sm in-nilai text-center px-1" placeholder="..."></td>
+                            <td><input type="text" class="form-control form-control-sm in-catatan" placeholder="Catatan..."></td>
                         </tr>
                     `;
                 });
             }
         };
 
-        // Render Monitor Global
+        // Render History Harian
         let masterLogData = [];
-        listenToLogbooks((logData) => { masterLogData = logData; renderLogbookList(); });
+        listenToLogbooks((logData) => { 
+            masterLogData = logData; 
+            ekstrakHari();
+            renderLogbookList(); 
+        });
+
         document.getElementById('filterKelas').onchange = () => renderLogbookList();
+        document.getElementById('filterHari').onchange = () => renderLogbookList();
+
+        function ekstrakHari() {
+            const daysMap = new Map();
+            masterLogData.forEach(d => {
+                if(d.waktu) {
+                    const dObj = d.waktu.toDate();
+                    const dStr = dObj.toLocaleDateString('id-ID');
+                    if(!daysMap.has(dStr)) daysMap.set(dStr, dObj);
+                }
+            });
+            const sortedDays = Array.from(daysMap.entries()).sort((a,b) => a[1] - b[1]);
+            const selHari = document.getElementById("filterHari");
+            const valSkg = selHari.value;
+            
+            selHari.innerHTML = '<option value="SEMUA">Semua History</option>';
+            sortedDays.forEach((entry, idx) => {
+                selHari.innerHTML += `<option value="${entry[0]}">Hari ke-${idx+1} (${entry[0]})</option>`;
+            });
+
+            // Default selalu ke Hari Terbaru jika baru di-load, atau pertahankan pilihan
+            if (Array.from(selHari.options).some(o=>o.value===valSkg) && valSkg !== "SEMUA") { selHari.value = valSkg; } 
+            else if (sortedDays.length > 0 && valSkg === "SEMUA" && selHari.options.length <= 2) { selHari.value = sortedDays[sortedDays.length-1][0]; }
+        }
 
         function renderLogbookList() {
-            const list = document.getElementById("logbookList"); const filterVal = document.getElementById("filterKelas").value; list.innerHTML = "";
-            const filteredData = masterLogData.filter(d => filterVal === "SEMUA" || d.kelas === filterVal);
-            if (filteredData.length === 0) { list.innerHTML = `<div class="alert alert-secondary text-center border-0">Kosong.</div>`; return; }
+            const list = document.getElementById("logbookList"); 
+            const fKelas = document.getElementById("filterKelas").value;
+            const fHari = document.getElementById("filterHari").value;
+            list.innerHTML = "";
             
-            filteredData.forEach((d, i) => {
+            let dataTampil = masterLogData;
+            if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari);
+            if (fKelas !== "SEMUA") dataTampil = dataTampil.filter(d => d.kelas === fKelas);
+            
+            if (dataTampil.length === 0) { list.innerHTML = `<div class="alert alert-secondary text-center border-0 mt-4">Belum ada history di filter ini.</div>`; return; }
+            
+            dataTampil.forEach((d, i) => {
                 const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'Baru saja';
                 
-                // Rakit Tabel Histori Nilai
                 let tabelHtml = "";
                 if (d.dataSiswa && d.dataSiswa.length > 0) {
-                    tabelHtml = `<table class="table table-bordered text-xs mt-2 mb-0"><tr class="bg-light"><th>Siswa</th><th>Status</th><th>Nilai</th><th>Catatan</th></tr>`;
-                    d.dataSiswa.forEach(s => { tabelHtml += `<tr><td>${s.nama}</td><td>${s.kehadiran}</td><td>${s.nilai || '-'}</td><td>${s.catatan || '-'}</td></tr>`; });
+                    tabelHtml = `<table class="table table-bordered text-xs mt-2 mb-0 text-center"><tr class="bg-light"><th>Siswa</th><th>Abs</th><th>Nilai</th><th>Catatan</th></tr>`;
+                    d.dataSiswa.forEach(s => { tabelHtml += `<tr><td class="text-start">${s.nama}</td><td class="text-uppercase fw-bold">${s.kehadiran}</td><td class="fw-bold">${s.nilai || '-'}</td><td class="text-start">${s.catatan || '-'}</td></tr>`; });
                     tabelHtml += `</table>`;
                 }
 
                 list.innerHTML += `
                     <div class="p-3 bg-white border rounded-3 mb-3 shadow-sm">
-                        <div class="d-flex justify-content-between border-bottom pb-1 mb-2"><span class="fw-bold text-primary"><i class="bi bi-person-fill"></i> Tutor: ${d.nama}</span><span class="text-muted text-xs">${w}</span></div>
+                        <div class="d-flex justify-content-between border-bottom pb-1 mb-2"><span class="fw-bold text-primary"><i class="bi bi-person-fill"></i> ${d.nama}</span><span class="text-muted text-xs">${w}</span></div>
                         <div><span class="badge bg-primary me-1">${d.kelas}</span><span class="badge bg-dark">${d.jamKe}</span></div>
                         <div class="text-xs fw-bold text-success mt-1">✔ ${d.materi.join(', ') || '-'}</div>
                         <div class="text-xs mt-1 p-2 bg-light border">📝 Umum: ${d.laporanSiswa || '-'}</div>
-                        <button class="btn btn-sm btn-outline-secondary w-100 mt-2 text-xs fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#col_${i}">Lihat Rapor & Absen Sesi Ini ▼</button>
+                        <button class="btn btn-sm btn-outline-secondary w-100 mt-2 text-xs fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#col_${i}">Lihat Rapor Sesi Ini ▼</button>
                         <div class="collapse" id="col_${i}">${tabelHtml}</div>
                         ${d.mentorId === userVal ? `<button class="btn btn-sm btn-warning mt-2 w-100 fw-bold" onclick='window.editPersonal(${JSON.stringify(d).replace(/'/g, "\\'")})'>Edit Sesi Saya</button>` : ''}
                     </div>`;
             });
         }
 
-        // Mode Edit (Mengembalikan data tabel)
         window.editPersonal = function(data) {
-            document.getElementById("editDocId").value = data.id;
-            document.getElementById("inputKelas").value = data.kelas;
-            document.getElementById("inputKelas").dispatchEvent(new Event('change')); // Trigger memunculkan tabel
+            document.getElementById("editDocId").value = data.id; document.getElementById("inputKelas").value = data.kelas;
+            document.getElementById("inputKelas").dispatchEvent(new Event('change')); 
             
             setTimeout(() => {
                 document.querySelectorAll('input[name="jamSesi"]').forEach(r => r.checked = r.value === data.jamKe);
                 document.querySelectorAll('.check-materi').forEach(cb => cb.checked = data.materi.includes(cb.value));
                 document.getElementById("notesSiswa").value = data.laporanSiswa;
-                
-                // Kembalikan nilai ke tabel
                 const baris = document.querySelectorAll('.baris-siswa');
                 baris.forEach(b => {
-                    const nm = b.dataset.nama;
-                    const cari = (data.dataSiswa || []).find(s => s.nama === nm);
-                    if(cari) {
-                        b.querySelector('.sel-hadir').value = cari.kehadiran;
-                        b.querySelector('.in-nilai').value = cari.nilai;
-                        b.querySelector('.in-catatan').value = cari.catatan;
-                    }
+                    const nm = b.dataset.nama; const cari = (data.dataSiswa || []).find(s => s.nama === nm);
+                    if(cari) { b.querySelector('.sel-hadir').value = cari.kehadiran; b.querySelector('.in-nilai').value = cari.nilai; b.querySelector('.in-catatan').value = cari.catatan; }
                 });
-
-                document.getElementById("btnSave").innerHTML = 'SIMPAN PERUBAHAN';
-                document.getElementById("btnBatalEdit").classList.remove("d-none");
+                document.getElementById("btnSave").innerHTML = 'SIMPAN PERUBAHAN'; document.getElementById("btnBatalEdit").classList.remove("d-none");
                 new bootstrap.Tab(document.getElementById('tab-logbook')).show();
-            }, 500);
+            }, 300);
         }
 
         document.getElementById("btnBatalEdit").onclick = () => {
@@ -250,35 +274,21 @@
             document.getElementById("btnBatalEdit").classList.add("d-none");
         };
 
-        // Simpan Logbook beserta Data Tabel Siswa
         document.getElementById("btnSave").onclick = async () => {
-            const kls = document.getElementById("inputKelas").value; 
-            if(!kls) return alert("Pilih Kelas dulu!");
-
+            const kls = document.getElementById("inputKelas").value; if(!kls) return alert("Pilih Kelas dulu!");
             const jam = document.querySelector('input[name="jamSesi"]:checked').value;
             const mat = Array.from(document.querySelectorAll('.check-materi:checked')).map(c => c.value);
-            const not = document.getElementById("notesSiswa").value;
-            const edId = document.getElementById("editDocId").value;
-
-            // Kumpulkan Data Siswa dari Tabel
+            const not = document.getElementById("notesSiswa").value; const edId = document.getElementById("editDocId").value;
             let arraySiswa = [];
             document.querySelectorAll('.baris-siswa').forEach(b => {
-                arraySiswa.push({
-                    nama: b.dataset.nama,
-                    kehadiran: b.querySelector('.sel-hadir').value,
-                    nilai: b.querySelector('.in-nilai').value,
-                    catatan: b.querySelector('.in-catatan').value
-                });
+                arraySiswa.push({ nama: b.dataset.nama, kehadiran: b.querySelector('.sel-hadir').value, nilai: b.querySelector('.in-nilai').value, catatan: b.querySelector('.in-catatan').value });
             });
 
             try {
                 document.getElementById("btnSave").disabled = true;
                 if (edId) await updateLogbook(edId, { kelas: kls, jamKe: jam, materi: mat, laporanSiswa: not, dataSiswa: arraySiswa });
                 else await sendLogbook(userVal, sessionStorage.getItem("loggedInName"), kls, jam, mat, not, "", arraySiswa);
-                
-                alert("Sukses Tersimpan!");
-                document.getElementById("btnBatalEdit").click();
-                document.getElementById("btnSave").disabled = false;
+                alert("Sukses Tersimpan!"); document.getElementById("btnBatalEdit").click(); document.getElementById("btnSave").disabled = false;
                 new bootstrap.Tab(document.getElementById('tab-rekap')).show();
             } catch (error) { alert("Error database!"); document.getElementById("btnSave").disabled = false; }
         };
