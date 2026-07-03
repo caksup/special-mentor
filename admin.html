@@ -23,11 +23,9 @@
                         <p class="small text-light opacity-75">Otorisasi Direktur & Superadmin</p>
                     </div>
 
+                    <!-- KOTAK KETIK MANUAL (Menggantikan Dropdown) -->
                     <div class="mb-3">
-                        <select id="userSelect" class="form-select form-select-lg bg-dark text-white border-0 fw-bold text-center">
-                            <option value="afif">Direktur (Afif)</option>
-                            <option value="sup">Superadmin (Sup)</option>
-                        </select>
+                        <input type="text" id="userInput" class="form-control form-control-lg bg-dark text-white border-0 text-center fw-bold text-lowercase" placeholder="username admin" autocomplete="off">
                     </div>
 
                     <div class="mb-4">
@@ -52,20 +50,37 @@
         import { mentorData } from './script.js';
 
         document.getElementById('btnMasuk').onclick = () => {
-            const userVal = document.getElementById('userSelect').value;
+            // Ambil input, paksa huruf kecil, dan hilangkan spasi
+            const userVal = document.getElementById('userInput').value.toLowerCase().trim();
             const pin = document.getElementById('pinInput').value;
 
-            // Cek PIN pakai data baru di database mentorData
-            if (pin !== mentorData[userVal].pin) {
-                alert("Akses Ditolak! PIN Keamanan Salah.");
+            // 1. Cek apakah kotak username kosong
+            if (!userVal) {
+                alert("Peringatan: Harap ketik username Anda!");
                 return;
             }
 
-            // Simpan Sesi (Session) dengan Julukan Baru
+            // 2. Cek apakah username terdaftar di database
+            if (!mentorData[userVal]) {
+                alert("Akses Ditolak: Username tidak ditemukan dalam sistem!");
+                return;
+            }
+
+            // 3. Cek Hak Akses (Hanya Direktur dan Superadmin yang boleh masuk sini)
+            if (userVal !== "afif" && userVal !== "sup") {
+                alert("Akses Ilegal: Anda tidak memiliki hak akses tingkat manajemen!");
+                return;
+            }
+
+            // 4. Cek apakah PIN benar
+            if (pin !== mentorData[userVal].pin) {
+                alert("Akses Ditolak! PIN Keamanan Anda salah.");
+                return;
+            }
+
+            // Jika semua lolos, simpan sesi dan masuk ke ruang kendali
             sessionStorage.setItem("loggedInUser", userVal);
             sessionStorage.setItem("loggedInName", mentorData[userVal].julukan);
-
-            // Lempar ke Ruang Kendali VIP
             window.location.href = "superuser.html"; 
         };
     </script>
