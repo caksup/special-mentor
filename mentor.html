@@ -1,104 +1,271 @@
-/* ==================================================
-   script.js - Pusat Data & Logika Firebase (V3 - Dengan Riwayat Info)
-   ================================================== */
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Mentor - Jatirogo Creative Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, doc, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <div class="app-wrapper">
+        <nav class="navbar navbar-expand bg-white shadow-sm mb-4">
+            <div class="container-fluid px-3">
+                <a class="navbar-brand fw-bold text-primary" href="#"><i class="bi bi-layers-half me-1"></i> Area Mentor</a>
+                <div class="d-flex align-items-center">
+                    <span id="userNameDisplay" class="fw-bold me-3 text-secondary" style="font-size: 0.9rem;">Memuat...</span>
+                    <button id="btnLogout" class="btn btn-outline-danger btn-sm fw-bold"><i class="bi bi-power"></i> Keluar</button>
+                </div>
+            </div>
+        </nav>
 
-const firebaseConfig = {
-    apiKey: "AIzaSyCgXGAww1dMu4eWzA1clUiOQht1DzxHl4A",
-    authDomain: "special-mentor.firebaseapp.com",
-    projectId: "special-mentor",
-    storageBucket: "special-mentor.firebasestorage.app",
-    messagingSenderId: "1075582532703",
-    appId: "1:1075582532703:web:969365cefff8999335efea"
-};
+        <div class="container pb-5">
+            <div class="row">
+                <div class="col-12 col-md-3 mb-4">
+                    <div class="card card-custom p-2">
+                        <ul class="nav nav-pills flex-row flex-md-column nav-fill gap-1" id="menuTabs" role="tablist">
+                            <li class="nav-item"><button class="nav-link active w-100" id="tab-beranda" data-bs-toggle="pill" data-bs-target="#beranda" type="button"><i class="bi bi-house-door me-1"></i> Informasi Kelas</button></li>
+                            <li class="nav-item"><button class="nav-link w-100" id="tab-logbook" data-bs-toggle="pill" data-bs-target="#logbook" type="button"><i class="bi bi-pencil-square me-1"></i> Isi Logbook</button></li>
+                            <li class="nav-item"><button class="nav-link w-100" id="tab-rekap" data-bs-toggle="pill" data-bs-target="#rekap" type="button"><i class="bi bi-activity me-1"></i> Aktivitas Mentor</button></li>
+                        </ul>
+                    </div>
+                </div>
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+                <div class="col-12 col-md-9">
+                    <div class="tab-content" id="menuContent">
+                        
+                        <!-- TAB 1: INFORMASI KELAS (Arsip Riwayat Aman) -->
+                        <div class="tab-pane fade show active" id="beranda" role="tabpanel">
+                            <div class="card card-custom p-4 text-center mb-4 shadow-sm">
+                                <h1 id="txtClockDash" class="digital-clock-dash mb-0">00:00:00</h1>
+                                <p id="txtDateDash" class="text-muted fw-bold text-uppercase mb-0">Tanggal</p>
+                            </div>
+                            <ul class="nav nav-tabs mb-3" id="infoSubTabs" role="tablist">
+                                <li class="nav-item"><button class="nav-link active fw-bold" id="sub-target-tab" data-bs-toggle="tab" data-bs-target="#sub-target" type="button">Target Hari Ini</button></li>
+                                <li class="nav-item"><button class="nav-link fw-bold" id="sub-jadwal-tab" data-bs-toggle="tab" data-bs-target="#sub-jadwal" type="button">Jadwal Full</button></li>
+                                <li class="nav-item"><button class="nav-link fw-bold" id="sub-riwayat-tab" data-bs-toggle="tab" data-bs-target="#sub-riwayat" type="button">Riwayat Anda</button></li>
+                            </ul>
+                            <div class="tab-content bg-white p-3 rounded-3 border shadow-sm mb-4">
+                                <div class="tab-pane fade show active" id="sub-target">
+                                    <div class="info-box"><div class="info-box-title">📢 Notif Briefing</div><div id="displayBriefing">Arahan...</div></div>
+                                    <div class="info-box warning"><div class="info-box-title">⚠️ Catatan Penting</div><div id="displayCatatan">Catatan...</div></div>
+                                    <div class="info-box success"><div class="info-box-title">🎯 Goal Kelas Harian</div><div id="displayGoal">Target...</div></div>
+                                </div>
+                                <div class="tab-pane fade" id="sub-jadwal">
+                                    <div class="p-3 bg-light rounded border border-secondary border-opacity-25" id="displayJadwalFull" style="white-space: pre-line;">Memuat master schedule...</div>
+                                </div>
+                                <div class="tab-pane fade" id="sub-riwayat">
+                                    <div id="myHistoryList" class="space-y-2">Memuat riwayat personal...</div>
+                                </div>
+                            </div>
+                            <div class="card card-custom p-4 shadow-sm border-0 bg-light">
+                                <h5 class="fw-bold text-dark mb-1"><i class="bi bi-archive-fill text-secondary me-2"></i> Arsip Pengumuman Superadmin</h5>
+                                <div id="riwayatPengumumanList" class="overflow-auto pe-2" style="max-height: 400px;"></div>
+                            </div>
+                        </div>
 
-export const userPins = {
-    "anam": "1111", "rizal": "2222", "budi": "3333", "afif": "4444", "sup": "5555"
-};
+                        <!-- TAB 2: FORMULIR LOGBOOK -->
+                        <div class="tab-pane fade" id="logbook" role="tabpanel">
+                            <div class="card card-custom p-4 shadow-sm">
+                                <h5 class="fw-bold mb-3 border-bottom pb-2" id="formTitle">Formulir Progres Harian</h5>
+                                <input type="hidden" id="editDocId" value="">
 
-export function startClock(clockId, dateId) {
-    function update() {
-        const now = new Date();
-        const jam = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        const tgl = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-        
-        if (document.getElementById(clockId)) document.getElementById(clockId).innerText = jam;
-        if (document.getElementById(dateId)) document.getElementById(dateId).innerText = tgl;
-    }
-    setInterval(update, 1000);
-    update();
-}
+                                <div class="row mb-3">
+                                    <div class="col-12 col-md-6 mb-3 mb-md-0">
+                                        <label class="form-label fw-bold text-secondary small">NAMA KELAS</label>
+                                        <select id="inputKelas" class="form-select border fw-bold text-primary">
+                                            <option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label fw-bold text-secondary small">JAM SESI KE</label>
+                                        <div class="btn-group w-100" role="group">
+                                            <input type="radio" class="btn-check" name="jamSesi" id="j1" value="Jam 1" checked><label class="btn btn-outline-primary fw-bold" for="j1">1</label>
+                                            <input type="radio" class="btn-check" name="jamSesi" id="j2" value="Jam 2"><label class="btn btn-outline-primary fw-bold" for="j2">2</label>
+                                            <input type="radio" class="btn-check" name="jamSesi" id="j3" value="Jam 3"><label class="btn btn-outline-primary fw-bold" for="j3">3</label>
+                                            <input type="radio" class="btn-check" name="jamSesi" id="j4" value="Jam 4"><label class="btn btn-outline-primary fw-bold" for="j4">4</label>
+                                        </div>
+                                    </div>
+                                </div>
 
-// Menarik Info Pengumuman Terbaru
-export function listenToGlobalInfo(callback) {
-    const infoRef = doc(db, "settings", "global_info");
-    onSnapshot(infoRef, (docSnap) => {
-        if (docSnap.exists()) {
-            callback(docSnap.data());
-        } else {
-            callback({ jadwal: "Belum ada jadwal", briefing: "Belum ada briefing", catatan: "-", goal: "-" });
+                                <!-- CHECKBOX DINAMIS SESUAI ARAHAN SUPERADMIN -->
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-secondary small">DAFTAR MATERI SESI</label>
+                                    <div class="bg-light p-3 rounded-3 border" id="containerChecklistMateri">
+                                        <p class="small text-muted mb-0">Mensinkronisasi materi dari server...</p>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-secondary small">CATATAN LAPORAN SISWA</label>
+                                    <textarea id="notesSiswa" class="form-control bg-light border" rows="3"></textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold text-danger small">CATATAN KENDALA (Jika ada)</label>
+                                    <textarea id="notesKendala" class="form-control bg-light border border-danger border-opacity-25" rows="2"></textarea>
+                                </div>
+
+                                <div class="row g-2">
+                                    <div class="col">
+                                        <button id="btnSave" class="btn btn-success btn-lg w-100 fw-bold shadow-sm">
+                                            <i class="bi bi-send-check me-2"></i> KIRIM LOGBOOK
+                                        </button>
+                                    </div>
+                                    <div class="col-auto d-none" id="containerBatalEdit">
+                                        <button id="btnBatalEdit" class="btn btn-secondary btn-lg fw-bold shadow-sm">Batal</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 3: AKTIVITAS MENTOR -->
+                        <div class="tab-pane fade" id="rekap" role="tabpanel">
+                            <div class="card card-custom p-4 shadow-sm">
+                                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center border-bottom pb-2 mb-3">
+                                    <div><h5 class="fw-bold text-primary mb-0">Logbook Bersama</h5></div>
+                                    <div class="mt-2 mt-sm-0">
+                                        <select id="filterKelas" class="form-select form-select-sm bg-light border fw-bold text-secondary">
+                                            <option value="SEMUA">Semua Kelas</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="logbookList" class="overflow-auto pe-2" style="max-height: 500px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { startClock, listenToGlobalInfo, listenToRiwayatInfo, sendLogbook, listenToLogbooks, updateLogbook } from './script.js';
+
+        const userVal = sessionStorage.getItem("loggedInUser");
+        if (!userVal || userVal === "sup") { window.location.href = "index.html"; }
+        document.getElementById("userNameDisplay").innerText = "Mentor: " + sessionStorage.getItem("loggedInName");
+
+        startClock('txtClockDash', 'txtDateDash');
+
+        // Render Checkbox Dinamis Berdasarkan Data Global Admin
+        listenToGlobalInfo((data) => {
+            document.getElementById('displayBriefing').innerText = data.briefing;
+            document.getElementById('displayCatatan').innerText = data.catatan;
+            document.getElementById('displayGoal').innerText = data.goal;
+            document.getElementById('displayJadwalFull').innerText = data.jadwal;
+            
+            // FUNGSI MEMBUAT CEKLIS MATERI DINAMIS
+            const daftarMateri = data.masterMateri && data.masterMateri.length > 0 
+                ? data.masterMateri 
+                : ["Greeting & Ice Breaking", "Review Materi", "Sesi Praktik Terbimbing"]; // Default
+            
+            const containerMateri = document.getElementById("containerChecklistMateri");
+            containerMateri.innerHTML = "";
+            
+            daftarMateri.forEach((materi, index) => {
+                containerMateri.innerHTML += `
+                    <div class="form-check mb-2">
+                        <input class="form-check-input check-materi" type="checkbox" value="${materi}" id="mat_${index}">
+                        <label class="form-check-label fw-bold" for="mat_${index}">${materi}</label>
+                    </div>
+                `;
+            });
+        });
+
+        // Arsip Pengumuman (Aman)
+        listenToRiwayatInfo((riwayatData) => {
+            const list = document.getElementById("riwayatPengumumanList"); list.innerHTML = "";
+            if (riwayatData.length === 0) { list.innerHTML = `<div class="alert alert-secondary text-center small border-0">Belum ada arsip riwayat pengumuman.</div>`; return; }
+            riwayatData.forEach((d, index) => {
+                const waktu = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', { dateStyle: 'full', timeStyle: 'short' }) : 'Baru saja';
+                const isLatest = index === 0 ? `<span class="badge bg-danger ms-2">Terbaru</span>` : '';
+                list.innerHTML += `
+                    <div class="p-3 bg-white border border-secondary border-opacity-25 rounded-3 mb-3 shadow-sm">
+                        <div class="border-bottom pb-2 mb-2"><span class="fw-bold text-dark small"><i class="bi bi-clock-history me-1"></i> Disiarkan pada: ${waktu} ${isLatest}</span></div>
+                        <div class="row g-2"><div class="col-12 col-md-6"><div class="text-xs text-muted fw-bold">📢 Briefing:</div><div class="small p-1 border rounded bg-light">${d.briefing || '-'}</div></div><div class="col-12 col-md-6"><div class="text-xs text-muted fw-bold">🎯 Goal Harian:</div><div class="small p-1 border rounded bg-light">${d.goal || '-'}</div></div><div class="col-12"><div class="text-xs text-muted fw-bold">⚠️ Catatan Khusus:</div><div class="small p-1 border rounded bg-light">${d.catatan || '-'}</div></div></div>
+                    </div>
+                `;
+            });
+        });
+
+        let masterLogData = [];
+        listenToLogbooks((logData) => { masterLogData = logData; renderLogbookList(); renderMyHistoryList(); });
+        document.getElementById('filterKelas').onchange = () => renderLogbookList();
+
+        function renderLogbookList() {
+            const list = document.getElementById("logbookList"); const filterVal = document.getElementById("filterKelas").value; list.innerHTML = "";
+            const filteredData = masterLogData.filter(d => filterVal === "SEMUA" || d.kelas === filterVal);
+            if (filteredData.length === 0) { list.innerHTML = `<div class="alert alert-secondary text-center border-0 small">Kosong.</div>`; return; }
+            filteredData.forEach(d => {
+                const waktu = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'Baru saja';
+                list.innerHTML += `
+                    <div class="logbook-item">
+                        <div class="d-flex justify-content-between align-items-center mb-1"><span class="fw-bold text-dark text-uppercase"><i class="bi bi-person-circle text-primary me-1"></i> ${d.nama}</span><span class="badge bg-light text-secondary border small">${waktu}</span></div>
+                        <div class="my-1"><span class="badge bg-primary me-1">${d.kelas}</span><span class="badge bg-dark">${d.jamKe}</span></div>
+                        <div class="small fw-bold text-success mb-1">✔ Materi: ${d.materi.join(', ') || '-'}</div>
+                        <div class="small text-muted bg-light p-2 rounded mb-1 border">📋 <b>Laporan:</b> ${d.laporanSiswa || '-'}</div>
+                        ${d.catatanKendala ? `<div class="small text-danger bg-danger bg-opacity-10 p-2 rounded border border-danger border-opacity-10">⚠️ <b>Kendala:</b> ${d.catatanKendala}</div>` : ''}
+                    </div>
+                `;
+            });
         }
-    });
-}
 
-// FUNGSI BARU: Menarik Data Riwayat Pengumuman Lama
-export function listenToRiwayatInfo(callback) {
-    const q = query(collection(db, "riwayat_info"), orderBy("waktu", "desc"));
-    onSnapshot(q, (snap) => {
-        let listData = [];
-        snap.forEach(doc => {
-            listData.push({ id: doc.id, ...doc.data() });
-        });
-        callback(listData);
-    });
-}
+        function renderMyHistoryList() {
+            const list = document.getElementById("myHistoryList"); list.innerHTML = "";
+            const myData = masterLogData.filter(d => d.mentorId === userVal);
+            if (myData.length === 0) { list.innerHTML = `<p class="text-center text-muted small mt-3">Belum mengisi logbook.</p>`; return; }
+            myData.forEach(d => {
+                const waktu = d.waktu ? d.waktu.toDate().toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) : 'Baru saja';
+                const item = document.createElement('div'); item.className = "p-3 bg-light rounded border border-secondary border-opacity-25 mb-2 position-relative shadow-sm";
+                item.innerHTML = `<div class="fw-bold small text-dark">${d.kelas} - ${d.jamKe} <span class="text-muted fw-normal font-monospace">(${waktu})</span></div><div class="text-xs text-muted text-truncate mt-1">📋 ${d.laporanSiswa}</div>`;
+                const btnEdit = document.createElement('button'); btnEdit.className = "btn btn-sm btn-outline-primary position-absolute end-0 top-0 mt-2 me-2 fw-bold"; btnEdit.style.fontSize = "0.75rem"; btnEdit.innerHTML = `<i class="bi bi-pencil-square"></i> Edit`; btnEdit.onclick = () => pemicuEditLogbook(d);
+                item.appendChild(btnEdit); list.appendChild(item);
+            });
+        }
 
-// Superadmin Update Info (Sekarang menyimpan 2 sekaligus: Tampilan depan & Riwayat)
-export async function updateGlobalInfo(dataData) {
-    // 1. Timpa info terbaru untuk halaman login depan
-    const infoRef = doc(db, "settings", "global_info");
-    await setDoc(infoRef, {
-        ...dataData,
-        waktuUpdate: serverTimestamp()
-    });
+        window.pemicuEditLogbook = function(data) {
+            document.getElementById("editDocId").value = data.id;
+            document.getElementById("inputKelas").value = data.kelas;
+            document.querySelectorAll('input[name="jamSesi"]').forEach(r => r.checked = r.value === data.jamKe);
+            // Centang materi sesuai database
+            document.querySelectorAll('.check-materi').forEach(cb => cb.checked = data.materi.includes(cb.value));
+            document.getElementById("notesSiswa").value = data.laporanSiswa; document.getElementById("notesKendala").value = data.catatanKendala || "";
+            document.getElementById("formTitle").innerText = "Mode Edit Logbook Sesi";
+            document.getElementById("btnSave").innerHTML = '<i class="bi bi-pencil-square me-2"></i> SIMPAN PERUBAHAN';
+            document.getElementById("containerBatalEdit").classList.remove("d-none");
+            new bootstrap.Tab(document.getElementById('tab-logbook')).show();
+        }
 
-    // 2. Simpan sebagai dokumen riwayat sejarah dengan stempel waktu
-    return await addDoc(collection(db, "riwayat_info"), {
-        ...dataData,
-        waktu: serverTimestamp()
-    });
-}
+        document.getElementById("btnBatalEdit").onclick = () => resetFormAksi();
+        function resetFormAksi() {
+            document.getElementById("editDocId").value = ""; document.getElementById("inputKelas").value = "Kelas A"; document.getElementById("j1").checked = true;
+            document.querySelectorAll('.check-materi').forEach(cb => cb.checked = false);
+            document.getElementById("notesSiswa").value = ""; document.getElementById("notesKendala").value = "";
+            document.getElementById("formTitle").innerText = "Formulir Progres Harian";
+            document.getElementById("btnSave").innerHTML = '<i class="bi bi-send-check me-2"></i> KIRIM LOGBOOK';
+            document.getElementById("containerBatalEdit").classList.add("d-none");
+        }
 
-// CRUD LOGBOOK (Tetap sama)
-export async function sendLogbook(mentorId, namaMentor, kelas, jamKe, materiArray, laporanSiswa, catatanKendala) {
-    return await addDoc(collection(db, "logbooks"), {
-        mentorId: mentorId, nama: namaMentor, kelas: kelas, jamKe: jamKe,
-        materi: materiArray, laporanSiswa: laporanSiswa, catatanKendala: catatanKendala, waktu: serverTimestamp()
-    });
-}
+        document.getElementById("btnSave").onclick = async () => {
+            const kelas = document.getElementById("inputKelas").value; const jamKe = document.querySelector('input[name="jamSesi"]:checked').value;
+            const materi = Array.from(document.querySelectorAll('.check-materi:checked')).map(cb => cb.value);
+            const notesSiswa = document.getElementById("notesSiswa").value; const notesKendala = document.getElementById("notesKendala").value;
+            const editId = document.getElementById("editDocId").value;
 
-export async function updateLogbook(docId, dataBaru) {
-    const logRef = doc(db, "logbooks", docId);
-    return await updateDoc(logRef, dataBaru);
-}
+            if (materi.length === 0 && notesSiswa === "") return alert("Pilih materi atau isi laporan!");
+            try {
+                document.getElementById("btnSave").disabled = true;
+                if (editId) { await updateLogbook(editId, { kelas: kelas, jamKe: jamKe, materi: materi, laporanSiswa: notesSiswa, catatanKendala: notesKendala }); alert("Sukses diedit!"); } 
+                else { await sendLogbook(userVal, sessionStorage.getItem("loggedInName"), kelas, jamKe, materi, notesSiswa, notesKendala); alert("Terkirim!"); }
+                resetFormAksi(); document.getElementById("btnSave").disabled = false;
+                new bootstrap.Tab(document.getElementById('tab-rekap')).show();
+            } catch (error) { alert("Error database!"); document.getElementById("btnSave").disabled = false; }
+        };
 
-export async function deleteLogbook(docId) {
-    const logRef = doc(db, "logbooks", docId);
-    return await deleteDoc(logRef);
-}
-
-export function listenToLogbooks(callback) {
-    const q = query(collection(db, "logbooks"), orderBy("waktu", "desc"));
-    onSnapshot(q, (snap) => {
-        let listData = [];
-        snap.forEach(doc => {
-            listData.push({ id: doc.id, ...doc.data() });
-        });
-        callback(listData);
-    });
-}
+        document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); window.location.href = "index.html"; };
+    </script>
+</body>
+</html>
