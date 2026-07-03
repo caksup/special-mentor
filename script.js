@@ -1,5 +1,5 @@
 /* ==================================================
-   script.js - Super Creative Hub AEC (V5 - Julukan Mentor)
+   script.js - Super Creative Hub AEC (V6 - Sistem Tugas WA & Estafet)
    ================================================== */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -17,14 +17,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
-// 2. Database Kunci PIN & Julukan Mentor
 export const mentorData = {
-    "anam": { pin: "1111", julukan: "Mr. Anam" },
-    "rizal": { pin: "2222", julukan: "Mr. Rizal" },
-    "budi": { pin: "3333", julukan: "Mr. Budi" },
-    "nandika": { pin: "4444", julukan: "Mr. Nandika" },
-    "huda": { pin: "5555", julukan: "Mr. Huda" },
-    "afif": { pin: "6666", julukan: "Mr. Afif" },
+    "anam": { pin: "1111", julukan: "Mr. Anam" }, "rizal": { pin: "2222", julukan: "Mr. Rizal" },
+    "budi": { pin: "3333", julukan: "Mr. Budi" }, "nandika": { pin: "4444", julukan: "Mr. Nandika" },
+    "huda": { pin: "5555", julukan: "Mr. Huda" }, "afif": { pin: "6666", julukan: "Mr. Afif" },
     "sup": { pin: "7777", julukan: "Mr. Sup" }
 };
 
@@ -43,32 +39,35 @@ export function listenToGlobalInfo(callback) {
     });
 }
 
-export function listenToRiwayatInfo(callback) {
-    onSnapshot(query(collection(db, "riwayat_info"), orderBy("waktu", "desc")), (snap) => {
-        let list = []; snap.forEach(doc => list.push({ id: doc.id, ...doc.data() })); callback(list);
-    });
-}
-
 export async function updateGlobalInfo(dataData) {
     await setDoc(doc(db, "settings", "global_info"), { ...dataData, waktuUpdate: serverTimestamp() });
     return await addDoc(collection(db, "riwayat_info"), { ...dataData, waktu: serverTimestamp() });
 }
 
-export async function sendLogbook(mentorId, namaMentor, kelas, jamKe, materiArray, laporanSiswa, catatanKendala, arraySiswa) {
+// UPDATE: Tambah Parameter tugasSiswa di Logbook
+export async function sendLogbook(mentorId, namaMentor, kelas, jamKe, materiArray, laporanSiswa, catatanKendala, arraySiswa, tugasSiswa) {
     return await addDoc(collection(db, "logbooks"), {
         mentorId, nama: namaMentor, kelas, jamKe, materi: materiArray, 
-        laporanSiswa, catatanKendala, dataSiswa: arraySiswa || [], waktu: serverTimestamp()
+        laporanSiswa, catatanKendala, dataSiswa: arraySiswa || [], tugasSiswa: tugasSiswa || "", waktu: serverTimestamp()
     });
 }
 
-export async function updateLogbook(docId, dataBaru) {
-    return await updateDoc(doc(db, "logbooks", docId), dataBaru);
-}
-
+export async function updateLogbook(docId, dataBaru) { return await updateDoc(doc(db, "logbooks", docId), dataBaru); }
 export async function deleteLogbook(docId) { return await deleteDoc(doc(db, "logbooks", docId)); }
 
 export function listenToLogbooks(callback) {
     onSnapshot(query(collection(db, "logbooks"), orderBy("waktu", "desc")), (snap) => {
+        let list = []; snap.forEach(doc => list.push({ id: doc.id, ...doc.data() })); callback(list);
+    });
+}
+
+// FUNGSI BARU: Sistem Tugas WA Sore (Jam 16.00)
+export async function sendTugasWA(targetKelas, linkGambar, instruksi) {
+    return await addDoc(collection(db, "tugas_wa"), { targetKelas, linkGambar, instruksi, waktu: serverTimestamp() });
+}
+export async function deleteTugasWA(docId) { return await deleteDoc(doc(db, "tugas_wa", docId)); }
+export function listenToTugasWA(callback) {
+    onSnapshot(query(collection(db, "tugas_wa"), orderBy("waktu", "desc")), (snap) => {
         let list = []; snap.forEach(doc => list.push({ id: doc.id, ...doc.data() })); callback(list);
     });
 }
