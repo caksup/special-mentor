@@ -11,6 +11,7 @@
 <body class="bg-light">
     <div class="app-wrapper">
         
+        <!-- HEADER PROFESIONAL MENTOR V7 -->
         <nav class="navbar navbar-expand bg-white shadow-sm mb-4 border-bottom border-primary border-3">
             <div class="container-fluid px-3">
                 <a class="navbar-brand fw-bold text-primary d-flex align-items-center" href="#">
@@ -21,10 +22,12 @@
                     </div>
                 </a>
                 <div class="d-flex align-items-center">
+                    <!-- Jam & Tanggal Header -->
                     <div class="text-end me-3 text-secondary border-end pe-3 d-none d-sm-block">
                         <div id="headDate" class="fw-bold" style="font-size: 0.7rem;">Tanggal</div>
                         <div id="headClock" class="font-monospace fw-bold text-primary" style="font-size: 0.9rem;">00:00:00</div>
                     </div>
+                    <!-- Profil Tutor -->
                     <div class="text-end me-3 d-none d-sm-block">
                         <div class="text-secondary small fw-bold" id="userNameDisplay">Memuat...</div>
                     </div>
@@ -35,6 +38,7 @@
 
         <div class="container pb-5">
             <div class="row">
+                <!-- MENU SAMPING MENTOR -->
                 <div class="col-12 col-md-3 mb-4">
                     <div class="card card-custom p-2 shadow-sm border-0">
                         <ul class="nav nav-pills flex-row flex-md-column nav-fill gap-1" id="menuTabs">
@@ -48,6 +52,7 @@
 
                 <div class="col-12 col-md-9">
                     <div class="tab-content">
+                        <!-- TAB 1: INFO -->
                         <div class="tab-pane fade show active" id="beranda">
                             <div class="card card-custom p-4 text-center mb-4 shadow-sm border-0 bg-white">
                                 <h1 id="txtClockDash" class="digital-clock-dash mb-0 text-primary">00:00:00</h1>
@@ -55,6 +60,7 @@
                             </div>
                         </div>
 
+                        <!-- TAB 2: LOGBOOK & TUGAS ESTAFET -->
                         <div class="tab-pane fade" id="logbook">
                             <div class="card card-custom p-4 shadow-sm border-top border-primary border-4">
                                 <h5 class="fw-bold mb-3 border-bottom pb-2">Formulir Sesi & Estafet Kelas</h5>
@@ -76,17 +82,21 @@
                                     </div>
                                 </div>
 
+                                <!-- RENDER CEKLIS MATERI 3 PILAR KURIKULUM AEC -->
                                 <div class="mb-3">
                                     <label class="form-label fw-bold text-secondary small">MATERI KURIKULUM YANG DIAJARKAN</label>
                                     <div class="bg-light p-3 rounded-3 border">
+                                        <!-- Sub-Blok Vocabulary -->
                                         <div class="mb-3">
                                             <h6 class="text-xs fw-bold text-primary mb-1 border-bottom pb-1">A. VOCABULARY MORNING</h6>
                                             <div id="boxVocab" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div>
                                         </div>
+                                        <!-- Sub-Blok Speaking -->
                                         <div class="mb-3">
                                             <h6 class="text-xs fw-bold text-success mb-1 border-bottom pb-1">B. SPEAKING</h6>
                                             <div id="boxSpeaking" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div>
                                         </div>
+                                        <!-- Sub-Blok Grammar -->
                                         <div>
                                             <h6 class="text-xs fw-bold text-danger mb-1 border-bottom pb-1">C. GRAMMAR</h6>
                                             <div id="boxGrammar" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div>
@@ -112,6 +122,7 @@
                             </div>
                         </div>
 
+                        <!-- TAB 3: HISTORY -->
                         <div class="tab-pane fade" id="rekap">
                             <div class="card card-custom p-4 shadow-sm"><h5 class="fw-bold text-primary mb-3">History Harian AEC</h5>
                                 <div class="row g-2 mb-3"><div class="col-6"><select id="filterHari" class="form-select form-select-sm bg-light fw-bold text-danger"><option value="SEMUA">Memuat...</option></select></div><div class="col-6"><select id="filterKelas" class="form-select form-select-sm bg-light fw-bold text-secondary"><option value="SEMUA">Semua Kelas</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option></select></div></div>
@@ -119,6 +130,7 @@
                             </div>
                         </div>
 
+                        <!-- TAB 4: TUGAS WA -->
                         <div class="tab-pane fade" id="tugaswa">
                             <div class="card card-custom p-4 shadow-sm border-top border-success border-4">
                                 <h5 class="fw-bold text-success mb-1"><i class="bi bi-whatsapp me-2"></i> Penugasan WhatsApp</h5>
@@ -161,7 +173,6 @@
             rawMasterSiswa = data.masterSiswa || ""; 
             document.getElementById('headHariKe').innerText = "Timeline: " + (data.hariKe || "Belum diatur");
 
-            // Fungsi Pembentuk Checkbox Dinamis Per Pilar
             const renderChecklist = (targetDivId, arrayMateri, className) => {
                 const box = document.getElementById(targetDivId); box.innerHTML = "";
                 if(!arrayMateri || arrayMateri.length === 0) { box.innerHTML = '<span class="text-muted text-xs">Belum di-setup admin.</span>'; return; }
@@ -188,7 +199,6 @@
             else { foundSiswa.forEach(nama => { tbody.innerHTML += `<tr class="baris-siswa" data-nama="${nama}"><td class="fw-bold">${nama}</td><td><select class="form-select form-select-sm sel-hadir fw-bold text-center px-1"><option value="h">h</option><option value="i">i</option><option value="s">s</option><option value="a">a</option></select></td><td><input type="text" class="form-control form-control-sm in-nilai text-center px-1" placeholder="..."></td><td><input type="text" class="form-control form-control-sm in-catatan" placeholder="Catatan..."></td></tr>`; }); }
         };
 
-        // Render History
         let masterLogData = [];
         listenToLogbooks((logData) => { masterLogData = logData; ekstrakHari(); renderLogbookList(); });
         document.getElementById('filterKelas').onchange = () => renderLogbookList(); document.getElementById('filterHari').onchange = () => renderLogbookList();
@@ -217,7 +227,6 @@
             setTimeout(() => {
                 document.querySelectorAll('input[name="jamSesi"]').forEach(r => r.checked = r.value === data.jamKe);
                 
-                // Kembalikan checklist per pilar
                 const groups = data.materiGroup || { vocab:[], speaking:[], grammar:[] };
                 document.querySelectorAll('.check-vocab').forEach(cb => cb.checked = (groups.vocab || []).includes(cb.value));
                 document.querySelectorAll('.check-speaking').forEach(cb => cb.checked = (groups.speaking || []).includes(cb.value));
@@ -232,19 +241,18 @@
             }, 300);
         }
 
-        document.getElementById("btnBatalEdit").onclick = () => { document.getElementById("editDocId").value = ""; document.getElementById("inputKelas").value = ""; document.getElementById("inputKelas").dispatchEvent(new Event('change')); document.getElementById("btnSave").innerHTML = '<i class="bi bi-send-check me-2"></i> SIMPAN LOGBOOK SESI INI'; document.getElementById("btnBatalEdit").classList.add("d-none"); };
+        document.getElementById("btnBatalEdit").onclick = () => { document.getElementById("editDocId").value = ""; document.getElementById("inputKelas").value = ""; document.getElementById("inputKelas").dispatchEvent(new Event('change')); document.getElementById("btnSave").innerHTML = '<i class="bi bi-send-check me-2"></i> SIMPAN LOGBOOK & UPDATE PENCAPAIAN'; document.getElementById("btnBatalEdit").classList.add("d-none"); };
 
         document.getElementById("btnSave").onclick = async () => {
             const kls = document.getElementById("inputKelas").value; if(!kls) return alert("Pilih Kelas!");
             const jam = document.querySelector('input[name="jamSesi"]:checked').value;
             
-            // Kumpulkan data terpisah dari 3 pilar
             const vChecked = Array.from(document.querySelectorAll('.check-vocab:checked')).map(c => c.value);
             const sChecked = Array.from(document.querySelectorAll('.check-speaking:checked')).map(c => c.value);
             const gChecked = Array.from(document.querySelectorAll('.check-grammar:checked')).map(c => c.value);
             
             const materiGroup = { vocab: vChecked, speaking: sChecked, grammar: gChecked };
-            const flatMateri = [...vChecked, ...sChecked, ...gChecked]; // Gabung untuk history logbook
+            const flatMateri = [...vChecked, ...sChecked, ...gChecked];
 
             const tg = document.getElementById("notesTugasSiswa").value; const not = document.getElementById("notesSiswa").value; const edId = document.getElementById("editDocId").value;
             let arraySiswa = []; document.querySelectorAll('.baris-siswa').forEach(b => { arraySiswa.push({ nama: b.dataset.nama, kehadiran: b.querySelector('.sel-hadir').value, nilai: b.querySelector('.in-nilai').value, catatan: b.querySelector('.in-catatan').value }); });
@@ -260,7 +268,7 @@
             } catch (error) { alert("Error database!"); document.getElementById("btnSave").disabled = false; }
         };
 
-        // RENDER TUGAS WA
+        // RENDER TUGAS WA (YANG TYPO TADI)
         let masterTugasWA = [];
         listenToTugasWA((data) => { masterTugasWA = data; renderTugasWA(); });
         document.getElementById("filterWA").onchange = () => renderTugasWA();
@@ -280,7 +288,7 @@
                         <button class="btn btn-outline-success btn-sm w-100 fw-bold" onclick="copyWA('txtWA_${i}')"><i class="bi bi-copy me-1"></i> Salin Instruksi Tugas</button>
                     </div>`;
             });
-        });
+        } // <-- INI YANG SUDAH DIBENARKAN
 
         window.copyWA = function(idDiv) {
             const txt = document.getElementById(idDiv).innerText;
