@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Superadmin - Jatirogo Creative Hub</title>
+    <title>Panel Pengendali Admin - Jatirogo Creative Hub</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
     <link rel="stylesheet" href="style.css">
 </head>
-<body style="background-color: #1e293b;"> <div class="app-wrapper">
+<body style="background-color: #1e293b;">
+
+    <div class="app-wrapper">
         <nav class="navbar navbar-expand navbar-dark bg-dark shadow-sm mb-4 border-bottom border-secondary">
             <div class="container-fluid px-3">
                 <a class="navbar-brand fw-bold text-white" href="#">
-                    <i class="bi bi-cpu-fill text-primary me-2"></i> KONTROL SUPERADMIN
+                    <i class="bi bi-shield-fill-check text-warning me-2"></i> PANEL KONTROL MANAJEMEN
                 </a>
                 <div class="d-flex align-items-center">
-                    <span id="userNameDisplay" class="fw-bold me-3 text-light" style="font-size: 0.9rem;">Memuat...</span>
+                    <span id="userNameDisplay" class="fw-bold me-3 text-light" style="font-size: 0.9rem;">Memuat Otoritas...</span>
                     <button id="btnLogout" class="btn btn-outline-danger btn-sm fw-bold">
                         <i class="bi bi-power"></i> Keluar
                     </button>
@@ -29,36 +31,44 @@
             <div class="row justify-content-center">
                 <div class="col-12 col-lg-8">
                     
-                    <div class="card card-custom p-4 shadow-lg border-0 mb-4">
+                    <div class="card card-custom p-4 shadow-lg border-0 mb-4 bg-white">
                         <div class="text-center mb-4">
-                            <h4 class="fw-bold text-dark"><i class="bi bi-broadcast me-2"></i> Pusat Transmisi Informasi</h4>
-                            <p class="text-muted small">Apa yang Anda ketik dan simpan di sini akan langsung disiarkan ke halaman depan dan halaman mentor secara real-time.</p>
+                            <h4 class="fw-bold text-dark"><i class="bi bi-broadcast text-danger me-2"></i> Konsol Siaran Real-Time</h4>
+                            <p class="text-muted small">Semua parameter informasi di bawah ini terhubung langsung ke halaman depan login dan dashboard mentor secara instan.</p>
                         </div>
 
-                        <hr>
+                        <hr class="mb-4">
 
                         <div class="mb-4">
-                            <label class="form-label fw-bold text-primary"><i class="bi bi-calendar-event me-2"></i> 1. Jadwal (Tampil di Halaman Login Depan)</label>
-                            <textarea id="inputJadwal" class="form-control bg-light border-primary border-opacity-25" rows="3" placeholder="Ketik jadwal hari ini..."></textarea>
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label fw-bold text-info"><i class="bi bi-megaphone-fill me-2"></i> 2. Notif Briefing (Tampil di Dashboard Mentor)</label>
-                            <textarea id="inputBriefing" class="form-control bg-light border-info border-opacity-25" rows="2" placeholder="Ketik arahan briefing sebelum kelas..."></textarea>
+                            <label class="form-label fw-bold text-primary mb-2">
+                                <i class="bi bi-calendar-event-fill me-2"></i> 1. Papan Jadwal Harian (Tampil di Halaman Login Depan)
+                            </label>
+                            <textarea id="inputJadwal" class="form-control bg-light border-primary border-opacity-25" rows="3" placeholder="Contoh:&#10;Sesi Pagi (08.00 - 11.00): Greeting & Materi&#10;Sesi Siang (13.00 - 16.00): Praktik Mandiri"></textarea>
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label fw-bold text-warning"><i class="bi bi-exclamation-triangle-fill me-2"></i> 3. Catatan Penting (Tampil di Dashboard Mentor)</label>
-                            <textarea id="inputCatatan" class="form-control bg-light border-warning border-opacity-25" rows="2" placeholder="Peringatan atau info krusial..."></textarea>
+                            <label class="form-label fw-bold text-info mb-2">
+                                <i class="bi bi-megaphone-fill me-2"></i> 2. Notif Briefing Kelas (Tampil di Atas Dashboard Mentor)
+                            </label>
+                            <textarea id="inputBriefing" class="form-control bg-light border-info border-opacity-25" rows="2" placeholder="Tulis instruksi briefing penting untuk para mentor sebelum mengajar..."></textarea>
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label fw-bold text-success"><i class="bi bi-flag-fill me-2"></i> 4. Goal Kelas Harian (Tampil di Dashboard Mentor)</label>
-                            <textarea id="inputGoal" class="form-control bg-light border-success border-opacity-25" rows="2" placeholder="Target pencapaian siswa hari ini..."></textarea>
+                            <label class="form-label fw-bold text-warning mb-2">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i> 3. Catatan Penting & Evaluasi (Tampil di Dashboard Mentor)
+                            </label>
+                            <textarea id="inputCatatan" class="form-control bg-light border-warning border-opacity-25" rows="2" placeholder="Peringatan khusus, kendala teknis, atau pengingat administrasi kelas..."></textarea>
                         </div>
 
-                        <button id="btnSaveGlobal" class="btn btn-dark btn-lg w-100 fw-bold shadow mt-2">
-                            <i class="bi bi-send-fill me-2"></i> SIARKAN DATA SEKARANG
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-success mb-2">
+                                <i class="bi bi-flag-fill me-2"></i> 4. Target / Goal Kelas Harian (Tampil di Dashboard Mentor)
+                            </label>
+                            <textarea id="inputGoal" class="form-control bg-light border-success border-opacity-25" rows="2" placeholder="Goal utama pembelajaran yang wajib dicapai siswa hari ini..."></textarea>
+                        </div>
+
+                        <button id="btnSaveGlobal" class="btn btn-dark btn-lg w-100 fw-bold shadow mt-3 py-3">
+                            <i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI & SIARKAN SEKARANG
                         </button>
                     </div>
 
@@ -71,28 +81,30 @@
     <script type="module">
         import { listenToGlobalInfo, updateGlobalInfo } from './script.js';
 
-        // 1. Cek Proteksi Keamanan Berlapis (HANYA SUP YANG BOLEH MASUK)
+        // 1. Validasi Keamanan Berlapis (Hanya 'sup' dan 'afif' yang boleh masuk)
         const userVal = sessionStorage.getItem("loggedInUser");
         const userText = sessionStorage.getItem("loggedInName");
 
-        if (userVal !== "sup") {
-            // Kalau yang login bukan Sup (misal mentor iseng ngetik url superuser.html), tendang ke depan!
-            alert("PELANGGARAN AKSES! Anda bukan Superadmin.");
+        if (userVal !== "sup" && userVal !== "afif") {
+            // Jika ada yang mencoba bypass via URL langsung, paksa tendang ke halaman login utama
+            alert("AKSES ILEGAL DETEKSI: Halaman ini memerlukan hak akses tingkat manajemen.");
             window.location.href = "index.html";
         }
 
-        // Tampilkan Nama Superadmin
-        document.getElementById("userNameDisplay").innerText = "Komandan " + userText;
+        // Tampilkan nama pejabat manajemen di pojok kanan atas navbar
+        document.getElementById("userNameDisplay").innerText = "Otoritas: " + userText;
 
-        // 2. Tarik Data Terakhir dari Database saat halaman dibuka
+        // 2. Tarik Data Terakhir dari Database (Agar input tidak kosong saat halaman dimuat)
         listenToGlobalInfo((data) => {
-            document.getElementById('inputJadwal').value = data.jadwal || "";
-            document.getElementById('inputBriefing').value = data.briefing || "";
-            document.getElementById('inputCatatan').value = data.catatan || "";
-            document.getElementById('inputGoal').value = data.goal || "";
+            if (data) {
+                document.getElementById('inputJadwal').value = data.jadwal || "";
+                document.getElementById('inputBriefing').value = data.briefing || "";
+                document.getElementById('inputCatatan').value = data.catatan || "";
+                document.getElementById('inputGoal').value = data.goal || "";
+            }
         });
 
-        // 3. Tombol Eksekusi: Simpan & Siarkan
+        // 3. Logika Penyimpanan dan Penyiaran Data Real-Time
         document.getElementById("btnSaveGlobal").onclick = async () => {
             const jadwalVal = document.getElementById('inputJadwal').value;
             const briefingVal = document.getElementById('inputBriefing').value;
@@ -100,11 +112,11 @@
             const goalVal = document.getElementById('inputGoal').value;
 
             try {
-                // Ubah tulisan tombol pas loading
                 const btn = document.getElementById("btnSaveGlobal");
-                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> MENYIARKAN DATA...';
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> SEDANG MEMPROSES SIARAN DATA...';
+                btn.disabled = true;
                 
-                // Kirim ke database lewat script.js
+                // Kirim paket data lengkap ke Firebase Firestore
                 await updateGlobalInfo({
                     jadwal: jadwalVal,
                     briefing: briefingVal,
@@ -112,16 +124,19 @@
                     goal: goalVal
                 });
                 
-                alert("Sukses! Semua instruksi telah disiarkan ke layar Mentor dan Halaman Depan.");
-                btn.innerHTML = '<i class="bi bi-send-fill me-2"></i> SIARKAN DATA SEKARANG';
+                alert("Sukses: Seluruh data informasi telah diperbarui dan langsung disiarkan ke semua sistem!");
+                
+                btn.innerHTML = '<i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI & SIARKAN SEKARANG';
+                btn.disabled = false;
                 
             } catch (error) {
-                alert("Gagal menyiarkan! Cek koneksi atau aturan Firestore Anda.");
-                document.getElementById("btnSaveGlobal").innerHTML = '<i class="bi bi-send-fill me-2"></i> SIARKAN DATA SEKARANG';
+                alert("Gagal memperbarui data! Silakan periksa koneksi internet atau hak akses database Firestore Anda.");
+                document.getElementById("btnSaveGlobal").innerHTML = '<i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI & SIARKAN SEKARANG';
+                document.getElementById("btnSaveGlobal").disabled = false;
             }
         };
 
-        // 4. Tombol Log Out / Keluar
+        // 4. Mekanisme Keluar (Log Out) dari Sesi Manajemen
         document.getElementById("btnLogout").onclick = () => {
             sessionStorage.clear();
             window.location.href = "index.html";
