@@ -8,14 +8,30 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="bg-light">
     <div class="app-wrapper">
-        <nav class="navbar navbar-expand bg-white shadow-sm mb-4">
+        
+        <!-- HEADER PROFESIONAL BARU MENTOR -->
+        <nav class="navbar navbar-expand bg-white shadow-sm mb-4 border-bottom border-primary border-3">
             <div class="container-fluid px-3">
-                <a class="navbar-brand fw-bold text-primary" href="#"><i class="bi bi-layers-half me-1"></i> Area Tutor AEC</a>
+                <a class="navbar-brand fw-bold text-primary d-flex align-items-center" href="#">
+                    <i class="bi bi-layers-half me-2" style="font-size: 1.5rem;"></i>
+                    <div>
+                        <div style="font-size: 1rem; line-height: 1;">AREA TUTOR AEC</div>
+                        <div id="headHariKe" class="badge bg-danger mt-1" style="font-size: 0.65rem;">Timeline: Memuat...</div>
+                    </div>
+                </a>
                 <div class="d-flex align-items-center">
-                    <span id="userNameDisplay" class="fw-bold me-3 text-secondary" style="font-size: 0.9rem;">Memuat...</span>
-                    <button id="btnLogout" class="btn btn-outline-danger btn-sm fw-bold"><i class="bi bi-power"></i> Keluar</button>
+                    <!-- Jam & Tanggal Header -->
+                    <div class="text-end me-3 text-secondary border-end pe-3 d-none d-sm-block">
+                        <div id="headDate" class="fw-bold" style="font-size: 0.7rem;">Tanggal</div>
+                        <div id="headClock" class="font-monospace fw-bold text-primary" style="font-size: 0.9rem;">00:00:00</div>
+                    </div>
+                    <!-- Profil Tutor -->
+                    <div class="text-end me-3 d-none d-sm-block">
+                        <div class="text-secondary small fw-bold" id="userNameDisplay">Memuat...</div>
+                    </div>
+                    <button id="btnLogout" class="btn btn-outline-danger btn-sm fw-bold"><i class="bi bi-power"></i></button>
                 </div>
             </div>
         </nav>
@@ -38,7 +54,7 @@
                     <div class="tab-content">
                         <!-- TAB 1: INFO -->
                         <div class="tab-pane fade show active" id="beranda">
-                            <div class="card card-custom p-4 text-center mb-4 shadow-sm">
+                            <div class="card card-custom p-4 text-center mb-4 shadow-sm border-0 bg-white">
                                 <h1 id="txtClockDash" class="digital-clock-dash mb-0 text-primary">00:00:00</h1>
                                 <p id="txtDateDash" class="text-muted fw-bold text-uppercase mb-0">Tanggal</p>
                             </div>
@@ -75,7 +91,6 @@
                                     </div>
                                 </div>
 
-                                <!-- FUNGSI BARU: ESTAFET TUGAS -->
                                 <div class="mb-3">
                                     <label class="form-label fw-bold text-success small">CATATAN & TUGAS ESTAFET UNTUK SISWA</label>
                                     <textarea id="notesTugasSiswa" class="form-control bg-success bg-opacity-10 border-success border-opacity-50" rows="2" placeholder="Tulis tugas estafet yang harus dilanjut ke jam berikutnya atau PR..."></textarea>
@@ -124,11 +139,23 @@
         const userVal = sessionStorage.getItem("loggedInUser");
         if (!userVal || userVal === "sup") window.location.href = "index.html";
         document.getElementById("userNameDisplay").innerText = "Tutor: " + sessionStorage.getItem("loggedInName");
+        
+        // Aktifkan Jam Besar di Dashboard
         startClock('txtClockDash', 'txtDateDash');
+        // Aktifkan Jam Kecil di Header secara manual biar tidak tabrakan
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('headClock').innerText = now.toLocaleTimeString('id-ID');
+            document.getElementById('headDate').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        }, 1000);
 
         let rawMasterSiswa = "";
         listenToGlobalInfo((data) => {
             rawMasterSiswa = data.masterSiswa || ""; 
+            
+            // Tampilkan Timeline Hari ke-X di Header Mentor
+            document.getElementById('headHariKe').innerText = "Timeline: " + (data.hariKe || "Belum diatur");
+
             const containerMateri = document.getElementById("containerChecklistMateri"); containerMateri.innerHTML = "";
             (data.masterMateri || []).forEach((materi, i) => { containerMateri.innerHTML += `<div class="form-check mb-1"><input class="form-check-input check-materi" type="checkbox" value="${materi}" id="m_${i}"><label class="form-check-label text-sm fw-bold" for="m_${i}">${materi}</label></div>`; });
         });
