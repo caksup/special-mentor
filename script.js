@@ -1,9 +1,9 @@
 /* ==================================================
-   script.js - Pusat Data & Logika Firebase
+   script.js - Pusat Data & Logika Firebase (V2)
    ================================================== */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, doc, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, doc, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // 1. Konfigurasi Firebase Proyek Anda
 const firebaseConfig = {
@@ -19,16 +19,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
-// 2. Database Kunci PIN Rahasia (Hanya Superadmin yang tahu)
+// 2. Database Kunci PIN Rahasia
 export const userPins = {
     "anam": "1111",
     "rizal": "2222",
     "budi": "3333",
     "afif": "4444",
-    "sup": "5555" // Ini PIN Superadmin
+    "sup": "5555"
 };
 
-// 3. Fungsi Jam Digital Real-time untuk Halaman Utama & Dashboard
+// 3. Fungsi Jam Digital Real-time
 export function startClock(clockId, dateId) {
     function update() {
         const now = new Date();
@@ -42,7 +42,7 @@ export function startClock(clockId, dateId) {
     update();
 }
 
-// 4. Fungsi Mengambil Info Global (Jadwal, Briefing, Catatan, Goal) dari Superadmin
+// 4. Fungsi Mengambil Info Global (Jadwal, Briefing, Catatan, Goal)
 export function listenToGlobalInfo(callback) {
     const infoRef = doc(db, "settings", "global_info");
     onSnapshot(infoRef, (docSnap) => {
@@ -59,7 +59,7 @@ export function listenToGlobalInfo(callback) {
     });
 }
 
-// 5. Fungsi Superadmin untuk Update Info Global ke Database
+// 5. Fungsi Superadmin untuk Update Info Global
 export async function updateGlobalInfo(dataData) {
     const infoRef = doc(db, "settings", "global_info");
     return await setDoc(infoRef, {
@@ -68,23 +68,42 @@ export async function updateGlobalInfo(dataData) {
     });
 }
 
-// 6. Fungsi Mentor untuk Mengirim Logbook
-export async function sendLogbook(namaMentor, materiArray, catatanTeks) {
+// 6. Fungsi Mentor untuk Mengirim Logbook (Struktur Data Baru)
+export async function sendLogbook(mentorId, namaMentor, kelas, jamKe, materiArray, laporanSiswa, catatanKendala) {
     return await addDoc(collection(db, "logbooks"), {
+        mentorId: mentorId,
         nama: namaMentor,
+        kelas: kelas,
+        jamKe: jamKe,
         materi: materiArray,
-        catatan: catatanTeks,
+        laporanSiswa: laporanSiswa,
+        catatanKendala: catatanKendala,
         waktu: serverTimestamp()
     });
 }
 
-// 7. Fungsi Sinkronisasi Data Logbook Bersama (Real-time)
+// 7. Fungsi Update/Edit Logbook (Bisa dipakai Mentor maupun Superadmin)
+export async function updateLogbook(docId, dataBaru) {
+    const logRef = doc(db, "logbooks", docId);
+    return await updateDoc(logRef, dataBaru);
+}
+
+// 8. Fungsi Hapus Logbook (Khusus Superadmin)
+export async function deleteLogbook(docId) {
+    const logRef = doc(db, "logbooks", docId);
+    return await deleteDoc(logRef);
+}
+
+// 9. Fungsi Sinkronisasi Data Logbook Bersama (Real-time dengan ID Dokumen)
 export function listenToLogbooks(callback) {
     const q = query(collection(db, "logbooks"), orderBy("waktu", "desc"));
     onSnapshot(q, (snap) => {
         let listData = [];
         snap.forEach(doc => {
-            listData.push(doc.data());
+            listData.push({
+                id: doc.id,
+                ...doc.data()
+            });
         });
         callback(listData);
     });
