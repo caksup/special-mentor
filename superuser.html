@@ -12,23 +12,20 @@
 <body style="background-color: #1e293b;">
     <div class="app-wrapper">
         
-        <!-- HEADER PROFESIONAL BARU -->
         <nav class="navbar navbar-expand bg-dark navbar-dark shadow-sm mb-4 border-bottom border-warning border-3">
             <div class="container-fluid px-3">
                 <a class="navbar-brand fw-bold text-white d-flex align-items-center" href="#">
                     <i class="bi bi-shield-fill-check text-warning me-2" style="font-size: 1.5rem;"></i>
                     <div>
-                        <div style="font-size: 1rem; line-height: 1;">KONTROL V6</div>
+                        <div style="font-size: 1rem; line-height: 1;">KONTROL V7</div>
                         <div id="headHariKe" class="badge bg-danger mt-1" style="font-size: 0.65rem;">Timeline: Memuat...</div>
                     </div>
                 </a>
                 <div class="d-flex align-items-center">
-                    <!-- Jam & Tanggal -->
                     <div class="text-end me-3 text-light border-end border-secondary pe-3 d-none d-sm-block">
                         <div id="headDate" class="fw-bold text-warning" style="font-size: 0.7rem;">Tanggal</div>
                         <div id="headClock" class="font-monospace fw-bold" style="font-size: 0.9rem;">00:00:00</div>
                     </div>
-                    <!-- Profil Admin -->
                     <div class="text-end me-3 d-none d-sm-block">
                         <div class="text-light small fw-bold" id="userNameDisplay">Otoritas...</div>
                     </div>
@@ -39,20 +36,20 @@
 
         <div class="container pb-5">
             <div class="row">
-                <!-- Kolom Kiri: KONSOL & TUGAS WA -->
+                <!-- Kolom Kiri: KONSOL & KURIKULUM & TUGAS -->
                 <div class="col-12 col-lg-5 mb-4">
-                    <ul class="nav nav-tabs mb-3" id="adminTabs" role="tablist">
-                        <li class="nav-item"><button class="nav-link active fw-bold" data-bs-toggle="tab" data-bs-target="#tab-konsol" type="button">Konsol Sistem</button></li>
-                        <li class="nav-item"><button class="nav-link fw-bold text-success" data-bs-toggle="tab" data-bs-target="#tab-tugas" type="button"><i class="bi bi-whatsapp me-1"></i> Template Tugas WA</button></li>
+                    <ul class="nav nav-tabs mb-3 text-xs" id="adminTabs" role="tablist">
+                        <li class="nav-item"><button class="nav-link active fw-bold" data-bs-toggle="tab" data-bs-target="#tab-konsol" type="button"><i class="bi bi-gear-fill"></i> Setup</button></li>
+                        <li class="nav-item"><button class="nav-link fw-bold text-primary" data-bs-toggle="tab" data-bs-target="#tab-kurikulum" type="button"><i class="bi bi-bar-chart-fill"></i> Kurikulum</button></li>
+                        <li class="nav-item"><button class="nav-link fw-bold text-success" data-bs-toggle="tab" data-bs-target="#tab-tugas" type="button"><i class="bi bi-whatsapp"></i> WA</button></li>
                     </ul>
 
                     <div class="tab-content">
-                        <!-- Sub-Tab: Konsol Master -->
+                        <!-- Sub-Tab 1: Konsol Master (Setup Kurikulum) -->
                         <div class="tab-pane fade show active" id="tab-konsol">
                             <div class="card card-custom p-3 shadow-lg bg-white h-100">
-                                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-broadcast text-danger me-2"></i> Master Info</h6>
+                                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-broadcast text-danger me-2"></i> Master Info & Kurikulum</h6>
                                 
-                                <!-- INPUT TIMELINE HARI KE-X -->
                                 <div class="mb-3 p-2 border border-warning rounded bg-warning bg-opacity-10">
                                     <label class="form-label fw-bold text-danger text-xs mb-1">0. TIMELINE HARI KURSUS</label>
                                     <input type="text" id="inputHariKe" class="form-control form-control-sm fw-bold text-primary border-warning" placeholder="Contoh: Hari ke-1 (Orientasi)">
@@ -60,17 +57,42 @@
 
                                 <div class="mb-2"><label class="form-label fw-bold text-primary text-xs mb-1">1. JADWAL FULL</label><textarea id="inputJadwal" class="form-control bg-light text-xs" rows="2"></textarea></div>
                                 <div class="mb-2"><label class="form-label fw-bold text-info text-xs mb-1">2. NOTIF BRIEFING</label><textarea id="inputBriefing" class="form-control bg-light text-xs" rows="2"></textarea></div>
-                                <div class="mb-2"><label class="form-label fw-bold text-success text-xs mb-1">3. GOAL HARIAN</label><textarea id="inputGoal" class="form-control bg-light text-xs" rows="2"></textarea></div>
-                                <div class="mb-2"><label class="form-label fw-bold text-secondary text-xs mb-1">4. MASTER MATERI (Pisahkan Enter)</label><textarea id="inputMasterMateri" class="form-control bg-light text-xs" rows="2"></textarea></div>
-                                <div class="mb-3"><label class="form-label fw-bold text-danger text-xs mb-0">5. DATA SISWA (Cth: Kelas A: Budi)</label><textarea id="inputMasterSiswa" class="form-control bg-light text-xs border-danger border-opacity-25" rows="3"></textarea></div>
+                                <div class="mb-3"><label class="form-label fw-bold text-danger text-xs mb-0">3. DATA SISWA (Cth: Kelas A: Budi, Andi)</label><textarea id="inputMasterSiswa" class="form-control bg-light text-xs border-danger border-opacity-25" rows="2"></textarea></div>
+                                
+                                <!-- SETUP 3 PILAR KURIKULUM -->
+                                <div class="p-2 border rounded bg-light mb-3">
+                                    <h6 class="text-xs fw-bold text-dark mb-2 border-bottom pb-1">4. MASTER MATERI (Pisahkan dgn Enter)</h6>
+                                    <label class="form-label fw-bold text-primary text-xs mb-0">A. VOCABULARY</label>
+                                    <textarea id="inputVocab" class="form-control text-xs mb-2 border-primary border-opacity-25" rows="2" placeholder="Introduction&#10;Hobby"></textarea>
+                                    <label class="form-label fw-bold text-success text-xs mb-0">B. SPEAKING</label>
+                                    <textarea id="inputSpeaking" class="form-control text-xs mb-2 border-success border-opacity-25" rows="2" placeholder="1. Introduction&#10;2. Hobby"></textarea>
+                                    <label class="form-label fw-bold text-danger text-xs mb-0">C. GRAMMAR</label>
+                                    <textarea id="inputGrammar" class="form-control text-xs border-danger border-opacity-25" rows="2" placeholder="Part of Speech&#10;Pro noun"></textarea>
+                                </div>
+
                                 <button id="btnSaveGlobal" class="btn btn-primary w-100 fw-bold shadow-sm py-2"><i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI SISTEM</button>
                             </div>
                         </div>
 
-                        <!-- Sub-Tab: Template Tugas WA Sore -->
+                        <!-- Sub-Tab 2: Monitor Pencapaian Kurikulum -->
+                        <div class="tab-pane fade" id="tab-kurikulum">
+                            <div class="card card-custom p-3 shadow-lg bg-white h-100 border-primary border-2">
+                                <h6 class="fw-bold text-primary mb-2"><i class="bi bi-clipboard-data me-2"></i> Tracker Kurikulum Otomatis</h6>
+                                <p class="text-xs text-muted mb-3 border-bottom pb-2">Pantau materi yang sudah tuntas diajarkan di tiap ruang kelas.</p>
+                                
+                                <select id="trackerKelas" class="form-select form-select-sm border-primary fw-bold mb-3">
+                                    <option value="Kelas A">Pencapaian: Kelas A</option><option value="Kelas B">Pencapaian: Kelas B</option>
+                                    <option value="Kelas C">Pencapaian: Kelas C</option><option value="Kelas D">Pencapaian: Kelas D</option>
+                                </select>
+
+                                <div id="areaTracker" class="overflow-auto pe-1" style="max-height: 380px;">Memuat pencapaian...</div>
+                            </div>
+                        </div>
+
+                        <!-- Sub-Tab 3: Template Tugas WA Sore -->
                         <div class="tab-pane fade" id="tab-tugas">
                             <div class="card card-custom p-3 shadow-lg bg-white h-100 border-success border-2">
-                                <h6 class="fw-bold text-success mb-3"><i class="bi bi-send-fill me-2"></i> Input Tugas via WA (Jam 16:00)</h6>
+                                <h6 class="fw-bold text-success mb-3"><i class="bi bi-send-fill me-2"></i> Penugasan (Jam 16:00)</h6>
                                 <div class="mb-2">
                                     <label class="form-label fw-bold text-xs mb-1">Target Kiriman</label>
                                     <select id="waTarget" class="form-select form-select-sm border-success">
@@ -95,7 +117,10 @@
                             <div><h5 class="fw-bold text-primary mb-1"><i class="bi bi-server me-2"></i> Moderasi & History</h5></div>
                             <button id="btnExportPDF" class="btn btn-danger fw-bold shadow-sm"><i class="bi bi-file-earmark-pdf-fill me-1"></i> PDF</button>
                         </div>
-                        <select id="filterHari" class="form-select form-select-sm border-2 fw-bold text-danger mb-3"><option value="SEMUA">Memuat Hari...</option></select>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6"><select id="filterHari" class="form-select form-select-sm border-2 fw-bold text-danger"><option value="SEMUA">Semua History</option></select></div>
+                            <div class="col-6"><select id="filterKelasHistori" class="form-select form-select-sm border-2 fw-bold text-secondary"><option value="SEMUA">Semua Kelas</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option></select></div>
+                        </div>
                         <div id="adminLogbookList" class="overflow-auto pe-1" style="max-height: 520px;">Memuat...</div>
                     </div>
                 </div>
@@ -109,34 +134,40 @@
         if (sessionStorage.getItem("loggedInUser") !== "sup" && sessionStorage.getItem("loggedInUser") !== "afif") window.location.href = "index.html";
         document.getElementById("userNameDisplay").innerText = "Otoritas: " + sessionStorage.getItem("loggedInName");
         
-        // Aktifkan Jam di Header
         startClock('headClock', 'headDate');
+
+        let rawKurikulum = { vocab: [], speaking: [], grammar: [] };
 
         listenToGlobalInfo((data) => {
             if (data) {
-                // Tampilkan Timeline Hari ke-X di Input dan Badge Navbar
                 document.getElementById('inputHariKe').value = data.hariKe || "";
                 document.getElementById('headHariKe').innerText = "Timeline: " + (data.hariKe || "Belum diatur");
-                
                 document.getElementById('inputJadwal').value = data.jadwal || ""; document.getElementById('inputBriefing').value = data.briefing || "";
-                document.getElementById('inputGoal').value = data.goal || ""; document.getElementById('inputMasterMateri').value = data.masterMateri ? data.masterMateri.join('\n') : "";
                 document.getElementById('inputMasterSiswa').value = data.masterSiswa || "";
+                
+                // Load Kurikulum Terpisah
+                rawKurikulum = data.kurikulum || { vocab: [], speaking: [], grammar: [] };
+                document.getElementById('inputVocab').value = rawKurikulum.vocab ? rawKurikulum.vocab.join('\n') : "";
+                document.getElementById('inputSpeaking').value = rawKurikulum.speaking ? rawKurikulum.speaking.join('\n') : "";
+                document.getElementById('inputGrammar').value = rawKurikulum.grammar ? rawKurikulum.grammar.join('\n') : "";
+                
+                renderTracker(); // Render jika info berubah
             }
         });
 
         document.getElementById("btnSaveGlobal").onclick = async () => {
-            const materiArray = document.getElementById('inputMasterMateri').value.split('\n').map(i => i.trim()).filter(i => i !== "");
+            const getArr = (id) => document.getElementById(id).value.split('\n').map(i => i.trim()).filter(i => i !== "");
+            const cur = { vocab: getArr('inputVocab'), speaking: getArr('inputSpeaking'), grammar: getArr('inputGrammar') };
             try {
                 await updateGlobalInfo({ 
-                    hariKe: document.getElementById('inputHariKe').value, // Simpan Timeline Hari
-                    jadwal: document.getElementById('inputJadwal').value, briefing: document.getElementById('inputBriefing').value, 
-                    goal: document.getElementById('inputGoal').value, masterMateri: materiArray, masterSiswa: document.getElementById('inputMasterSiswa').value 
+                    hariKe: document.getElementById('inputHariKe').value, jadwal: document.getElementById('inputJadwal').value, briefing: document.getElementById('inputBriefing').value, 
+                    masterSiswa: document.getElementById('inputMasterSiswa').value, kurikulum: cur
                 });
-                alert("Sukses diperbarui!");
+                alert("Sistem Kurikulum V7 Diperbarui!");
             } catch (e) { alert("Gagal update."); }
         };
 
-        // Modul TUGAS WA ADMIN
+        // Modul TUGAS WA
         document.getElementById("btnKirimTugasWA").onclick = async () => {
             const target = document.getElementById("waTarget").value; const gbr = document.getElementById("waGambar").value; const ins = document.getElementById("waInstruksi").value;
             if(!ins) return alert("Instruksi wajib diisi!");
@@ -151,13 +182,56 @@
                 list.innerHTML += `<div class="p-2 border rounded bg-light mb-2"><div class="d-flex justify-content-between"><span class="badge bg-success mb-1">${d.targetKelas}</span><span class="text-xs text-muted">${w}</span></div><p class="text-xs mb-1 text-truncate">${d.instruksi}</p><button class="btn btn-xs btn-outline-danger w-100" onclick="aksidminHapusTugas('${d.id}')">Hapus Template</button></div>`;
             });
         });
-
         window.aksidminHapusTugas = async function(id) { if (confirm(`Hapus template tugas ini?`)) await deleteTugasWA(id); };
 
         let dataLengkap = [];
-        listenToLogbooks((logData) => { dataLengkap = logData; ekstrakHari(); renderListAdmin(); });
+        listenToLogbooks((logData) => { 
+            dataLengkap = logData; 
+            ekstrakHari(); 
+            renderListAdmin(); 
+            renderTracker(); // Otomatis kalkulasi tracker jika ada logbook baru
+        });
+        
         document.getElementById('filterHari').onchange = () => renderListAdmin();
+        document.getElementById('filterKelasHistori').onchange = () => renderListAdmin();
+        document.getElementById('trackerKelas').onchange = () => renderTracker();
 
+        // Tracker Pencapaian Kurikulum
+        function renderTracker() {
+            const area = document.getElementById("areaTracker");
+            const kelasAktif = document.getElementById("trackerKelas").value;
+            if(!rawKurikulum || Object.keys(rawKurikulum).length === 0) { area.innerHTML = "<div class='small text-muted'>Belum ada setup kurikulum.</div>"; return; }
+
+            // Kumpulkan semua materi yang pernah diajarkan untuk kelas ini
+            let materiSelesai = new Set();
+            dataLengkap.forEach(log => {
+                if (log.kelas === kelasAktif && log.materi) {
+                    log.materi.forEach(m => materiSelesai.add(m));
+                }
+            });
+
+            // Fungsi Bikin Blok Kategori
+            const renderBlok = (judul, arrayMateri, warna) => {
+                if(!arrayMateri || arrayMateri.length === 0) return '';
+                let listHtml = "";
+                arrayMateri.forEach(mat => {
+                    const isDone = materiSelesai.has(mat);
+                    const icon = isDone ? `<i class="bi bi-check-circle-fill text-${warna}"></i>` : `<i class="bi bi-circle text-secondary opacity-50"></i>`;
+                    const bg = isDone ? `bg-${warna} bg-opacity-10 border-${warna}` : 'bg-white text-muted';
+                    listHtml += `<div class="d-flex justify-content-between align-items-center p-2 mb-1 border rounded text-xs ${bg}">
+                        <span class="${isDone ? 'fw-bold' : ''}">${mat}</span> <span>${icon}</span>
+                    </div>`;
+                });
+                return `<div class="mb-3"><h6 class="text-xs fw-bold text-${warna} mb-1 border-bottom pb-1">${judul}</h6>${listHtml}</div>`;
+            };
+
+            area.innerHTML = 
+                renderBlok("VOCABULARY", rawKurikulum.vocab, "primary") +
+                renderBlok("SPEAKING", rawKurikulum.speaking, "success") +
+                renderBlok("GRAMMAR", rawKurikulum.grammar, "danger");
+        }
+
+        // Histori & Render
         function ekstrakHari() {
             const daysMap = new Map(); dataLengkap.forEach(d => { if(d.waktu) { const dStr = d.waktu.toDate().toLocaleDateString('id-ID'); if(!daysMap.has(dStr)) daysMap.set(dStr, d.waktu.toDate()); } });
             const sortedDays = Array.from(daysMap.entries()).sort((a,b) => a[1] - b[1]); const selHari = document.getElementById("filterHari"); const valSkg = selHari.value;
@@ -167,8 +241,10 @@
         }
 
         function renderListAdmin() {
-            const container = document.getElementById("adminLogbookList"); container.innerHTML = ""; const fHari = document.getElementById("filterHari").value;
-            let dataTampil = dataLengkap; if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari);
+            const container = document.getElementById("adminLogbookList"); container.innerHTML = ""; const fHari = document.getElementById("filterHari").value; const fKelas = document.getElementById("filterKelasHistori").value;
+            let dataTampil = dataLengkap; 
+            if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari);
+            if (fKelas !== "SEMUA") dataTampil = dataTampil.filter(d => d.kelas === fKelas);
             if(dataTampil.length === 0) { container.innerHTML = `<div class="alert alert-secondary text-center small">Kosong.</div>`; return; }
             dataTampil.forEach(d => {
                 const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-';
