@@ -2,17 +2,24 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Mentor</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
+    </style>
 </head>
 <body>
-    <h1>Portal Mentor Special</h1>
-    <div id="status">Menunggu koneksi...</div>
+    <h1>Input Logbook</h1>
+    <input type="text" id="mentorName" placeholder="Nama Mentor">
+    <textarea id="progress" placeholder="Progress hari ini..." rows="4"></textarea>
+    <button id="btnSubmit">Simpan Logbook</button>
 
     <script type="module">
-        // Import fungsi Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Konfigurasi dari gambar Anda
         const firebaseConfig = {
             apiKey: "AIzaSyCgXGAww1dMu4eWzA1clUiOQht1DzxHl4A",
             authDomain: "special-mentor.firebaseapp.com",
@@ -22,9 +29,27 @@
             appId: "1:1075582532703:web:969365cefff8999335efea"
         };
 
-        // Inisialisasi
         const app = initializeApp(firebaseConfig);
-        document.getElementById("status").innerText = "✅ Firebase Terhubung dengan sukses!";
+        const db = getFirestore(app);
+
+        document.getElementById("btnSubmit").addEventListener("click", async () => {
+            const name = document.getElementById("mentorName").value;
+            const progress = document.getElementById("progress").value;
+            
+            if(!name || !progress) return alert("Isi semua kolom!");
+
+            try {
+                await addDoc(collection(db, "logbooks"), {
+                    mentor: name,
+                    progress: progress,
+                    timestamp: new Date()
+                });
+                alert("Logbook berhasil disimpan!");
+                document.getElementById("progress").value = ""; // Bersihkan form
+            } catch (e) {
+                alert("Gagal: " + e.message);
+            }
+        });
     </script>
 </body>
 </html>
