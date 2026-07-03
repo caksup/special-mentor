@@ -7,7 +7,6 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body style="background-color: #1e293b;">
@@ -19,7 +18,7 @@
                     <i class="bi bi-shield-fill-check text-warning me-2"></i> PANEL KONTROL MANAJEMEN
                 </a>
                 <div class="d-flex align-items-center">
-                    <span id="userNameDisplay" class="fw-bold me-3 text-light" style="font-size: 0.9rem;">Memuat Otoritas...</span>
+                    <span id="userNameDisplay" class="fw-bold me-3 text-light" style="font-size: 0.9rem;">Otoritas...</span>
                     <button id="btnLogout" class="btn btn-outline-danger btn-sm fw-bold">
                         <i class="bi bi-power"></i> Keluar
                     </button>
@@ -28,73 +27,64 @@
         </nav>
 
         <div class="container pb-5">
-            <div class="row justify-content-center">
-                <div class="col-12 col-lg-8">
-                    
-                    <div class="card card-custom p-4 shadow-lg border-0 mb-4 bg-white">
-                        <div class="text-center mb-4">
-                            <h4 class="fw-bold text-dark"><i class="bi bi-broadcast text-danger me-2"></i> Konsol Siaran Real-Time</h4>
-                            <p class="text-muted small">Semua parameter informasi di bawah ini terhubung langsung ke halaman depan login dan dashboard mentor secara instan.</p>
+            <div class="row">
+                
+                <div class="col-12 col-lg-5 mb-4">
+                    <div class="card card-custom p-4 shadow-lg bg-white h-100">
+                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-broadcast text-danger me-2"></i> Konsol Siaran Real-Time</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-primary small">1. PAPAN JADWAL FULL (Login Depan & Mentor)</label>
+                            <textarea id="inputJadwal" class="form-control bg-light text-xs" rows="4" placeholder="Ketik master schedule lengkap..."></textarea>
                         </div>
-
-                        <hr class="mb-4">
-
-                        <div class="mb-4">
-                            <label class="form-label fw-bold text-primary mb-2">
-                                <i class="bi bi-calendar-event-fill me-2"></i> 1. Papan Jadwal Harian (Tampil di Halaman Login Depan)
-                            </label>
-                            <textarea id="inputJadwal" class="form-control bg-light border-primary border-opacity-25" rows="3" placeholder="Contoh:&#10;Sesi Pagi (08.00 - 11.00): Greeting & Materi&#10;Sesi Siang (13.00 - 16.00): Praktik Mandiri"></textarea>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-info small">2. NOTIF BRIEFING MENTOR</label>
+                            <textarea id="inputBriefing" class="form-control bg-light text-xs" rows="2" placeholder="Instruksi briefing harian..."></textarea>
                         </div>
-
-                        <div class="mb-4">
-                            <label class="form-label fw-bold text-info mb-2">
-                                <i class="bi bi-megaphone-fill me-2"></i> 2. Notif Briefing Kelas (Tampil di Atas Dashboard Mentor)
-                            </label>
-                            <textarea id="inputBriefing" class="form-control bg-light border-info border-opacity-25" rows="2" placeholder="Tulis instruksi briefing penting untuk para mentor sebelum mengajar..."></textarea>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-warning small">3. CATATAN PENTING & EVALUASI</label>
+                            <textarea id="inputCatatan" class="form-control bg-light text-xs" rows="2" placeholder="Catatan evaluasi khusus..."></textarea>
                         </div>
-
-                        <div class="mb-4">
-                            <label class="form-label fw-bold text-warning mb-2">
-                                <i class="bi bi-exclamation-triangle-fill me-2"></i> 3. Catatan Penting & Evaluasi (Tampil di Dashboard Mentor)
-                            </label>
-                            <textarea id="inputCatatan" class="form-control bg-light border-warning border-opacity-25" rows="2" placeholder="Peringatan khusus, kendala teknis, atau pengingat administrasi kelas..."></textarea>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-success small">4. TARGET / GOAL KELAS HARIAN</label>
+                            <textarea id="inputGoal" class="form-control bg-light text-xs" rows="2" placeholder="Target wajib hari ini..."></textarea>
                         </div>
-
-                        <div class="mb-4">
-                            <label class="form-label fw-bold text-success mb-2">
-                                <i class="bi bi-flag-fill me-2"></i> 4. Target / Goal Kelas Harian (Tampil di Dashboard Mentor)
-                            </label>
-                            <textarea id="inputGoal" class="form-control bg-light border-success border-opacity-25" rows="2" placeholder="Goal utama pembelajaran yang wajib dicapai siswa hari ini..."></textarea>
-                        </div>
-
-                        <button id="btnSaveGlobal" class="btn btn-dark btn-lg w-100 fw-bold shadow mt-3 py-3">
-                            <i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI & SIARKAN SEKARANG
+                        <button id="btnSaveGlobal" class="btn btn-primary w-100 fw-bold shadow-sm py-2">
+                            <i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI PAPAN UTAMA
                         </button>
                     </div>
-
                 </div>
+
+                <div class="col-12 col-lg-7">
+                    <div class="card card-custom p-4 shadow-lg bg-white h-100">
+                        <h5 class="fw-bold text-primary mb-1"><i class="bi bi-server me-2"></i> Moderasi Data Aktivitas Mentor</h5>
+                        <p class="text-muted small border-bottom pb-2">Sebagai administrator manajemen, Anda berhak penuh mengedit parameter sesi atau menghapus entri logbook yang salah input.</p>
+                        
+                        <div id="adminLogbookList" class="overflow-auto pe-1" style="max-height: 520px;">
+                            <p class="text-center text-muted small mt-5">Sinkronisasi data aktivitas...</p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
-        import { listenToGlobalInfo, updateGlobalInfo } from './script.js';
+        import { listenToGlobalInfo, updateGlobalInfo, listenToLogbooks, updateLogbook, deleteLogbook } from './script.js';
 
-        // 1. Validasi Keamanan Berlapis (Hanya 'sup' dan 'afif' yang boleh masuk)
+        // 1. Validasi Keamanan Berlapis
         const userVal = sessionStorage.getItem("loggedInUser");
         const userText = sessionStorage.getItem("loggedInName");
 
         if (userVal !== "sup" && userVal !== "afif") {
-            // Jika ada yang mencoba bypass via URL langsung, paksa tendang ke halaman login utama
-            alert("AKSES ILEGAL DETEKSI: Halaman ini memerlukan hak akses tingkat manajemen.");
+            alert("Akses Ilegal Terdeteksi!");
             window.location.href = "index.html";
         }
-
-        // Tampilkan nama pejabat manajemen di pojok kanan atas navbar
         document.getElementById("userNameDisplay").innerText = "Otoritas: " + userText;
 
-        // 2. Tarik Data Terakhir dari Database (Agar input tidak kosong saat halaman dimuat)
+        // 2. Load Info Papan Siaran
         listenToGlobalInfo((data) => {
             if (data) {
                 document.getElementById('inputJadwal').value = data.jadwal || "";
@@ -104,39 +94,105 @@
             }
         });
 
-        // 3. Logika Penyimpanan dan Penyiaran Data Real-Time
+        // Simpan Pembaruan Papan Siaran
         document.getElementById("btnSaveGlobal").onclick = async () => {
-            const jadwalVal = document.getElementById('inputJadwal').value;
-            const briefingVal = document.getElementById('inputBriefing').value;
-            const catatanVal = document.getElementById('inputCatatan').value;
-            const goalVal = document.getElementById('inputGoal').value;
+            try {
+                await updateGlobalInfo({
+                    jadwal: document.getElementById('inputJadwal').value,
+                    briefing: document.getElementById('inputBriefing').value,
+                    catatan: document.getElementById('inputCatatan').value,
+                    goal: document.getElementById('inputGoal').value
+                });
+                alert("Sukses: Papan informasi global telah diperbarui!");
+            } catch (e) { alert("Gagal memperbarui data papan siaran."); }
+        };
+
+        // 3. Tarik Real-Time List untuk Kebutuhan Edit & Hapus Komando
+        listenToLogbooks((logData) => {
+            const container = document.getElementById("adminLogbookList");
+            container.innerHTML = "";
+            
+            if (logData.length === 0) {
+                container.innerHTML = `<p class="text-center text-muted small mt-5">Belum ada rekaman logbook aktivitas mengajar.</p>`;
+                return;
+            }
+
+            logData.forEach(d => {
+                const waktu = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle: 'short', timeStyle: 'short'}) : 'Baru saja';
+                
+                const box = document.createElement('div');
+                box.className = "p-3 bg-light rounded-3 border mb-3 position-relative shadow-sm";
+                box.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center border-bottom pb-1 mb-2">
+                        <span class="fw-bold text-dark small"><i class="bi bi-person-fill"></i> ${d.nama.toUpperCase()}</span>
+                        <span class="text-muted font-monospace" style="font-size: 0.7rem;">${waktu}</span>
+                    </div>
+                    <div class="mb-1"><span class="badge bg-primary text-xs me-1">${d.kelas}</span><span class="badge bg-dark text-xs">${d.jamKe}</span></div>
+                    <div class="text-xs text-success fw-bold mb-1">✔ Materi: ${d.materi.join(', ')}</div>
+                    <div class="text-xs text-muted mb-1 bg-white p-1.5 rounded border">📝 <b>Lap:</b> ${d.laporanSiswa}</div>
+                    ${d.catatanKendala ? `<div class="text-xs text-danger mb-2 bg-danger bg-opacity-10 p-1.5 rounded border border-danger border-opacity-10">⚠️ <b>Kendala:</b> ${d.catatanKendala}</div>` : ''}
+                `;
+
+                // Layouting Tombol Operasi Admin di bagian bawah item
+                const btnContainer = document.createElement('div');
+                btnContainer.className = "d-flex gap-1 justify-content-end mt-2";
+
+                // TOMBOL EDIT ADMIN
+                const btnEdit = document.createElement('button');
+                btnEdit.className = "btn btn-xs btn-outline-primary fw-bold text-xs px-2 py-0.5";
+                btnEdit.innerHTML = `<i class="bi bi-pencil"></i> Edit Sesi`;
+                btnEdit.onclick = () => aksidminEdit(d);
+
+                // TOMBOL HAPUS ADMIN
+                const btnHapus = document.createElement('button');
+                btnHapus.className = "btn btn-xs btn-danger fw-bold text-xs px-2 py-0.5 text-white";
+                btnHapus.innerHTML = `<i class="bi bi-trash"></i> Hapus`;
+                btnHapus.onclick = () => aksidminHapus(d.id, d.nama, d.kelas, d.jamKe);
+
+                btnContainer.appendChild(btnEdit);
+                btnContainer.appendChild(btnHapus);
+                box.appendChild(btnContainer);
+                container.appendChild(box);
+            });
+        });
+
+        // EKSEKUSI AUKSI EDIT DARI SUPERADMIN
+        window.aksidminEdit = async function(data) {
+            const kelasBaru = prompt(`Ubah Nama Kelas untuk ${data.nama}:`, data.kelas);
+            if (kelasBaru === null) return; 
+
+            const jamBaru = prompt(`Ubah Jam Sesi (Contoh: Jam 1 / Jam 2 / Jam 3 / Jam 4):`, data.jamKe);
+            if (jamBaru === null) return;
+
+            const laporanBaru = prompt(`Ubah Catatan Laporan Siswa:`, data.laporanSiswa);
+            if (laporanBaru === null) return;
+
+            const kendalaBaru = prompt(`Ubah Catatan Kendala:`, data.catatanKendala || "");
+            if (kendalaBaru === null) return;
 
             try {
-                const btn = document.getElementById("btnSaveGlobal");
-                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> SEDANG MEMPROSES SIARAN DATA...';
-                btn.disabled = true;
-                
-                // Kirim paket data lengkap ke Firebase Firestore
-                await updateGlobalInfo({
-                    jadwal: jadwalVal,
-                    briefing: briefingVal,
-                    catatan: catatanVal,
-                    goal: goalVal
+                await updateLogbook(data.id, {
+                    kelas: kelasBaru,
+                    jamKe: jamBaru,
+                    laporanSiswa: laporanBaru,
+                    catatanKendala: kendalaBaru
                 });
-                
-                alert("Sukses: Seluruh data informasi telah diperbarui dan langsung disiarkan ke semua sistem!");
-                
-                btn.innerHTML = '<i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI & SIARKAN SEKARANG';
-                btn.disabled = false;
-                
-            } catch (error) {
-                alert("Gagal memperbarui data! Silakan periksa koneksi internet atau hak akses database Firestore Anda.");
-                document.getElementById("btnSaveGlobal").innerHTML = '<i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI & SIARKAN SEKARANG';
-                document.getElementById("btnSaveGlobal").disabled = false;
+                alert("Sukses: Data logbook mentor berhasil diperbarui oleh Administrator!");
+            } catch (e) { alert("Gagal melakukan pembaruan dokumen."); }
+        };
+
+        // EKSEKUSI AKSI HAPUS DARI SUPERADMIN
+        window.aksidminHapus = async function(id, nama, kelas, jam) {
+            const konfirmasi = confirm(`PERINGATAN KRUSIAL:\nApakah Anda yakin ingin menghapus data logbook ${nama} pada ${kelas} (${jam}) secara permanen dari server database?`);
+            if (konfirmasi) {
+                try {
+                    await deleteLogbook(id);
+                    alert("Sukses: Dokumen logbook tersebut telah dihapus secara permanen.");
+                } catch (e) { alert("Gagal menghapus dokumen database."); }
             }
         };
 
-        // 4. Mekanisme Keluar (Log Out) dari Sesi Manajemen
+        // Mekanisme Keluar Sesi
         document.getElementById("btnLogout").onclick = () => {
             sessionStorage.clear();
             window.location.href = "index.html";
