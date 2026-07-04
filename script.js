@@ -1,8 +1,8 @@
 /* ==================================================
-   script.js - AEC HUB (V13 - Japri Private Chat Engine)
+   script.js - AEC HUB (V14 - Multi Handle School Engine)
    ================================================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getFirestore, enableIndexedDbPersistence, doc, getDoc, setDoc, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { getFirestore, enableIndexedDbPersistence, doc, getDoc, setDoc, collection, addDoc, serverTimestamp, query, onSnapshot, updateDoc, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCgXGAww1dMu4eWzA1clUiOQht1DzxHl4A",
@@ -18,23 +18,17 @@ export const db = getFirestore(app);
 enableIndexedDbPersistence(db).catch((err) => { console.warn("Offline mode err:", err.code); });
 if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
 
+// LOGIN SEDERHANA (Admin sing ngatur njero panel, dadi mlebu disik wae)
 export async function verifyLogin(username, pin) {
     const userDoc = await getDoc(doc(db, "users", username));
     if (userDoc.exists()) {
         const data = userDoc.data();
-        if(data.status !== "aktif") throw new Error("Akses Ditolak: Akun dinonaktifkan Admin.");
+        if(data.status !== "aktif") throw new Error("Akses Ditolak: Akun dinonaktifkan!");
         if(data.pin !== pin) throw new Error("Gagal Masuk: PIN Keamanan salah!");
         return data;
     } else {
-        const fallback = {
-            "sup": { pin: "7777", julukan: "Mr. Sup", role: "admin", status: "aktif" }, "afif": { pin: "6666", julukan: "Mr. Afif", role: "direktur", status: "aktif" },
-            "anam": { pin: "1111", julukan: "Mr. Anam", role: "mentor", status: "aktif" }, "rizal": { pin: "2222", julukan: "Mr. Rizal", role: "mentor", status: "aktif" },
-            "huda": { pin: "5555", julukan: "Mr. Huda", role: "mentor", status: "aktif" }
-        };
-        if(fallback[username]) {
-            if(fallback[username].pin !== pin) throw new Error("Gagal Masuk: PIN salah!");
-            await setDoc(doc(db, "users", username), fallback[username]); return fallback[username];
-        }
+        const fallback = { "sup": { pin: "7777", julukan: "Mr. Sup", role: "admin", status: "aktif" }, "afif": { pin: "6666", julukan: "Mr. Afif", role: "direktur", status: "aktif" }, "anam": { pin: "1111", julukan: "Mr. Anam", role: "mentor", status: "aktif" } };
+        if(fallback[username]) { if(fallback[username].pin !== pin) throw new Error("Gagal Masuk: PIN salah!"); await setDoc(doc(db, "users", username), fallback[username]); return fallback[username]; }
         throw new Error("Peringatan: Username tidak terdaftar!");
     }
 }
@@ -42,55 +36,77 @@ export async function verifyLogin(username, pin) {
 export function generateTimelineHTML(totalHari, hariBerjalan) {
     const outlined = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩","⑪","⑫","⑬","⑭","⑮","⑯","⑰","⑱","⑲","⑳"];
     const filled   = ["❶","❷","❸","❹","❺","❻","❼","❽","❾","❿","⓫","⓬","⓭","⓮","⓯","⓰","⓱","⓲","⓳","⓴"];
-    let result = `<div class="d-flex flex-wrap align-items-center mt-1">`; 
-    let t = parseInt(totalHari) || 5; let b = parseInt(hariBerjalan) || 0;
+    let result = `<div class="d-flex flex-wrap align-items-center mt-1">`; let t = parseInt(totalHari) || 5; let b = parseInt(hariBerjalan) || 0;
     for(let i=0; i<t; i++) { if(i < 20) { if (i < b) result += `<span style="font-size: 1.4rem; margin: 0 2px;" class="text-danger">${filled[i]}</span>`; else result += `<span style="font-size: 1rem; margin: 0 2px; opacity: 0.5;">${outlined[i]}</span>`; } }
-    result += `</div>`; return result;
+    return result + `</div>`;
 }
 
 export function getActiveSchedule(jadwalGlobal) {
     if (!jadwalGlobal || jadwalGlobal === "-") return "Tidak ada jadwal kelas.";
-    const lines = jadwalGlobal.split('\n'); const now = new Date(); const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const lines = jadwalGlobal.split('\n'); const now = new Date(); const cur = now.getHours() * 60 + now.getMinutes();
     for (let line of lines) {
         const match = line.match(/(\d{1,2})[.:](\d{2})\s*-\s*(\d{1,2})[.:](\d{2})/);
-        if (match) {
-            const startMins = parseInt(match[1]) * 60 + parseInt(match[2]); const endMins = parseInt(match[3]) * 60 + parseInt(match[4]);
-            if (currentMinutes >= startMins && currentMinutes <= endMins) return line;
-        }
-    }
-    return "Sedang di luar jam kelas / Istirahat.";
+        if (match) { const start = parseInt(match[1]) * 60 + parseInt(match[2]); const end = parseInt(match[3]) * 60 + parseInt(match[4]); if (cur >= start && cur <= end) return line; }
+    } return "Di luar jam kelas / Istirahat.";
 }
 
 export function startClock(clockId, dateId) {
-    function update() {
-        const now = new Date();
-        if (document.getElementById(clockId)) document.getElementById(clockId).innerText = now.toLocaleTimeString('id-ID');
-        if (document.getElementById(dateId)) document.getElementById(dateId).innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-    }
+    function update() { const now = new Date(); if (document.getElementById(clockId)) document.getElementById(clockId).innerText = now.toLocaleTimeString('id-ID'); if (document.getElementById(dateId)) document.getElementById(dateId).innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }
     setInterval(update, 1000); update();
 }
 
-export function listenToGlobalInfo(callback) { onSnapshot(doc(db, "settings", "global_info"), (docSnap) => { callback(docSnap.exists() ? docSnap.data() : { jadwal: "-", jadwalHarian: "-", briefing: "-", goal: "-", kurikulum: { vocab: [], speaking: [], grammar: [] }, masterKelas: "Kelas A, Kelas B, Kelas C, Kelas D", masterSiswa: "", namaSekolah: "AEC Hub Pusat", totalHari: 5, hariBerjalan: 0 }); }); }
-export async function updateGlobalInfo(dataData) { fillGambarPWA(dataData); await setDoc(doc(db, "settings", "global_info"), { ...dataData, waktuUpdate: serverTimestamp() }, {merge:true}); }
-function fillGambarPWA(d){ if(d.masterKelas) { d.pwaIcon = "aec_hub.png"; } }
+// ==========================================
+// FUNGSI MULTI HANDLE SCHOOL (BARU!)
+// ==========================================
 
-export async function sendLogbook(mentorId, namaMentor, kelas, jamKe, materiGroup, flatMateri, laporanSiswa, catatanKendala, arraySiswa, tugasSiswa) { return await addDoc(collection(db, "logbooks"), { mentorId, nama: namaMentor, kelas, jamKe, materiGroup: materiGroup || { vocab:[], speaking:[], grammar:[] }, materi: flatMateri || [], laporanSiswa, catatanKendala, dataSiswa: arraySiswa || [], tugasSiswa: tugasSiswa || "", waktu: serverTimestamp() }); }
-export async function updateLogbook(docId, dataBaru) { return await updateDoc(doc(db, "logbooks", docId), dataBaru); }
-export async function deleteLogbook(docId) { return await deleteDoc(doc(db, "logbooks", docId)); }
-export function listenToLogbooks(callback) { onSnapshot(query(collection(db, "logbooks"), orderBy("waktu", "desc")), { includeMetadataChanges: true }, (snap) => { let list = []; snap.forEach(doc => { list.push({ id: doc.id, ...doc.data(), isPending: doc.metadata.hasPendingWrites }); }); callback(list); }); }
-export async function deleteChat(chatId) { return await deleteDoc(doc(db, "chats", chatId)); }
+export function listenToSchools(callback) { 
+    onSnapshot(collection(db, "schools"), (snap) => { 
+        let list = []; snap.forEach(doc => { if(doc.data().status !== 'archived') list.push({ id: doc.id, ...doc.data() }); }); callback(list); 
+    }); 
+}
+export async function saveSchool(schoolId, dataData) { await setDoc(doc(db, "schools", schoolId), { ...dataData, waktuUpdate: serverTimestamp(), status: 'aktif' }, {merge:true}); }
+export async function archiveSchool(schoolId) { await setDoc(doc(db, "schools", schoolId), { status: 'archived' }, {merge:true}); }
 
-export async function sendJapri(dariNama, keUsername, isiPesan, roleSender) {
-    return await addDoc(collection(db, "chats"), {
-        sender: dariNama,
-        receiver: keUsername,
-        message: isiPesan,
-        waktu: serverTimestamp(),
-        type: 'private',
-        role: roleSender
-    });
+export function listenToSingleSchool(schoolId, callback) {
+    if(!schoolId) return;
+    onSnapshot(doc(db, "schools", schoolId), (docSnap) => { if(docSnap.exists()) callback(docSnap.data()); else callback(null); });
 }
 
-export async function sendTugasWA(targetKelas, linkGambar, instruksi) { return await addDoc(collection(db, "tugas_wa"), { targetKelas, linkGambar, instruksi, waktu: serverTimestamp() }); }
+// LOGBOOK BERDASARKAN SCHOOL ID (Anti Index Error Firestore)
+export function listenToLogbooks(schoolId, callback) { 
+    if(!schoolId) return;
+    const q = query(collection(db, "logbooks"), where("schoolId", "==", schoolId));
+    onSnapshot(q, { includeMetadataChanges: true }, (snap) => { 
+        let list = []; snap.forEach(doc => { list.push({ id: doc.id, ...doc.data(), isPending: doc.metadata.hasPendingWrites }); }); 
+        list.sort((a, b) => (b.waktu?.toMillis() || 0) - (a.waktu?.toMillis() || 0)); // Urutkan client-side
+        callback(list); 
+    }); 
+}
+export async function sendLogbook(schoolId, mentorId, namaMentor, kelas, jamKe, materiGroup, flatMateri, laporanSiswa, catatanKendala, arraySiswa, tugasSiswa) { return await addDoc(collection(db, "logbooks"), { schoolId, mentorId, nama: namaMentor, kelas, jamKe, materiGroup: materiGroup || { vocab:[], speaking:[], grammar:[] }, materi: flatMateri || [], laporanSiswa, catatanKendala, dataSiswa: arraySiswa || [], tugasSiswa: tugasSiswa || "", waktu: serverTimestamp() }); }
+export async function updateLogbook(docId, dataBaru) { return await updateDoc(doc(db, "logbooks", docId), dataBaru); }
+export async function deleteLogbook(docId) { return await deleteDoc(doc(db, "logbooks", docId)); }
+
+// CHAT & JAPRI BERDASARKAN SCHOOL ID
+export function listenToChats(schoolId, callback) {
+    if(!schoolId) return;
+    const q = query(collection(db, "chats"), where("schoolId", "==", schoolId));
+    onSnapshot(q, (snap) => { 
+        let list = []; snap.forEach(doc => list.push({ id: doc.id, ...doc.data() })); 
+        list.sort((a, b) => (a.waktu?.toMillis() || 0) - (b.waktu?.toMillis() || 0)); callback(list); 
+    });
+}
+export async function sendJapri(schoolId, dariNama, keUsername, isiPesan, roleSender) { return await addDoc(collection(db, "chats"), { schoolId, sender: dariNama, receiver: keUsername, message: isiPesan, waktu: serverTimestamp(), type: 'private', role: roleSender }); }
+export async function sendGlobalChat(schoolId, dariNama, isiPesan, roleSender) { return await addDoc(collection(db, "chats"), { schoolId, sender: dariNama, message: isiPesan, waktu: serverTimestamp(), type: 'global', role: roleSender }); }
+export async function deleteChat(chatId) { return await deleteDoc(doc(db, "chats", chatId)); }
+
+// TUGAS WA BERDASARKAN SCHOOL ID
+export function listenToTugasWA(schoolId, callback) { 
+    if(!schoolId) return;
+    const q = query(collection(db, "tugas_wa"), where("schoolId", "==", schoolId));
+    onSnapshot(q, (snap) => { 
+        let list = []; snap.forEach(doc => list.push({ id: doc.id, ...doc.data() })); 
+        list.sort((a, b) => (b.waktu?.toMillis() || 0) - (a.waktu?.toMillis() || 0)); callback(list); 
+    }); 
+}
+export async function sendTugasWA(schoolId, targetKelas, linkGambar, instruksi) { return await addDoc(collection(db, "tugas_wa"), { schoolId, targetKelas, linkGambar, instruksi, waktu: serverTimestamp() }); }
 export async function deleteTugasWA(docId) { return await deleteDoc(doc(db, "tugas_wa", docId)); }
-export function listenToTugasWA(callback) { onSnapshot(query(collection(db, "tugas_wa"), orderBy("waktu", "desc")), (snap) => { let list = []; snap.forEach(doc => list.push({ id: doc.id, ...doc.data() })); callback(list); }); }
