@@ -11,12 +11,16 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        .dynamic-tabs .nav-link { transition: all 0.3s ease; padding: 0.6rem 0.8rem; border: none; border-bottom: 3px solid transparent; color: #6c757d; }
-        .dynamic-tabs .nav-link i { font-size: 1.3rem; }
-        .dynamic-tabs .nav-link .tab-label { display: none; margin-left: 6px; font-size: 0.8rem; white-space: nowrap; }
-        .dynamic-tabs .nav-link.active { border-bottom: 3px solid #0d6efd; background-color: transparent; color: #000; font-weight: bold; }
-        .dynamic-tabs .nav-link.active .tab-label { display: inline-block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; width: 0; } to { opacity: 1; width: auto; } }
+        /* CSS MENU DINAMIS V13 (ANTI-DISKO / STABIL) */
+        .dynamic-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 8px; border-bottom: none; padding-bottom: 5px; }
+        .dynamic-tabs::-webkit-scrollbar { display: none; }
+        .dynamic-tabs .nav-item { flex: 0 0 auto; }
+        .dynamic-tabs .nav-link { background-color: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 30px; padding: 8px 16px; color: #64748b; display: flex; align-items: center; justify-content: center; transition: background-color 0.2s; }
+        .dynamic-tabs .nav-link i { font-size: 1.2rem; margin: 0; }
+        .dynamic-tabs .nav-link .tab-label { display: none; font-size: 0.8rem; font-weight: 700; margin-left: 8px; white-space: nowrap; }
+        .dynamic-tabs .nav-link.active { background-color: #0d6efd; color: #fff; border-color: #0d6efd; box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2); }
+        .dynamic-tabs .nav-link.active i { color: #fff !important; }
+        .dynamic-tabs .nav-link.active .tab-label { display: block; }
 
         .chat-box { max-height: 300px; overflow-y: auto; background-color: #f8f9fa; }
         .msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.8rem; position: relative; }
@@ -56,16 +60,18 @@
             <div class="row">
                 <div class="col-12 col-lg-7 mb-4">
                     
-                    <ul class="nav nav-tabs mb-3 shadow-sm bg-white rounded pt-2 px-2 dynamic-tabs d-flex justify-content-between flex-nowrap overflow-auto hide-scrollbar" id="adminTabs" role="tablist">
-                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-setup" title="Setup Global"><i class="bi bi-gear-fill text-secondary"></i><span class="tab-label">Setup</span></button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tutor" title="Manajemen Tutor"><i class="bi bi-person-badge text-primary"></i><span class="tab-label">Tutor</span></button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-siswa" title="Data Siswa"><i class="bi bi-mortarboard text-success"></i><span class="tab-label">Siswa</span></button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-diskusi" title="Ruang Diskusi"><i class="bi bi-chat-dots text-danger"></i><span class="tab-label">Diskusi</span></button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-kurikulum" title="Tracker Materi"><i class="bi bi-bar-chart-fill text-warning"></i><span class="tab-label">Tracker</span></button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tugas" title="Tugas WA"><i class="bi bi-whatsapp text-success"></i><span class="tab-label">WA</span></button></li>
+                    <!-- MENU DINAMIS ANTI-DISKO -->
+                    <ul class="nav nav-pills mb-3 shadow-sm bg-white rounded p-2 dynamic-tabs" id="adminTabs" role="tablist">
+                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-setup" title="Setup Global"><i class="bi bi-gear-fill"></i><span class="tab-label">Setup</span></button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-tutor" title="Manajemen Tutor"><i class="bi bi-person-badge"></i><span class="tab-label">Tutor</span></button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-siswa" title="Data Siswa"><i class="bi bi-mortarboard"></i><span class="tab-label">Siswa</span></button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-diskusi" title="Ruang Diskusi"><i class="bi bi-chat-dots"></i><span class="tab-label">Diskusi</span></button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-kurikulum" title="Tracker Materi"><i class="bi bi-bar-chart-fill"></i><span class="tab-label">Tracker</span></button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-tugas" title="Tugas WA"><i class="bi bi-whatsapp"></i><span class="tab-label">WA</span></button></li>
                     </ul>
 
                     <div class="tab-content h-100">
+                        <!-- SETUP MASTER -->
                         <div class="tab-pane fade show active" id="tab-setup">
                             <div class="card card-custom p-3 shadow-lg bg-white mb-3">
                                 <h6 class="fw-bold text-dark mb-3"><i class="bi bi-broadcast text-danger me-2"></i> Konfigurasi Sistem Utama</h6>
@@ -90,6 +96,7 @@
                             </div>
                         </div>
 
+                        <!-- DATA TUTOR -->
                         <div class="tab-pane fade" id="tab-tutor">
                             <div class="card card-custom p-3 shadow-lg bg-white border-primary border-2 mb-3">
                                 <h6 class="fw-bold text-primary mb-3"><i class="bi bi-person-fill-add me-2"></i> Tambah / Edit Akses Tutor</h6>
@@ -107,8 +114,10 @@
                             <div class="card card-custom p-3 shadow-lg bg-white"><h6 class="fw-bold text-dark mb-2"><i class="bi bi-trophy text-warning me-2"></i> Pencapaian Kinerja Tutor (Keaktifan)</h6><div id="leaderboardTutor" class="space-y-2">Memuat ranking...</div></div>
                         </div>
 
+                        <!-- DATA SISWA -->
                         <div class="tab-pane fade" id="tab-siswa"><div class="card card-custom p-3 shadow-lg bg-white border-success border-2"><h6 class="fw-bold text-success mb-2"><i class="bi bi-mortarboard-fill me-2"></i> Rapor Kelas & Leaderboard Siswa</h6><select id="filterKelasSiswa" class="form-select form-select-sm fw-bold border-success mb-3"></select><ul class="nav nav-pills mb-3 text-xs" id="siswaTabs" role="tablist"><li class="nav-item"><button class="nav-link active py-1" data-bs-toggle="pill" data-bs-target="#sub-absen">Rekap Absen & Nilai</button></li><li class="nav-item"><button class="nav-link py-1 text-warning bg-warning bg-opacity-10" data-bs-toggle="pill" data-bs-target="#sub-top10"><i class="bi bi-star-fill"></i> Top 10 Kelas</button></li></ul><div class="tab-content"><div class="tab-pane fade show active" id="sub-absen"><div class="table-responsive" style="max-height: 400px; overflow-y: auto;"><table class="table table-sm table-bordered text-xs align-middle text-center mb-0"><thead class="table-success sticky-top"><tr><th style="width: 30px;">No</th><th>Nama Siswa</th><th>✔</th><th>✖</th><th>S</th><th>I</th><th>Total Poin/A</th></tr></thead><tbody id="tabelRekapSiswa"></tbody></table></div></div><div class="tab-pane fade" id="sub-top10"><div id="listTop10" class="space-y-2">Memuat peringkat...</div></div></div></div></div>
                         
+                        <!-- TAB DISKUSI -->
                         <div class="tab-pane fade" id="tab-diskusi">
                             <div class="card card-custom p-3 shadow-lg bg-white border-danger border-2 h-100 d-flex flex-column">
                                 <h6 class="fw-bold text-danger mb-2"><i class="bi bi-chat-dots-fill me-2"></i> Ruang Diskusi & Japri</h6>
@@ -116,13 +125,14 @@
                                 <div class="input-group">
                                     <select id="chatTarget" class="form-select form-select-sm" style="max-width: 120px; font-size: 0.75rem; font-weight: bold;">
                                         <option value="GLOBAL">Grup Semua</option>
-                                        </select>
+                                    </select>
                                     <input type="text" id="inputChat" class="form-control form-control-sm text-sm" placeholder="Ketik pesan/japri...">
                                     <button class="btn btn-danger btn-sm fw-bold" id="btnSendChat"><i class="bi bi-send"></i></button>
                                 </div>
                             </div>
                         </div>
                         
+                        <!-- TAB KURIKULUM & TUGAS -->
                         <div class="tab-pane fade" id="tab-kurikulum"><div class="card card-custom p-3 shadow-lg bg-white border-warning border-2"><h6 class="fw-bold text-warning mb-2"><i class="bi bi-clipboard-data me-2"></i> Tracker Otomatis</h6><select id="trackerKelas" class="form-select form-select-sm border-warning fw-bold mb-3"></select><div id="areaTracker" class="overflow-auto pe-1" style="max-height: 380px;">Memuat pencapaian...</div></div></div>
                         <div class="tab-pane fade" id="tab-tugas"><div class="card card-custom p-3 shadow-lg bg-white border-success border-2"><h6 class="fw-bold text-success mb-3"><i class="bi bi-send-fill me-2"></i> Penugasan (Jam 16:00)</h6><div class="mb-2"><select id="waTarget" class="form-select form-select-sm border-success"></select></div><div class="mb-2"><input type="text" id="waGambar" class="form-control form-control-sm bg-light" placeholder="URL Gambar..."></div><div class="mb-3"><textarea id="waInstruksi" class="form-control bg-light text-sm" rows="3" placeholder="Instruksi..."></textarea></div><button id="btnKirimTugasWA" class="btn btn-success btn-sm w-100 fw-bold shadow-sm py-2">Buat Template WA</button><hr class="my-3"><div id="listTugasAdmin" style="max-height: 200px; overflow-y: auto;"></div></div></div>
                     </div>
@@ -184,7 +194,6 @@
             } catch (e) { alert("Gagal update."); }
         };
 
-        // BACA DATA USER SEKALIGUS ISI DROPDOWN TARGET JAPRI
         onSnapshot(collection(db, "users"), (snap) => { 
             const tbody = document.getElementById("listUsersTable"); tbody.innerHTML = ""; 
             const chatTarget = document.getElementById("chatTarget"); 
@@ -197,8 +206,6 @@
                 const btnEdit = `<button class="btn btn-sm btn-outline-primary py-0 px-1 ms-1" onclick="window.editUser('${uid}', '${ud.pin}', '${ud.julukan}', '${ud.role}')" title="Edit Akun"><i class="bi bi-pencil"></i></button>`;
                 const badge = ud.status === 'aktif' ? '<span class="badge bg-success">Aktif</span>' : '<span class="badge bg-secondary">Cuti</span>'; 
                 tbody.innerHTML += `<tr><td class="fw-bold text-primary">${uid}</td><td>${ud.julukan}</td><td class="text-uppercase" style="font-size:0.6rem;">${ud.role}</td><td class="font-monospace text-danger fw-bold">${ud.pin}</td><td>${badge}</td><td>${btnStatus}${btnEdit}</td></tr>`; 
-                
-                // Tambah ke dropdown Japri jika bukan akun admin sendiri
                 if(chatTarget && ud.julukan !== myName) { chatTarget.innerHTML += `<option value="${ud.julukan}">Japri: ${ud.julukan}</option>`; }
             }); 
             if(chatTarget) chatTarget.value = prevTarget;
@@ -227,20 +234,15 @@
         }
         window.aksidminHapus = async function(id) { if (confirm(`Hapus permanen sesi ini?`)) await deleteLogbook(id); };
 
-        // ==========================================
-        // V13 LOGIC: RENDER CHAT JAPRI DI ADMIN
-        // ==========================================
         onSnapshot(query(collection(db, "chats"), orderBy("waktu", "asc")), (snap) => { 
             const box = document.getElementById("chatBox"); box.innerHTML = ""; 
             snap.forEach(docSnap => { 
                 const c = docSnap.data(); const cid = docSnap.id; 
-                // Filter: Tampilkan Global, ATAU Japri yg nyangkut sama Admin
                 if (c.type === 'global' || (c.type === 'private' && (c.sender === myName || c.receiver === "admin" || c.receiver === myName))) {
                     const isMe = c.sender === myName; 
                     const time = c.waktu ? c.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '..'; 
                     const delBtn = `<i class="bi bi-trash del-chat-btn ms-2" onclick="window.hapusPesan('${cid}')" title="Hapus (Hanya Admin)"></i>`; 
                     const badgeJapri = c.type === 'private' ? `<span class="badge bg-secondary ms-1" style="font-size:0.6rem;">JAPRI ${c.sender === myName ? 'ke ' + c.receiver : ''}</span>` : '';
-                    
                     box.innerHTML += `<div class="msg-bubble ${isMe ? 'msg-me' : 'msg-other'} shadow-sm"><div class="d-flex justify-content-between align-items-start"><div class="fw-bold text-xs ${isMe ? 'text-success' : 'text-primary'}">${c.sender} <span class="fw-normal text-muted" style="font-size:0.6rem;">${time}</span> ${badgeJapri}</div>${delBtn}</div><div>${c.message}</div></div>`; 
                 }
             }); 
