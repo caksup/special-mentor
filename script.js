@@ -1,5 +1,5 @@
 /* ==================================================
-   script.js - Super Creative Hub AEC (V8 - PWA & Offline Sync)
+   script.js - Super Creative Hub AEC (V9 - Jadwal Ganda & Notif Restored)
    ================================================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, enableIndexedDbPersistence, doc, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -16,19 +16,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
-// AKTIFKAN FITUR STORAGE OFFLINE (PWA AUTO-SYNC)
-enableIndexedDbPersistence(db).catch((err) => {
-    console.warn("Mode offline gagal diaktifkan:", err.code);
-});
+enableIndexedDbPersistence(db).catch((err) => { console.warn("Mode offline gagal:", err.code); });
 
-// REGISTRASI SERVICE WORKER UNTUK PWA
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').then((reg) => {
-            console.log('Mesin PWA Aktif.');
-        }).catch((err) => {
-            console.log('Mesin PWA Gagal: ', err);
-        });
+        navigator.serviceWorker.register('./sw.js').then((reg) => { console.log('Mesin PWA Aktif.'); }).catch((err) => { console.log('Mesin PWA Gagal: ', err); });
     });
 }
 
@@ -50,8 +42,9 @@ export function startClock(clockId, dateId) {
 
 export function listenToGlobalInfo(callback) {
     onSnapshot(doc(db, "settings", "global_info"), (docSnap) => {
+        // UPDATE V9: Menambahkan jadwalHarian, goal, dan briefing yang sempat hilang!
         callback(docSnap.exists() ? docSnap.data() : { 
-            jadwal: "-", briefing: "-", catatan: "-", goal: "-", 
+            jadwal: "-", jadwalHarian: "-", briefing: "-", goal: "-", catatan: "-", 
             kurikulum: { vocab: [], speaking: [], grammar: [] },
             masterSiswa: "", hariKe: "" 
         });
@@ -64,34 +57,20 @@ export async function updateGlobalInfo(dataData) {
 }
 
 export async function sendLogbook(mentorId, namaMentor, kelas, jamKe, materiGroup, flatMateri, laporanSiswa, catatanKendala, arraySiswa, tugasSiswa) {
-    return await addDoc(collection(db, "logbooks"), {
-        mentorId, nama: namaMentor, kelas, jamKe, 
-        materiGroup: materiGroup || { vocab:[], speaking:[], grammar:[] },
-        materi: flatMateri || [], 
-        laporanSiswa, catatanKendala, dataSiswa: arraySiswa || [], tugasSiswa: tugasSiswa || "", waktu: serverTimestamp()
-    });
+    return await addDoc(collection(db, "logbooks"), { mentorId, nama: namaMentor, kelas, jamKe, materiGroup: materiGroup || { vocab:[], speaking:[], grammar:[] }, materi: flatMateri || [], laporanSiswa, catatanKendala, dataSiswa: arraySiswa || [], tugasSiswa: tugasSiswa || "", waktu: serverTimestamp() });
 }
 
 export async function updateLogbook(docId, dataBaru) { return await updateDoc(doc(db, "logbooks", docId), dataBaru); }
 export async function deleteLogbook(docId) { return await deleteDoc(doc(db, "logbooks", docId)); }
 
-// DETEKSI LOGBOOK YANG STATUSNYA "PENDING" (BELUM TERKIRIM KE SERVER KARENA OFFLINE)
 export function listenToLogbooks(callback) {
     onSnapshot(query(collection(db, "logbooks"), orderBy("waktu", "desc")), { includeMetadataChanges: true }, (snap) => {
-        let list = []; 
-        snap.forEach(doc => {
-            list.push({ id: doc.id, ...doc.data(), isPending: doc.metadata.hasPendingWrites });
-        }); 
-        callback(list);
+        let list = []; snap.forEach(doc => { list.push({ id: doc.id, ...doc.data(), isPending: doc.metadata.hasPendingWrites }); }); callback(list);
     });
 }
 
-export async function sendTugasWA(targetKelas, linkGambar, instruksi) {
-    return await addDoc(collection(db, "tugas_wa"), { targetKelas, linkGambar, instruksi, waktu: serverTimestamp() });
-}
+export async function sendTugasWA(targetKelas, linkGambar, instruksi) { return await addDoc(collection(db, "tugas_wa"), { targetKelas, linkGambar, instruksi, waktu: serverTimestamp() }); }
 export async function deleteTugasWA(docId) { return await deleteDoc(doc(db, "tugas_wa", docId)); }
 export function listenToTugasWA(callback) {
-    onSnapshot(query(collection(db, "tugas_wa"), orderBy("waktu", "desc")), (snap) => {
-        let list = []; snap.forEach(doc => list.push({ id: doc.id, ...doc.data() })); callback(list);
-    });
+    onSnapshot(query(collection(db, "tugas_wa"), orderBy("waktu", "desc")), (snap) => { let list = []; snap.forEach(doc => list.push({ id: doc.id, ...doc.data() })); callback(list); });
 }
