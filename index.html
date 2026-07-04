@@ -12,16 +12,20 @@
 </head>
 <body class="bg-light">
 
-    <!-- HEADER V11: Layout Turun Biar Gak Offside -->
+    <!-- HEADER V12: Layout Day & at Sekolah -->
     <nav class="navbar navbar-expand bg-white shadow-sm border-bottom border-primary border-3 mb-4">
         <div class="container-fluid px-3">
             <a class="navbar-brand fw-bold d-flex align-items-center text-decoration-none" href="info.html">
                 <i class="bi bi-layers-half me-2 text-primary" style="font-size: 1.8rem;"></i>
-                <div class="d-flex flex-column">
+                <div class="d-flex flex-column text-start">
                     <div style="font-size: 1rem; line-height: 1.2;" class="text-primary">PORTAL AEC <span id="netStatus" class="ms-1"></span></div>
-                    <!-- HARI KE dan NAMA SEKOLAH SEKARANG ATAS BAWAH -->
-                    <div class="mt-1"><span class="badge bg-danger text-white">Hari Ke: <span id="headTimeline">...</span></span></div>
-                    <div id="headSekolah" class="text-xs fw-bold text-secondary text-uppercase mt-1" style="font-size: 0.65rem;">Memuat Lokasi...</div>
+                    <!-- DAY DI ATAS, BUNDERAN DI BAWAH -->
+                    <div class="mt-1 d-flex flex-column align-items-start">
+                        <span class="badge bg-danger text-white px-2 py-1 mb-1" style="width: fit-content; font-size: 0.65rem;">Day</span>
+                        <div id="headTimeline">Memuat...</div>
+                    </div>
+                    <!-- NAMA SEKOLAH PAKAI "at" -->
+                    <div class="text-xs fw-bold text-secondary text-uppercase mt-1" style="font-size: 0.65rem;">at <span id="headSekolah">Memuat Lokasi...</span></div>
                 </div>
             </a>
             <div class="d-flex align-items-center">
@@ -44,18 +48,21 @@
                     <hr class="border-white opacity-25 mb-3">
                     
                     <div class="text-start">
-                        <!-- BRIEFING DI ATAS SENDIRI (R2) -->
+                        <!-- BRIEFING DI ATAS SENDIRI -->
                         <div class="mb-3 p-3 bg-danger bg-opacity-25 rounded border border-danger border-opacity-50">
                             <h6 class="fw-bold text-white text-xs mb-1"><i class="bi bi-megaphone"></i> NOTIF & BRIEFING DIREKTUR</h6>
                             <p id="displayBriefing" class="small fw-bold mb-0 text-white" style="white-space: pre-line;">Memuat...</p>
                         </div>
-                        <div class="mb-3 p-2 bg-white bg-opacity-10 rounded border border-white border-opacity-25">
+                        
+                        <!-- JADWAL HARIAN OTOMATIS BERDASARKAN JAM -->
+                        <div class="mb-3 p-3 bg-white bg-opacity-10 rounded border border-white border-opacity-50 shadow-sm">
+                            <h6 class="fw-bold text-info text-xs mb-1"><i class="bi bi-clock-history"></i> KELAS SAAT INI (LIVE)</h6>
+                            <p id="displayJadwalHarian" class="fw-bold mb-0 text-warning" style="white-space: pre-line; font-size: 0.9rem;">Mendeteksi jadwal...</p>
+                        </div>
+
+                        <div class="p-2 bg-white bg-opacity-10 rounded border border-white border-opacity-25">
                             <h6 class="fw-bold text-warning text-xs mb-1"><i class="bi bi-calendar-week"></i> JADWAL FULL GLOBAL</h6>
                             <p id="displayJadwal" class="small fw-medium mb-0 text-light" style="white-space: pre-line;">Memuat...</p>
-                        </div>
-                        <div class="p-2 bg-white bg-opacity-10 rounded border border-white border-opacity-25">
-                            <h6 class="fw-bold text-info text-xs mb-1"><i class="bi bi-calendar-event"></i> JADWAL HARIAN KELAS</h6>
-                            <p id="displayJadwalHarian" class="small fw-medium mb-0 text-light" style="white-space: pre-line;">Memuat...</p>
                         </div>
                     </div>
                 </div>
@@ -73,14 +80,14 @@
                         <span id="btnText">MASUK <i class="bi bi-box-arrow-in-right ms-2"></i></span>
                         <div id="btnLoading" class="spinner-border spinner-border-sm text-light position-absolute top-50 start-50 translate-middle d-none" role="status"></div>
                     </button>
-                    <div class="text-center mt-4"><p class="text-xs text-muted mb-0"><i class="bi bi-shield-check text-success"></i> Secured by AEC Engine V11</p></div>
+                    <div class="text-center mt-4"><p class="text-xs text-muted mb-0"><i class="bi bi-shield-check text-success"></i> Secured by AEC Engine V12</p></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script type="module">
-        import { startClock, listenToGlobalInfo, verifyLogin, generateTimelineHTML } from './script.js?v=11';
+        import { startClock, listenToGlobalInfo, verifyLogin, generateTimelineHTML, getActiveSchedule } from './script.js?v=12';
         
         const activeUser = sessionStorage.getItem("loggedInUser"); const activeRole = sessionStorage.getItem("userRole");
         if (activeUser && activeRole) {
@@ -96,10 +103,22 @@
         listenToGlobalInfo((data) => {
             document.getElementById('displayBriefing').innerText = data.briefing || "-";
             document.getElementById('displayJadwal').innerText = data.jadwal || "-";
-            document.getElementById('displayJadwalHarian').innerText = data.jadwalHarian || "-";
+            
+            // Eksekusi Mesin Pembaca Jam Otomatis
+            document.getElementById('displayJadwalHarian').innerText = getActiveSchedule(data.jadwal);
+            
             document.getElementById('headSekolah').innerText = data.namaSekolah || "AEC Hub Pusat";
             document.getElementById('headTimeline').innerHTML = generateTimelineHTML(data.totalHari, data.hariBerjalan);
         });
+
+        // Deteksi ulang jadwal setiap 1 menit biar live tanpa perlu refresh
+        setInterval(() => {
+            const jadwalElement = document.getElementById('displayJadwal');
+            const liveElement = document.getElementById('displayJadwalHarian');
+            if(jadwalElement && liveElement) {
+                liveElement.innerText = getActiveSchedule(jadwalElement.innerText);
+            }
+        }, 60000);
 
         document.getElementById('btnMasuk').onclick = async () => {
             const userVal = document.getElementById('userInput').value.toLowerCase().trim(); const pin = document.getElementById('pinInput').value;
