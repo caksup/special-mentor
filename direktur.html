@@ -11,12 +11,21 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        .dynamic-menu .nav-link { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0.6rem; color: #64748b; display: flex; align-items: center; justify-content: center; border-radius: 12px; background-color: #fff; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 0.2rem; }
-        .dynamic-menu .nav-link i { font-size: 1.4rem; line-height: 1; transition: color 0.3s; }
-        .dynamic-menu .nav-link .tab-label { max-width: 0; opacity: 0; overflow: hidden; margin-left: 0; font-size: 0.85rem; font-weight: 700; white-space: nowrap; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* CSS MENU DINAMIS ANTI-DISKO */
+        .dynamic-menu { gap: 8px; }
+        .dynamic-menu .nav-link { background-color: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px 16px; color: #64748b; display: flex; align-items: center; justify-content: flex-start; transition: background-color 0.2s; margin-bottom: 0; }
+        .dynamic-menu .nav-link i { font-size: 1.2rem; margin: 0; }
+        .dynamic-menu .nav-link .tab-label { display: inline-block; font-size: 0.85rem; font-weight: 700; margin-left: 10px; white-space: nowrap; }
         .dynamic-menu .nav-link.active { background-color: #0f172a; color: #fff; border-color: #0f172a; box-shadow: 0 4px 6px rgba(15, 23, 42, 0.2); }
         .dynamic-menu .nav-link.active i { color: #f59e0b !important; }
-        .dynamic-menu .nav-link.active .tab-label { max-width: 150px; opacity: 1; margin-left: 8px; }
+        @media (max-width: 767.98px) {
+            .dynamic-menu { flex-direction: row !important; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 5px; }
+            .dynamic-menu::-webkit-scrollbar { display: none; }
+            .dynamic-menu .nav-item { flex: 0 0 auto; }
+            .dynamic-menu .nav-link { border-radius: 30px; padding: 8px 16px; justify-content: center; }
+            .dynamic-menu .nav-link .tab-label { display: none; }
+            .dynamic-menu .nav-link.active .tab-label { display: inline-block; }
+        }
 
         .chat-box { max-height: 400px; overflow-y: auto; background-color: #f8f9fa; }
         .msg-bubble { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; }
@@ -55,7 +64,7 @@
             <div class="row">
                 <div class="col-12 col-md-3 mb-4">
                     <div class="card card-custom p-2 shadow-sm border-0 bg-transparent">
-                        <ul class="nav nav-pills flex-row flex-md-column nav-fill gap-2 dynamic-menu" id="menuTabs">
+                        <ul class="nav nav-pills flex-column dynamic-menu" id="menuTabs">
                             <li class="nav-item"><button class="nav-link active" id="tab-beranda" data-bs-toggle="pill" data-bs-target="#beranda" title="Dashboard"><i class="bi bi-display text-primary"></i><span class="tab-label">Dashboard</span></button></li>
                             <li class="nav-item"><button class="nav-link" id="tab-pantau" data-bs-toggle="pill" data-bs-target="#pantau" title="Monitoring Kinerja"><i class="bi bi-graph-up-arrow text-success"></i><span class="tab-label">Monitoring</span></button></li>
                             <li class="nav-item"><button class="nav-link" id="tab-rekap" data-bs-toggle="pill" data-bs-target="#rekap" title="History Logbook"><i class="bi bi-clock-history text-secondary"></i><span class="tab-label">History</span></button></li>
@@ -93,7 +102,7 @@
                         <div class="tab-pane fade" id="pantau"><div class="row g-4"><div class="col-12 col-lg-6"><div class="card card-custom p-3 shadow-sm border-top border-warning border-4 bg-white h-100"><h6 class="fw-bold text-warning mb-2"><i class="bi bi-clipboard-data me-2"></i> Tracker Kurikulum Otomatis</h6><select id="trackerKelas" class="form-select form-select-sm border-warning fw-bold mb-3"></select><div id="areaTracker" class="overflow-auto pe-1" style="max-height: 400px;">Memuat pencapaian...</div></div></div><div class="col-12 col-lg-6"><div class="card card-custom p-3 shadow-sm border-top border-success border-4 bg-white mb-4"><h6 class="fw-bold text-success mb-3"><i class="bi bi-star-fill me-2"></i> Top 10 Siswa (Leaderboard)</h6><select id="filterKelasSiswa" class="form-select form-select-sm fw-bold border-success mb-3"></select><div id="listTop10" class="space-y-2 overflow-auto" style="max-height: 200px;">Memuat peringkat...</div></div><div class="card card-custom p-3 shadow-sm border-top border-primary border-4 bg-white"><h6 class="fw-bold text-primary mb-2"><i class="bi bi-trophy-fill me-2"></i> Keaktifan Logbook Tutor</h6><div id="leaderboardTutor" class="space-y-2 overflow-auto" style="max-height: 150px;">Memuat ranking...</div></div></div></div></div>
                         <div class="tab-pane fade" id="rekap"><div class="card card-custom p-4 shadow-sm border-top border-secondary border-4"><div class="d-flex justify-content-between align-items-center mb-3"><h5 class="fw-bold text-secondary mb-0"><i class="bi bi-server me-2"></i> Pantau Logbook Sesi</h5><button id="btnExportPDF" class="btn btn-danger btn-sm fw-bold"><i class="bi bi-file-earmark-pdf-fill"></i> Ekspor PDF</button></div><div class="row g-2 mb-3"><div class="col-6"><select id="filterHari" class="form-select form-select-sm bg-light fw-bold text-danger"></select></div><div class="col-6"><select id="filterKelas" class="form-select form-select-sm bg-light fw-bold text-secondary"></select></div></div><div id="logbookList" class="overflow-auto pe-2" style="max-height: 500px;"></div></div></div>
                         
-                        <!-- TAB DISKUSI (UPDATE V13 JAPRI UI) -->
+                        <!-- TAB DISKUSI (JAPRI UI) -->
                         <div class="tab-pane fade h-100" id="diskusi">
                             <div class="card card-custom p-3 shadow-sm border-top border-danger border-4 h-100 d-flex flex-column bg-white">
                                 <h5 class="fw-bold text-danger mb-1"><i class="bi bi-chat-dots-fill me-2"></i> Ruang Diskusi & Japri</h5>
@@ -101,7 +110,6 @@
                                 <div class="input-group">
                                     <select id="chatTarget" class="form-select" style="max-width: 140px; font-weight: bold;">
                                         <option value="GLOBAL">Grup Semua</option>
-                                        <!-- Nama tutor dimuat otomatis -->
                                     </select>
                                     <input type="text" id="inputChat" class="form-control text-sm" placeholder="Ketik arahan Anda...">
                                     <button class="btn btn-warning fw-bold px-4" id="btnSendChat"><i class="bi bi-send-fill text-dark"></i></button>
@@ -138,35 +146,22 @@
         });
         setInterval(() => { const globalJadwal = document.getElementById('tutorJadwal').innerText; document.getElementById('tutorJadwalHarian').innerText = getActiveSchedule(globalJadwal); }, 60000);
 
-        // BACA DATA USER UTK DROPDOWN TARGET JAPRI
         onSnapshot(collection(db, "users"), (snap) => { 
-            const chatTarget = document.getElementById("chatTarget"); 
-            const prevTarget = chatTarget.value;
+            const chatTarget = document.getElementById("chatTarget"); const prevTarget = chatTarget.value;
             chatTarget.innerHTML = `<option value="GLOBAL">Grup Semua</option>`;
-            snap.forEach(d => { 
-                const ud = d.data(); 
-                // Admin & Direktur iso japri kabeh wong
-                if(ud.julukan !== myName) { chatTarget.innerHTML += `<option value="${ud.julukan}">Japri: ${ud.julukan}</option>`; }
-            }); 
+            snap.forEach(d => { const ud = d.data(); if(ud.julukan !== myName) { chatTarget.innerHTML += `<option value="${ud.julukan}">Japri: ${ud.julukan}</option>`; } }); 
             chatTarget.value = prevTarget;
         });
 
-        // ==========================================
-        // V13 LOGIC: RENDER CHAT JAPRI DI DIREKTUR
-        // ==========================================
         onSnapshot(query(collection(db, "chats"), orderBy("waktu", "asc")), (snap) => { 
             const box = document.getElementById("chatBox"); box.innerHTML = ""; 
             snap.forEach(doc => { 
                 const c = doc.data(); 
-                // Filter: Tampilkan Global, ATAU Japri yg nyangkut sama Direktur ini
                 if (c.type === 'global' || (c.type === 'private' && (c.sender === myName || c.receiver === myName))) {
-                    const isMe = c.sender === myName; 
-                    const time = c.waktu ? c.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '..'; 
+                    const isMe = c.sender === myName; const time = c.waktu ? c.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '..'; 
                     let nameColor = isMe ? 'text-warning text-darken-2' : 'text-primary'; 
                     let roleBadge = ""; if(c.role === "admin") { nameColor = 'text-danger'; roleBadge = '<i class="bi bi-shield-lock-fill ms-1"></i>'; } else if(c.role === "direktur") { nameColor = 'text-warning'; roleBadge = '<i class="bi bi-star-fill ms-1"></i>'; } 
-                    
                     const badgeJapri = c.type === 'private' ? `<span class="badge bg-secondary ms-1" style="font-size:0.6rem;">JAPRI ${c.sender === myName ? 'ke ' + c.receiver : ''}</span>` : '';
-
                     box.innerHTML += `<div class="msg-bubble ${isMe ? 'msg-me' : 'msg-other'} shadow-sm"><div class="fw-bold text-xs ${nameColor}">${c.sender} ${roleBadge} <span class="fw-normal text-muted ms-1" style="font-size:0.6rem;">${time}</span> ${badgeJapri}</div><div class="mt-1">${c.message}</div></div>`; 
                 }
             }); 
@@ -174,8 +169,7 @@
         });
 
         document.getElementById("btnSendChat").onclick = async () => { 
-            const msg = document.getElementById("inputChat").value.trim(); 
-            const target = document.getElementById("chatTarget").value;
+            const msg = document.getElementById("inputChat").value.trim(); const target = document.getElementById("chatTarget").value;
             if(!msg) return; 
             if (target === "GLOBAL") { await addDoc(collection(db, "chats"), { sender: myName, role: "direktur", message: msg, waktu: serverTimestamp(), type: 'global' }); }
             else { await sendJapri(myName, target, msg, "direktur"); }
