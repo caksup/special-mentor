@@ -1,5 +1,5 @@
 /* ==================================================
-   script.js - AEC HUB (V12 - Smart Schedule & Layout)
+   script.js - AEC HUB (V13 - Japri Private Chat Engine)
    ================================================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, enableIndexedDbPersistence, doc, getDoc, setDoc, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -39,38 +39,23 @@ export async function verifyLogin(username, pin) {
     }
 }
 
-// 1. TIMELINE BUNDERAN (DAY DI ATAS, ANGKA DI BAWAH, LEBIH BESAR JIKA AKTIF)
 export function generateTimelineHTML(totalHari, hariBerjalan) {
     const outlined = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩","⑪","⑫","⑬","⑭","⑮","⑯","⑰","⑱","⑲","⑳"];
     const filled   = ["❶","❷","❸","❹","❺","❻","❼","❽","❾","❿","⓫","⓬","⓭","⓮","⓯","⓰","⓱","⓲","⓳","⓴"];
     let result = `<div class="d-flex flex-wrap align-items-center mt-1">`; 
     let t = parseInt(totalHari) || 5; let b = parseInt(hariBerjalan) || 0;
-    for(let i=0; i<t; i++) { 
-        if(i < 20) {
-            if (i < b) result += `<span style="font-size: 1.4rem; margin: 0 2px;" class="text-danger">${filled[i]}</span>`;
-            else result += `<span style="font-size: 1rem; margin: 0 2px; opacity: 0.5;">${outlined[i]}</span>`;
-        }
-    }
-    result += `</div>`;
-    return result;
+    for(let i=0; i<t; i++) { if(i < 20) { if (i < b) result += `<span style="font-size: 1.4rem; margin: 0 2px;" class="text-danger">${filled[i]}</span>`; else result += `<span style="font-size: 1rem; margin: 0 2px; opacity: 0.5;">${outlined[i]}</span>`; } }
+    result += `</div>`; return result;
 }
 
-// 2. MESIN PELACAK JADWAL OTOMATIS BERDASARKAN JAM
 export function getActiveSchedule(jadwalGlobal) {
     if (!jadwalGlobal || jadwalGlobal === "-") return "Tidak ada jadwal kelas.";
-    const lines = jadwalGlobal.split('\n');
-    const now = new Date();
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-    
+    const lines = jadwalGlobal.split('\n'); const now = new Date(); const currentMinutes = now.getHours() * 60 + now.getMinutes();
     for (let line of lines) {
-        // Melacak teks yang punya format angka jam (cth: 07.00 - 08.00 atau 07:00 - 08:00)
         const match = line.match(/(\d{1,2})[.:](\d{2})\s*-\s*(\d{1,2})[.:](\d{2})/);
         if (match) {
-            const startMins = parseInt(match[1]) * 60 + parseInt(match[2]);
-            const endMins = parseInt(match[3]) * 60 + parseInt(match[4]);
-            if (currentMinutes >= startMins && currentMinutes <= endMins) {
-                return line; // Mengembalikan baris jadwal yang sedang aktif saat ini
-            }
+            const startMins = parseInt(match[1]) * 60 + parseInt(match[2]); const endMins = parseInt(match[3]) * 60 + parseInt(match[4]);
+            if (currentMinutes >= startMins && currentMinutes <= endMins) return line;
         }
     }
     return "Sedang di luar jam kelas / Istirahat.";
@@ -85,23 +70,27 @@ export function startClock(clockId, dateId) {
     setInterval(update, 1000); update();
 }
 
-export function listenToGlobalInfo(callback) {
-    onSnapshot(doc(db, "settings", "global_info"), (docSnap) => {
-        callback(docSnap.exists() ? docSnap.data() : { 
-            jadwal: "-", jadwalHarian: "-", briefing: "-", goal: "-", 
-            kurikulum: { vocab: [], speaking: [], grammar: [] },
-            masterKelas: "Kelas A, Kelas B, Kelas C, Kelas D", masterSiswa: "", 
-            namaSekolah: "AEC Hub Pusat", totalHari: 5, hariBerjalan: 0
-        });
-    });
-}
-export async function updateGlobalInfo(dataData) { await setDoc(doc(db, "settings", "global_info"), { ...dataData, waktuUpdate: serverTimestamp() }, {merge:true}); }
+export function listenToGlobalInfo(callback) { onSnapshot(doc(db, "settings", "global_info"), (docSnap) => { callback(docSnap.exists() ? docSnap.data() : { jadwal: "-", jadwalHarian: "-", briefing: "-", goal: "-", kurikulum: { vocab: [], speaking: [], grammar: [] }, masterKelas: "Kelas A, Kelas B, Kelas C, Kelas D", masterSiswa: "", namaSekolah: "AEC Hub Pusat", totalHari: 5, hariBerjalan: 0 }); }); }
+export async function updateGlobalInfo(dataData) { fillGambarPWA(dataData); await setDoc(doc(db, "settings", "global_info"), { ...dataData, waktuUpdate: serverTimestamp() }, {merge:true}); }
+function fillGambarPWA(d){ if(d.masterKelas) { d.pwaIcon = "aec_hub.png"; } }
 
 export async function sendLogbook(mentorId, namaMentor, kelas, jamKe, materiGroup, flatMateri, laporanSiswa, catatanKendala, arraySiswa, tugasSiswa) { return await addDoc(collection(db, "logbooks"), { mentorId, nama: namaMentor, kelas, jamKe, materiGroup: materiGroup || { vocab:[], speaking:[], grammar:[] }, materi: flatMateri || [], laporanSiswa, catatanKendala, dataSiswa: arraySiswa || [], tugasSiswa: tugasSiswa || "", waktu: serverTimestamp() }); }
 export async function updateLogbook(docId, dataBaru) { return await updateDoc(doc(db, "logbooks", docId), dataBaru); }
 export async function deleteLogbook(docId) { return await deleteDoc(doc(db, "logbooks", docId)); }
 export function listenToLogbooks(callback) { onSnapshot(query(collection(db, "logbooks"), orderBy("waktu", "desc")), { includeMetadataChanges: true }, (snap) => { let list = []; snap.forEach(doc => { list.push({ id: doc.id, ...doc.data(), isPending: doc.metadata.hasPendingWrites }); }); callback(list); }); }
 export async function deleteChat(chatId) { return await deleteDoc(doc(db, "chats", chatId)); }
+
+export async function sendJapri(dariNama, keUsername, isiPesan, roleSender) {
+    return await addDoc(collection(db, "chats"), {
+        sender: dariNama,
+        receiver: keUsername,
+        message: isiPesan,
+        waktu: serverTimestamp(),
+        type: 'private',
+        role: roleSender
+    });
+}
+
 export async function sendTugasWA(targetKelas, linkGambar, instruksi) { return await addDoc(collection(db, "tugas_wa"), { targetKelas, linkGambar, instruksi, waktu: serverTimestamp() }); }
 export async function deleteTugasWA(docId) { return await deleteDoc(doc(db, "tugas_wa", docId)); }
 export function listenToTugasWA(callback) { onSnapshot(query(collection(db, "tugas_wa"), orderBy("waktu", "desc")), (snap) => { let list = []; snap.forEach(doc => list.push({ id: doc.id, ...doc.data() })); callback(list); }); }
