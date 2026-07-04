@@ -3,89 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Pengendali VIP - AEC Hub</title>
+    <title>God Mode Admin - AEC Hub</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        body { background-color: #f1f5f9; }
-        .dynamic-tabs { flex-wrap: nowrap; overflow-x: auto; gap: 8px; border-bottom: none; }
-        .nav-link { background: #fff; border-radius: 30px; padding: 8px 16px; color: #64748b; font-weight: 700; font-size: 0.8rem; }
-        .nav-link.active { background: #0d6efd; color: #fff; }
-        .card-custom { border-radius: 16px; border: none; }
+        body { background-color: #f8fafc; }
+        .card-custom { border-radius: 16px; border: none; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .nav-link { font-weight: 700; font-size: 0.8rem; }
     </style>
 </head>
 <body>
-    <nav class="navbar bg-white shadow-sm mb-3 sticky-top">
+    <nav class="navbar bg-white shadow-sm mb-4">
         <div class="container-fluid px-3">
             <span class="fw-bold text-danger"><i class="bi bi-shield-lock-fill"></i> ADMIN GOD MODE</span>
             <button class="btn btn-sm btn-outline-danger" id="btnLogout"><i class="bi bi-power"></i></button>
         </div>
     </nav>
 
-    <div class="container pb-5">
-        <!-- DASHBOARD SEKOLAH (TAMPIL AWAL) -->
+    <div class="container">
+        <!-- VIEW DAFTAR SEKOLAH -->
         <div id="dashboardView">
-            <h5 class="fw-bold mb-3">Daftar Handle School</h5>
+            <h5 class="fw-bold mb-3">Pilih Handle School:</h5>
             <div class="row g-3" id="schoolListContainer"></div>
-            <button class="btn btn-primary w-100 mt-4 fw-bold" onclick="window.tambahSekolah()">+ BUAT HANDLE SCHOOL BARU</button>
+            <button class="btn btn-primary w-100 mt-4 fw-bold" onclick="window.tambahSekolah()">+ BUAT SEKOLAH BARU</button>
         </div>
 
-        <!-- PANEL MANAJEMEN (TAMPIL PAS SEKOLAH DIPILIH) -->
+        <!-- VIEW MANAJEMEN -->
         <div id="managementView" style="display:none;">
             <button class="btn btn-sm btn-secondary mb-3" onclick="location.reload()"><i class="bi bi-arrow-left"></i> Kembali ke Daftar</button>
             <h5 class="fw-bold mb-3" id="selectedSchoolName">Memuat...</h5>
             
-            <ul class="nav nav-pills mb-3 dynamic-tabs" id="adminTabs" role="tablist">
+            <ul class="nav nav-pills mb-3" id="adminTabs" role="tablist">
                 <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-tutor">Tutor (Global)</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-setup">Setup Sekolah</button></li>
-                <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-siswa">Siswa</button></li>
+                <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-setup">Setup</button></li>
                 <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-logbook">Logbook</button></li>
             </ul>
 
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="tab-tutor">
                     <div class="card p-3 mb-3">
-                        <h6 class="fw-bold">Tambah/Edit Tutor</h6>
+                        <h6 class="fw-bold text-primary">Kelola Tutor (Penugasan Sekolah)</h6>
                         <div class="row g-2">
-                            <div class="col-4"><input type="text" id="newUser" class="form-control form-control-sm" placeholder="username"></div>
-                            <div class="col-4"><input type="text" id="newPin" class="form-control form-control-sm" placeholder="PIN"></div>
-                            <div class="col-4"><input type="text" id="newSchool" class="form-control form-control-sm" placeholder="ID Sekolah (Tugas)"></div>
-                            <div class="col-12"><button id="btnAddUser" class="btn btn-primary btn-sm w-100">Simpan Tutor</button></div>
+                            <div class="col-3"><input type="text" id="newUser" class="form-control form-control-sm" placeholder="username"></div>
+                            <div class="col-3"><input type="text" id="newPin" class="form-control form-control-sm" placeholder="PIN"></div>
+                            <div class="col-3"><input type="text" id="newSchool" class="form-control form-control-sm" placeholder="ID Sekolah Tugas"></div>
+                            <div class="col-3"><button id="btnAddUser" class="btn btn-primary btn-sm w-100">Simpan</button></div>
                         </div>
                         <table class="table table-sm mt-3 text-xs"><thead><tr><th>User</th><th>Sekolah</th><th>Aksi</th></tr></thead><tbody id="listUsersTable"></tbody></table>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="tab-setup">...Form Setup Sekolah...</div>
-                <div class="tab-pane fade" id="tab-siswa">...Data Siswa...</div>
+                <div class="tab-pane fade" id="tab-setup">...Form Setup (Sama dengan sebelumnya)...</div>
                 <div class="tab-pane fade" id="tab-logbook"><div id="adminLogbookList"></div></div>
             </div>
         </div>
     </div>
 
     <script type="module">
-        import { db, listenToSchools, listenToLogbooks } from './script.js?v=14.1';
+        import { db, listenToSchools, listenToLogbooks, listenToSingleSchool } from './script.js?v=15';
         import { collection, onSnapshot, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // 1. TAMPIL DAFTAR SEKOLAH
+        let unsubSchool, unsubLogs;
+
+        function bersihkanListener() {
+            if(unsubSchool) unsubSchool();
+            if(unsubLogs) unsubLogs();
+        }
+
+        // TAMPIL DAFTAR
         listenToSchools((schools) => {
             const container = document.getElementById("schoolListContainer");
             container.innerHTML = "";
             schools.forEach(s => {
                 container.innerHTML += `<div class="col-12 col-md-6"><div class="card p-3 shadow-sm border-start border-danger border-4">
                     <h6 class="fw-bold">${s.namaSekolah}</h6>
-                    <button class="btn btn-sm btn-outline-primary" onclick="window.masukSekolah('${s.id}')">Masuk Panel</button>
+                    <button class="btn btn-sm btn-outline-primary" onclick="window.masukSekolah('${s.id}', '${s.namaSekolah}')">Kelola Sekolah Ini</button>
                 </div></div>`;
             });
         });
 
-        window.masukSekolah = (sid) => {
+        window.masukSekolah = (sid, nama) => {
+            bersihkanListener();
             document.getElementById("dashboardView").style.display = "none";
             document.getElementById("managementView").style.display = "block";
-            // ... panggil fungsi load data logbook/tutor per sekolah ...
-            listenToLogbooks(sid, (logs) => { /* Render ke adminLogbookList */ });
+            document.getElementById("selectedSchoolName").innerText = "Kelola: " + nama;
+            
+            unsubLogs = listenToLogbooks(sid, (logs) => {
+                const list = document.getElementById("adminLogbookList");
+                list.innerHTML = logs.map(d => `<div class="p-2 border-bottom text-xs"><b>${d.nama}</b> - ${d.kelas}</div>`).join('');
+            });
         };
-        
-        window.tambahSekolah = () => { /* Logic buat sekolah */ };
+
+        // MANAJEMEN TUTOR (Penting!)
+        onSnapshot(collection(db, "users"), (snap) => {
+            const tbody = document.getElementById("listUsersTable");
+            tbody.innerHTML = "";
+            snap.forEach(d => {
+                const ud = d.data();
+                tbody.innerHTML += `<tr><td>${d.id}</td><td>${ud.assignedSchool || '-'}</td><td>Aktif</td></tr>`;
+            });
+        });
+
+        document.getElementById("btnAddUser").onclick = async () => {
+            await setDoc(doc(db, "users", document.getElementById("newUser").value), {
+                pin: document.getElementById("newPin").value,
+                assignedSchool: document.getElementById("newSchool").value.toLowerCase(),
+                role: "mentor",
+                status: "aktif"
+            }, {merge: true});
+            alert("Tutor & Penugasan Sekolah Disimpan!");
+        };
+
         document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); location.replace("index.html"); };
     </script>
 </body>
