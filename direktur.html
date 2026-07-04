@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Direktur - AEC Hub</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e293b">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        .chat-box { max-height: 400px; overflow-y: auto; background-color: #f8f9fa; }
+        .msg-bubble { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; }
+        .msg-me { background-color: #fff3cd; border: 1px solid #ffecb5; margin-left: auto; border-bottom-right-radius: 2px; }
+        .msg-other { background-color: #fff; border: 1px solid #dee2e6; margin-right: auto; border-bottom-left-radius: 2px; }
+    </style>
+</head>
+<body style="background-color: #f1f5f9;">
+    <div class="app-wrapper">
+        
+        <!-- HEADER EKSEKUTIF V10 -->
+        <nav class="navbar navbar-expand shadow-sm mb-4 border-bottom border-warning border-3" style="background-color: #0f172a;">
+            <div class="container-fluid px-3">
+                <a class="navbar-brand fw-bold d-flex align-items-center text-decoration-none" href="info.html" title="Info Sistem">
+                    <i class="bi bi-star-fill text-warning me-2" style="font-size: 1.5rem;"></i>
+                    <div>
+                        <div style="font-size: 1rem; line-height: 1;" class="text-white">PANEL DIREKTUR <span id="netStatus" class="ms-1"></span></div>
+                        <div class="d-flex align-items-center mt-1">
+                            <span class="badge bg-danger text-white me-2" style="font-size: 0.7rem;">Hari Ke: <span id="headTimeline">Memuat...</span></span>
+                            <span id="headSekolah" class="text-xs fw-bold text-warning text-uppercase">Memuat Lokasi...</span>
+                        </div>
+                    </div>
+                </a>
+                <div class="d-flex align-items-center">
+                    <div class="text-end me-3 text-light border-end border-secondary pe-3 d-none d-sm-block">
+                        <div id="headDate" class="fw-bold text-warning" style="font-size: 0.7rem;">Tanggal</div>
+                        <div id="headClock" class="font-monospace fw-bold" style="font-size: 0.9rem;">00:00:00</div>
+                    </div>
+                    <div class="text-end me-3 d-none d-sm-block"><div class="text-light small fw-bold" id="userNameDisplay">Memuat...</div></div>
+                    <button id="btnLogout" class="btn btn-outline-warning btn-sm fw-bold"><i class="bi bi-power"></i></button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container pb-5">
+            <div class="row">
+                <!-- MENU SAMPING DIREKTUR -->
+                <div class="col-12 col-md-3 mb-4">
+                    <div class="card card-custom p-2 shadow-sm border-0">
+                        <ul class="nav nav-pills flex-row flex-md-column nav-fill gap-1" id="menuTabs">
+                            <li class="nav-item"><button class="nav-link active w-100 fw-bold text-start text-dark" id="tab-beranda" data-bs-toggle="pill" data-bs-target="#beranda"><i class="bi bi-display me-2 text-primary"></i> Info Dashboard</button></li>
+                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start text-dark" id="tab-pantau" data-bs-toggle="pill" data-bs-target="#pantau"><i class="bi bi-graph-up-arrow me-2 text-success"></i> Monitoring Kinerja</button></li>
+                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start text-dark" id="tab-rekap" data-bs-toggle="pill" data-bs-target="#rekap"><i class="bi bi-clock-history me-2 text-secondary"></i> History Logbook</button></li>
+                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start text-danger bg-danger bg-opacity-10" id="tab-diskusi" data-bs-toggle="pill" data-bs-target="#diskusi"><i class="bi bi-chat-dots-fill me-2"></i> Ruang Diskusi</button></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-9">
+                    <div class="tab-content h-100">
+                        
+                        <!-- TAB 1: INFO DASHBOARD -->
+                        <div class="tab-pane fade show active" id="beranda">
+                            <div class="card card-custom p-4 text-center mb-4 shadow-sm border-0 bg-white">
+                                <h1 id="txtClockDash" class="digital-clock-dash mb-0" style="color: #0f172a;">00:00:00</h1>
+                                <p id="txtDateDash" class="text-muted fw-bold text-uppercase mb-3">Tanggal</p>
+                                <hr class="border-secondary opacity-25">
+                                <div class="row text-start mt-4 g-3">
+                                    <div class="col-12 col-md-6"><div class="p-3 bg-primary bg-opacity-10 border border-primary border-opacity-50 rounded-3 h-100"><h6 class="fw-bold text-primary mb-2 text-xs"><i class="bi bi-calendar-week"></i> JADWAL FULL GLOBAL</h6><p id="tutorJadwal" class="text-sm mb-0 text-dark fw-medium" style="white-space: pre-line;">Memuat...</p></div></div>
+                                    <div class="col-12 col-md-6"><div class="p-3 bg-info bg-opacity-10 border border-info border-opacity-50 rounded-3 h-100"><h6 class="fw-bold text-info mb-2 text-xs"><i class="bi bi-calendar-event"></i> JADWAL HARIAN KELAS</h6><p id="tutorJadwalHarian" class="text-sm mb-0 text-dark fw-medium" style="white-space: pre-line;">Memuat...</p></div></div>
+                                    <div class="col-12 col-md-6"><div class="p-3 bg-danger bg-opacity-10 border border-danger border-opacity-50 rounded-3 h-100"><h6 class="fw-bold text-danger mb-2 text-xs"><i class="bi bi-megaphone"></i> BRIEFING & NOTIFIKASI</h6><p id="tutorBriefing" class="text-sm mb-0 text-dark fw-medium" style="white-space: pre-line;">Memuat...</p></div></div>
+                                    <div class="col-12 col-md-6"><div class="p-3 bg-success bg-opacity-10 border border-success border-opacity-50 rounded-3 h-100"><h6 class="fw-bold text-success mb-2 text-xs"><i class="bi bi-bullseye"></i> GOAL HARIAN</h6><p id="tutorGoal" class="text-sm mb-0 text-dark fw-medium" style="white-space: pre-line;">Memuat...</p></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 2: MONITORING KINERJA -->
+                        <div class="tab-pane fade" id="pantau">
+                            <div class="row g-4">
+                                <div class="col-12 col-lg-6">
+                                    <div class="card card-custom p-3 shadow-sm border-top border-warning border-4 bg-white h-100">
+                                        <h6 class="fw-bold text-warning mb-2"><i class="bi bi-clipboard-data me-2"></i> Tracker Kurikulum Otomatis</h6>
+                                        <select id="trackerKelas" class="form-select form-select-sm border-warning fw-bold mb-3"><option value="Kelas A">Pilih: Kelas A</option><option value="Kelas B">Pilih: Kelas B</option><option value="Kelas C">Pilih: Kelas C</option><option value="Kelas D">Pilih: Kelas D</option></select>
+                                        <div id="areaTracker" class="overflow-auto pe-1" style="max-height: 400px;">Memuat pencapaian...</div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="card card-custom p-3 shadow-sm border-top border-success border-4 bg-white mb-4">
+                                        <h6 class="fw-bold text-success mb-3"><i class="bi bi-star-fill me-2"></i> Top 10 Siswa (Leaderboard)</h6>
+                                        <select id="filterKelasSiswa" class="form-select form-select-sm fw-bold border-success mb-3"><option value="Kelas A">Pilih: Kelas A</option><option value="Kelas B">Pilih: Kelas B</option><option value="Kelas C">Pilih: Kelas C</option><option value="Kelas D">Pilih: Kelas D</option></select>
+                                        <div id="listTop10" class="space-y-2 overflow-auto" style="max-height: 200px;">Memuat peringkat...</div>
+                                    </div>
+                                    <div class="card card-custom p-3 shadow-sm border-top border-primary border-4 bg-white">
+                                        <h6 class="fw-bold text-primary mb-2"><i class="bi bi-trophy-fill me-2"></i> Keaktifan Logbook Tutor</h6>
+                                        <div id="leaderboardTutor" class="space-y-2 overflow-auto" style="max-height: 150px;">Memuat ranking...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 3: HISTORY LOGBOOK (MATA ELANG) -->
+                        <div class="tab-pane fade" id="rekap">
+                            <div class="card card-custom p-4 shadow-sm border-top border-secondary border-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="fw-bold text-secondary mb-0"><i class="bi bi-server me-2"></i> Pantau Logbook Sesi</h5>
+                                    <button id="btnExportPDF" class="btn btn-danger btn-sm fw-bold"><i class="bi bi-file-earmark-pdf-fill"></i> Ekspor PDF</button>
+                                </div>
+                                <div class="row g-2 mb-3"><div class="col-6"><select id="filterHari" class="form-select form-select-sm bg-light fw-bold text-danger"><option value="SEMUA">Memuat...</option></select></div><div class="col-6"><select id="filterKelas" class="form-select form-select-sm bg-light fw-bold text-secondary"><option value="SEMUA">Semua Kelas</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option></select></div></div>
+                                <div id="logbookList" class="overflow-auto pe-2" style="max-height: 500px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 4: RUANG DISKUSI -->
+                        <div class="tab-pane fade h-100" id="diskusi">
+                            <div class="card card-custom p-3 shadow-sm border-top border-danger border-4 h-100 d-flex flex-column bg-white">
+                                <h5 class="fw-bold text-danger mb-1"><i class="bi bi-chat-dots-fill me-2"></i> Ruang Diskusi Terbuka</h5>
+                                <p class="small text-muted mb-3">Beri arahan, teguran, atau motivasi kepada seluruh tim AEC.</p>
+                                
+                                <div id="chatBox" class="chat-box flex-grow-1 p-3 rounded border mb-3 d-flex flex-column gap-2" style="min-height: 350px;"></div>
+                                
+                                <div class="input-group">
+                                    <input type="text" id="inputChat" class="form-control text-sm" placeholder="Ketik pesan arahan Anda...">
+                                    <button class="btn btn-warning fw-bold px-4" id="btnSendChat"><i class="bi bi-send-fill text-dark"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT INTI V10 + DATABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { db, startClock, listenToGlobalInfo, listenToLogbooks, generateTimelineHTML } from './script.js?v=10';
+        import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ANTI BACK LOGIN (HANYA DIREKTUR YANG BOLEH MASUK)
+        const activeRole = sessionStorage.getItem("userRole");
+        if (activeRole !== "direktur") window.location.replace("index.html");
+        
+        const myName = sessionStorage.getItem("loggedInName");
+        document.getElementById("userNameDisplay").innerText = "Dir: " + myName;
+        
+        function updateNetworkStatus() { document.getElementById('netStatus').innerHTML = navigator.onLine ? '<i class="bi bi-circle-fill text-success" style="font-size: 0.6rem;"></i>' : '<i class="bi bi-circle-fill text-danger" style="font-size: 0.6rem;"></i>'; }
+        window.addEventListener('online', updateNetworkStatus); window.addEventListener('offline', updateNetworkStatus); updateNetworkStatus();
+        
+        startClock('txtClockDash', 'txtDateDash');
+        setInterval(() => { const now = new Date(); document.getElementById('headClock').innerText = now.toLocaleTimeString('id-ID'); document.getElementById('headDate').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }, 1000);
+
+        // DATA INFO & TIMELINE BUNDERAN
+        let rawKurikulum = { vocab: [], speaking: [], grammar: [] };
+        listenToGlobalInfo((data) => {
+            document.getElementById('headSekolah').innerText = data.namaSekolah || "AEC Hub Pusat";
+            document.getElementById('headTimeline').innerText = generateTimelineHTML(data.totalHari, data.hariBerjalan);
+            
+            document.getElementById('tutorJadwal').innerText = data.jadwal || "-";
+            document.getElementById('tutorJadwalHarian').innerText = data.jadwalHarian || "-";
+            document.getElementById('tutorBriefing').innerText = data.briefing || "-";
+            document.getElementById('tutorGoal').innerText = data.goal || "-";
+
+            rawKurikulum = data.kurikulum || { vocab: [], speaking: [], grammar: [] };
+            renderTracker();
+        });
+
+        // RUANG DISKUSI (CHAT)
+        onSnapshot(query(collection(db, "chats"), orderBy("waktu", "asc")), (snap) => {
+            const box = document.getElementById("chatBox"); box.innerHTML = "";
+            snap.forEach(doc => {
+                const c = doc.data(); const isMe = c.sender === myName;
+                const time = c.waktu ? c.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '..';
+                
+                let nameColor = isMe ? 'text-warning text-darken-2' : 'text-primary';
+                let roleBadge = "";
+                if(c.role === "admin") { nameColor = 'text-danger'; roleBadge = '<i class="bi bi-shield-lock-fill ms-1"></i>'; }
+                else if(c.role === "direktur") { nameColor = 'text-warning'; roleBadge = '<i class="bi bi-star-fill ms-1"></i>'; }
+
+                box.innerHTML += `<div class="msg-bubble ${isMe ? 'msg-me' : 'msg-other'} shadow-sm">
+                    <div class="fw-bold text-xs ${nameColor}">${c.sender} ${roleBadge} <span class="fw-normal text-muted ms-1" style="font-size:0.6rem;">${time}</span></div>
+                    <div class="mt-1">${c.message}</div>
+                </div>`;
+            });
+            box.scrollTop = box.scrollHeight; 
+        });
+
+        document.getElementById("btnSendChat").onclick = async () => {
+            const msg = document.getElementById("inputChat").value.trim(); if(!msg) return;
+            await addDoc(collection(db, "chats"), { sender: myName, role: "direktur", message: msg, waktu: serverTimestamp(), type: 'global' });
+            document.getElementById("inputChat").value = "";
+        };
+        document.getElementById("inputChat").addEventListener("keypress", function(event) { if (event.key === "Enter") { event.preventDefault(); document.getElementById("btnSendChat").click(); } });
+
+        // LOGBOOK, TRACKER & LEADERBOARD DATA
+        let dataLengkap = []; 
+        listenToLogbooks((logData) => { 
+            dataLengkap = logData; 
+            ekstrakHari(); renderLogbookList(); renderTracker(); kalkulasiDataSiswa(); kalkulasiKinerjaMentor();
+        });
+        
+        document.getElementById('filterKelas').onchange = () => renderLogbookList(); document.getElementById('filterHari').onchange = () => renderLogbookList();
+        document.getElementById('trackerKelas').onchange = () => renderTracker(); document.getElementById('filterKelasSiswa').onchange = () => kalkulasiDataSiswa();
+        
+        // 1. Fungsi Tracker Kurikulum
+        function renderTracker() {
+            const area = document.getElementById("areaTracker"); const kelasAktif = document.getElementById("trackerKelas").value;
+            if(!rawKurikulum || Object.keys(rawKurikulum).length === 0) { area.innerHTML = "<div class='small text-muted'>Kosong.</div>"; return; }
+            let materiSelesai = new Set(); dataLengkap.forEach(log => { if (log.kelas === kelasAktif && log.materi) { log.materi.forEach(m => materiSelesai.add(m)); } });
+            const renderBlok = (judul, arrayMateri, warna) => {
+                if(!arrayMateri || arrayMateri.length === 0) return '';
+                let listHtml = ""; arrayMateri.forEach(mat => {
+                    const isDone = materiSelesai.has(mat); const icon = isDone ? `<i class="bi bi-check-circle-fill text-${warna}"></i>` : `<i class="bi bi-circle text-secondary opacity-50"></i>`; const bg = isDone ? `bg-${warna} bg-opacity-10 border-${warna}` : 'bg-white text-muted';
+                    listHtml += `<div class="d-flex justify-content-between align-items-center p-2 mb-1 border rounded text-xs ${bg}"><span class="${isDone ? 'fw-bold' : ''}">${mat}</span> <span>${icon}</span></div>`;
+                }); return `<div class="mb-3"><h6 class="text-xs fw-bold text-${warna} mb-1 border-bottom pb-1">${judul}</h6>${listHtml}</div>`;
+            };
+            area.innerHTML = renderBlok("VOCABULARY", rawKurikulum.vocab, "primary") + renderBlok("SPEAKING", rawKurikulum.speaking, "success") + renderBlok("GRAMMAR", rawKurikulum.grammar, "danger");
+        }
+
+        // 2. Fungsi Leaderboard Siswa & Mentor
+        function kalkulasiDataSiswa() {
+            const kls = document.getElementById("filterKelasSiswa").value;
+            let rekap = {}; 
+            dataLengkap.forEach(log => {
+                if(log.kelas === kls && log.dataSiswa) {
+                    log.dataSiswa.forEach(s => {
+                        if(!rekap[s.nama]) rekap[s.nama] = { poin:0 };
+                        let nStr = (s.nilai || "").toString().toLowerCase().trim();
+                        if(nStr === 'a' || nStr === 'a+') rekap[s.nama].poin += 90; else if(parseInt(nStr) > 0) rekap[s.nama].poin += parseInt(nStr);
+                    });
+                }
+            });
+            const listTop = document.getElementById("listTop10"); listTop.innerHTML = "";
+            let arrPeringkat = Object.entries(rekap).map(([nama, data]) => ({ nama, poin: data.poin })).sort((a,b) => b.poin - a.poin).slice(0, 10);
+            if(arrPeringkat.length === 0) { listTop.innerHTML = "<div class='text-muted small'>Belum ada data nilai di kelas ini.</div>"; return; }
+            arrPeringkat.forEach((item, idx) => {
+                let badge = idx === 0 ? "bg-warning text-dark" : (idx === 1 ? "bg-secondary text-white" : "bg-primary text-white");
+                listTop.innerHTML += `<div class="d-flex justify-content-between align-items-center p-2 border rounded mb-1 bg-light text-sm"><div class="fw-bold"><span class="badge ${badge} me-2">#${idx+1}</span> ${item.nama}</div><div class="fw-bold text-success">${item.poin} Pts</div></div>`;
+            });
+        }
+
+        function kalkulasiKinerjaMentor() {
+            let rekapMentor = {};
+            dataLengkap.forEach(log => { if(!rekapMentor[log.nama]) rekapMentor[log.nama] = 0; rekapMentor[log.nama]++; });
+            const board = document.getElementById("leaderboardTutor"); board.innerHTML = "";
+            let arrMentor = Object.entries(rekapMentor).map(([nama, count]) => ({nama, count})).sort((a,b) => b.count - a.count);
+            arrMentor.forEach((m, idx) => {
+                let med = idx === 0 ? "🥇" : (idx === 1 ? "🥈" : "🏅");
+                board.innerHTML += `<div class="d-flex justify-content-between p-2 border rounded mb-1 bg-white shadow-sm text-sm"><div class="fw-bold">${med} ${m.nama}</div><div class="badge bg-primary">${m.count} Logbook</div></div>`;
+            });
+        }
+
+        // 3. Fungsi Render History Logbook Mata Elang
+        function ekstrakHari() {
+            const daysMap = new Map(); dataLengkap.forEach(d => { if(d.waktu) { const dStr = d.waktu.toDate().toLocaleDateString('id-ID'); if(!daysMap.has(dStr)) daysMap.set(dStr, d.waktu.toDate()); } });
+            const sortedDays = Array.from(daysMap.entries()).sort((a,b) => a[1] - b[1]); const selHari = document.getElementById("filterHari"); const valSkg = selHari.value;
+            selHari.innerHTML = '<option value="SEMUA">Semua History</option>';
+            sortedDays.forEach((entry, idx) => { selHari.innerHTML += `<option value="${entry[0]}">Hari ke-${idx+1} (${entry[0]})</option>`; });
+            if (Array.from(selHari.options).some(o=>o.value===valSkg) && valSkg !== "SEMUA") selHari.value = valSkg; else if (sortedDays.length > 0 && valSkg === "SEMUA" && selHari.options.length <= 2) selHari.value = sortedDays[sortedDays.length-1][0];
+        }
+
+        function renderLogbookList() {
+            const list = document.getElementById("logbookList"); const fKls = document.getElementById("filterKelas").value; const fHari = document.getElementById("filterHari").value; list.innerHTML = "";
+            let dt = dataLengkap; if (fHari !== "SEMUA") dt = dt.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari); if (fKls !== "SEMUA") dt = dt.filter(d => d.kelas === fKls);
+            if (dt.length === 0) { list.innerHTML = `<div class="alert text-center border-0 mt-4">Belum ada history.</div>`; return; }
+            dt.forEach((d, i) => {
+                const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'Pending...';
+                let tb = ""; if (d.dataSiswa && d.dataSiswa.length > 0) { tb = `<table class="table table-bordered text-xs mt-2 mb-0 text-center"><tr class="bg-light"><th>Siswa</th><th>Abs</th><th>Nilai</th></tr>`; d.dataSiswa.forEach(s => { 
+                    let ikon = s.kehadiran === 'h' ? '✔' : (s.kehadiran === 'a' ? '✖' : s.kehadiran.toUpperCase());
+                    tb += `<tr><td class="text-start">${s.nama}</td><td class="text-uppercase fw-bold">${ikon}</td><td class="fw-bold">${s.nilai || '-'}</td></tr>`; 
+                }); tb += `</table>`; }
+                
+                list.innerHTML += `<div class="p-3 bg-white border rounded-3 mb-3 shadow-sm"><div class="d-flex justify-content-between border-bottom pb-1 mb-2"><span class="fw-bold text-primary"><i class="bi bi-person-fill"></i> ${d.nama}</span><span class="text-muted text-xs">${w}</span></div><div><span class="badge bg-primary me-1">${d.kelas}</span><span class="badge bg-dark">${d.jamKe}</span></div><div class="text-xs fw-bold mt-2 text-dark">📖 Materi: ${d.materi ? d.materi.join(', ') : '-'}</div><div class="text-xs fw-bold mt-1 text-success">🎯 Catatan Estafet: ${d.tugasSiswa || '-'}</div><button class="btn btn-sm btn-outline-secondary w-100 mt-2 text-xs fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#col_${i}">Lihat Rapor ▼</button><div class="collapse" id="col_${i}">${tb}</div></div>`;
+            });
+        }
+
+        // Export PDF
+        document.getElementById("btnExportPDF").onclick = () => { const fHari = document.getElementById("filterHari").value; let dataTampil = dataLengkap; if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari); const printDiv = document.createElement("div"); printDiv.style.fontFamily = "Arial, sans-serif"; let htmlString = `<h3 style="text-align:center;">LAPORAN AEC (DIREKTUR) - ${fHari}</h3><table style="width: 100%; border-collapse: collapse; font-size: 11px;" border="1"><tr style="background:#ddd;"><th>Wkt</th><th>Tutor</th><th>Kls</th><th>Materi & Tugas Estafet</th><th>Nilai</th></tr>`; dataTampil.forEach(d => { const w = d.waktu ? d.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '-'; let ds = d.dataSiswa ? d.dataSiswa.map(s=>`<b>${s.nama}</b>:${s.kehadiran}(${s.nilai || '-'})`).join('<br>') : '-'; htmlString += `<tr><td>${w}</td><td>${d.nama}</td><td>${d.kelas}<br>${d.jamKe}</td><td><b>Materi:</b> ${d.materi.join(', ')}<br><b>Tugas:</b> ${d.tugasSiswa}</td><td>${ds}</td></tr>`; }); htmlString += `</table>`; printDiv.innerHTML = htmlString; html2pdf().set({ margin: 0.3, filename: `AEC_Dir_${fHari.replace(/\//g, "-")}.pdf`, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }}).from(printDiv).save(); };
+        
+        document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); window.location.replace("index.html"); };
+    </script>
+</body>
+</html>
