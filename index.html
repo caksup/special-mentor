@@ -14,7 +14,6 @@
 </head>
 <body class="bg-light">
 
-    <!-- HEADER V8 DENGAN LINK INFO & INDIKATOR SINYAL -->
     <nav class="navbar navbar-expand bg-white shadow-sm border-bottom border-primary border-3 mb-4">
         <div class="container-fluid px-3">
             <a class="navbar-brand fw-bold d-flex align-items-center text-decoration-none" href="info.html" title="Klik untuk Info & Versi Aplikasi">
@@ -68,6 +67,13 @@
     <script type="module">
         import { startClock, listenToGlobalInfo, mentorData } from './script.js?v=8';
 
+        // 1. SISTEM ANTI-BACK & AUTO REDIRECT (JIKA SUDAH LOGIN)
+        const activeUser = sessionStorage.getItem("loggedInUser");
+        if (activeUser) {
+            if (activeUser === "sup" || activeUser === "afif") window.location.replace("superuser.html");
+            else window.location.replace("mentor.html");
+        }
+
         // Deteksi Sinyal
         function updateNetworkStatus() {
             const ind = document.getElementById('netStatus');
@@ -92,7 +98,9 @@
             if (!userVal) return alert("Ketik username!"); if (!mentorData[userVal]) return alert("Username tidak terdaftar!");
             if (mentorData[userVal].pin !== pin) return alert("PIN salah.");
             sessionStorage.setItem("loggedInUser", userVal); sessionStorage.setItem("loggedInName", mentorData[userVal].julukan);
-            window.location.href = "mentor.html"; 
+            
+            // 2. GANTI PERINTAH JADI REPLACE (BIAR NGGAK BISA DI BACK)
+            window.location.replace("mentor.html"); 
         };
     </script>
 </body>
