@@ -33,7 +33,6 @@
         
         <nav class="navbar navbar-expand bg-white sticky-top shadow-sm mb-3 border-bottom border-danger border-3" style="z-index: 1020; padding: 6px 0;">
             <div class="container-fluid px-3 d-flex flex-column align-items-stretch">
-                
                 <!-- BARIS 1: Header Atas -->
                 <div class="d-flex justify-content-between align-items-center w-100 mb-2">
                     <div class="d-flex flex-column text-start flex-grow-1 overflow-hidden" style="font-size: 0.75rem; line-height: 1.25;">
@@ -55,20 +54,22 @@
                 <div class="w-100 bg-danger bg-opacity-10 p-2 rounded border border-danger border-opacity-50 d-flex align-items-center">
                     <i class="bi bi-buildings-fill text-danger me-2 fs-5"></i>
                     <select id="masterSchoolSelect" class="form-select form-select-sm fw-bold border-danger text-danger bg-white shadow-sm">
-                        <option value="">-- Pilih Handle School --</option>
+                        <option value="">-- Pilih Handle School utk diedit --</option>
                         <option value="NEW" class="fw-bold text-primary">+ BUAT SEKOLAH BARU</option>
                     </select>
                 </div>
             </div>
         </nav>
 
-        <div class="container pb-5" id="mainContentArea" style="display: none;">
+        <!-- KONTEN UTAMA SAAT INI SELALU TAMPIL (TIDAK ADA DISPLAY NONE) -->
+        <div class="container pb-5" id="mainContentArea">
             <div class="row">
                 <div class="col-12 col-lg-7 mb-4">
                     
                     <ul class="nav nav-pills mb-3 shadow-sm bg-white rounded p-2 dynamic-tabs" id="adminTabs" role="tablist">
-                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-setup" title="Setup Global"><i class="bi bi-gear-fill"></i><span class="tab-label">Setup</span></button></li>
-                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-tutor" title="Manajemen Tutor"><i class="bi bi-person-badge"></i><span class="tab-label">Tutor</span></button></li>
+                        <!-- TAB TUTOR (GLOBAL) JADI YANG PERTAMA MUNCUL -->
+                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-tutor" title="Manajemen Tutor"><i class="bi bi-person-badge"></i><span class="tab-label">Tutor (Global)</span></button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-setup" title="Setup Sekolah"><i class="bi bi-gear-fill"></i><span class="tab-label">Setup Sekolah</span></button></li>
                         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-siswa" title="Data Siswa"><i class="bi bi-mortarboard"></i><span class="tab-label">Siswa</span></button></li>
                         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-diskusi" title="Ruang Diskusi"><i class="bi bi-chat-dots"></i><span class="tab-label">Diskusi</span></button></li>
                         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-kurikulum" title="Tracker Materi"><i class="bi bi-bar-chart-fill"></i><span class="tab-label">Tracker</span></button></li>
@@ -76,10 +77,14 @@
                     </ul>
 
                     <div class="tab-content h-100">
-                        <div class="tab-pane fade show active" id="tab-setup">
+                        
+                        <!-- TAB TUTOR (SEKARANG DEFAULT AKTIF) -->
+                        <div class="tab-pane fade show active" id="tab-tutor"><div class="card card-custom p-3 shadow-sm bg-white border-primary border-2 mb-3"><h6 class="fw-bold text-primary mb-3"><i class="bi bi-person-fill-add me-2"></i> Kelola Tutor (Global)</h6><div class="row g-2 mb-2"><div class="col-4"><input type="text" id="newUser" class="form-control form-control-sm text-xs text-lowercase fw-bold" placeholder="username"></div><div class="col-4"><input type="text" id="newPin" class="form-control form-control-sm text-xs text-danger fw-bold" placeholder="PIN Angka"></div><div class="col-4"><input type="text" id="newName" class="form-control form-control-sm text-xs" placeholder="Julukan"></div></div><div class="row g-2 mb-3"><div class="col-6"><select id="newRole" class="form-select form-select-sm text-xs"><option value="mentor">Mentor</option><option value="direktur">Direktur</option><option value="admin">Admin</option></select></div><div class="col-6"><button id="btnAddUser" class="btn btn-sm btn-primary w-100 fw-bold">Tambah Akun</button></div></div><div class="table-responsive"><table class="table table-sm table-bordered text-xs align-middle text-center"><thead class="table-light"><tr><th>User</th><th>Nama</th><th>Role</th><th>PIN</th><th>Aksi</th></tr></thead><tbody id="listUsersTable"></tbody></table></div></div><div class="card card-custom p-3 shadow-sm bg-white"><h6 class="fw-bold text-dark mb-2"><i class="bi bi-trophy text-warning me-2"></i> Kinerja Tutor (Berdasarkan Sekolah yg Dipilih)</h6><div id="leaderboardTutor" class="space-y-2">Pilih sekolah di atas untuk melihat ranking...</div></div></div>
+
+                        <div class="tab-pane fade" id="tab-setup">
                             <div class="card card-custom p-3 shadow-sm bg-white mb-3 border-top border-warning border-3">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-broadcast text-danger me-2"></i> Pengaturan Sekolah</h6>
+                                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-broadcast text-danger me-2"></i> Pengaturan Sekolah Spesifik</h6>
                                     <button class="btn btn-sm btn-outline-danger" id="btnArsipSekolah"><i class="bi bi-archive"></i> Arsipkan</button>
                                 </div>
                                 <div class="row g-2 mb-3 p-2 border border-warning rounded bg-warning bg-opacity-10">
@@ -104,7 +109,6 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="tab-tutor"><div class="card card-custom p-3 shadow-sm bg-white border-primary border-2 mb-3"><h6 class="fw-bold text-primary mb-3"><i class="bi bi-person-fill-add me-2"></i> Kelola Tutor (Global)</h6><div class="row g-2 mb-2"><div class="col-4"><input type="text" id="newUser" class="form-control form-control-sm text-xs text-lowercase fw-bold" placeholder="username"></div><div class="col-4"><input type="text" id="newPin" class="form-control form-control-sm text-xs text-danger fw-bold" placeholder="PIN Angka"></div><div class="col-4"><input type="text" id="newName" class="form-control form-control-sm text-xs" placeholder="Julukan"></div></div><div class="row g-2 mb-3"><div class="col-6"><select id="newRole" class="form-select form-select-sm text-xs"><option value="mentor">Mentor</option><option value="direktur">Direktur</option><option value="admin">Admin</option></select></div><div class="col-6"><button id="btnAddUser" class="btn btn-sm btn-primary w-100 fw-bold">Tambah Akun</button></div></div><div class="table-responsive"><table class="table table-sm table-bordered text-xs align-middle text-center"><thead class="table-light"><tr><th>User</th><th>Nama</th><th>Role</th><th>PIN</th><th>Aksi</th></tr></thead><tbody id="listUsersTable"></tbody></table></div></div><div class="card card-custom p-3 shadow-sm bg-white"><h6 class="fw-bold text-dark mb-2"><i class="bi bi-trophy text-warning me-2"></i> Kinerja Tutor (Di Sekolah Ini)</h6><div id="leaderboardTutor" class="space-y-2">Memuat ranking...</div></div></div>
                         <div class="tab-pane fade" id="tab-siswa"><div class="card card-custom p-3 shadow-sm bg-white border-success border-2"><h6 class="fw-bold text-success mb-2"><i class="bi bi-mortarboard-fill me-2"></i> Rapor Siswa & Leaderboard</h6><select id="filterKelasSiswa" class="form-select form-select-sm fw-bold border-success mb-3"></select><ul class="nav nav-pills mb-3 text-xs" id="siswaTabs" role="tablist"><li class="nav-item"><button class="nav-link active py-1" data-bs-toggle="pill" data-bs-target="#sub-absen">Rekap Absen & Nilai</button></li><li class="nav-item"><button class="nav-link py-1 text-warning bg-warning bg-opacity-10" data-bs-toggle="pill" data-bs-target="#sub-top10"><i class="bi bi-star-fill"></i> Top 10 Kelas</button></li></ul><div class="tab-content"><div class="tab-pane fade show active" id="sub-absen"><div class="table-responsive" style="max-height: 400px; overflow-y: auto;"><table class="table table-sm table-bordered text-xs align-middle text-center mb-0"><thead class="table-success sticky-top"><tr><th style="width: 30px;">No</th><th>Nama Siswa</th><th>✔</th><th>✖</th><th>S</th><th>I</th><th>Total Poin/A</th></tr></thead><tbody id="tabelRekapSiswa"></tbody></table></div></div><div class="tab-pane fade" id="sub-top10"><div id="listTop10" class="space-y-2">Memuat peringkat...</div></div></div></div></div>
                         <div class="tab-pane fade" id="tab-diskusi"><div class="card card-custom p-3 shadow-sm bg-white border-danger border-2 h-100 d-flex flex-column"><h6 class="fw-bold text-danger mb-2"><i class="bi bi-chat-dots-fill me-2"></i> Ruang Diskusi & Japri</h6><div id="chatBox" class="chat-box flex-grow-1 p-2 rounded border mb-2 d-flex flex-column gap-2"></div><div class="input-group"><select id="chatTarget" class="form-select form-select-sm" style="max-width: 120px; font-size: 0.75rem; font-weight: bold;"><option value="GLOBAL">Grup Semua</option></select><input type="text" id="inputChat" class="form-control form-control-sm text-sm" placeholder="Ketik pesan/japri..."><button class="btn btn-danger btn-sm fw-bold" id="btnSendChat"><i class="bi bi-send"></i></button></div></div></div>
                         <div class="tab-pane fade" id="tab-kurikulum"><div class="card card-custom p-3 shadow-sm bg-white border-warning border-2"><h6 class="fw-bold text-warning mb-2"><i class="bi bi-clipboard-data me-2"></i> Tracker Otomatis</h6><select id="trackerKelas" class="form-select form-select-sm border-warning fw-bold mb-3"></select><div id="areaTracker" class="overflow-auto pe-1" style="max-height: 380px;">Memuat pencapaian...</div></div></div>
@@ -115,14 +119,16 @@
                 <div class="col-12 col-lg-5">
                     <div class="card card-custom p-3 shadow-sm bg-white h-100">
                         <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                            <h6 class="fw-bold text-primary mb-0"><i class="bi bi-server me-1"></i> Logbook Harian</h6>
+                            <h6 class="fw-bold text-primary mb-0"><i class="bi bi-server me-1"></i> Logbook Sekolah</h6>
                             <button id="btnExportPDF" class="btn btn-danger btn-sm fw-bold"><i class="bi bi-file-earmark-excel-fill"></i> Cetak PDF (Tabel)</button>
                         </div>
                         <div class="row g-2 mb-3">
                             <div class="col-6"><select id="filterHari" class="form-select form-select-sm border-2 fw-bold text-danger text-xs"><option value="SEMUA">Semua Data</option></select></div>
                             <div class="col-6"><select id="filterKelasHistori" class="form-select form-select-sm border-2 fw-bold text-secondary text-xs"></select></div>
                         </div>
-                        <div id="adminLogbookList" class="overflow-auto pe-1" style="max-height: 520px;">Memuat...</div>
+                        <div id="adminLogbookList" class="overflow-auto pe-1" style="max-height: 520px;">
+                            <div class="alert alert-secondary small text-center">Pilih Handle School di atas terlebih dahulu.</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -140,25 +146,35 @@
         function updateNetworkStatus() { document.getElementById('netStatus').innerHTML = navigator.onLine ? '<i class="bi bi-wifi text-success"></i>' : '<i class="bi bi-wifi-off text-danger"></i>'; }
         window.addEventListener('online', updateNetworkStatus); window.addEventListener('offline', updateNetworkStatus); updateNetworkStatus(); startClock('headClock', 'headDate');
 
-        let currentSchoolId = ""; let rawKurikulum = {}; let dataLengkap = []; let unsubLogbooks = null; let unsubChats = null; let unsubWA = null;
+        let currentSchoolId = ""; let rawKurikulum = {}; let dataLengkap = [];
 
         // 1. INIT MASTER DROPDOWN
         listenToSchools((schools) => {
             const select = document.getElementById("masterSchoolSelect"); const prev = select.value;
-            select.innerHTML = `<option value="">-- Pilih Handle School --</option><option value="NEW" class="fw-bold text-primary">+ BUAT SEKOLAH BARU</option>`;
+            select.innerHTML = `<option value="">-- Pilih Handle School utk diedit --</option><option value="NEW" class="fw-bold text-primary">+ BUAT SEKOLAH BARU</option>`;
             schools.forEach(s => { select.innerHTML += `<option value="${s.id}" class="fw-bold text-dark">${s.namaSekolah} (${s.id})</option>`; });
             if (Array.from(select.options).some(o=>o.value===prev)) select.value = prev;
         });
 
+        // KETIKA ADMIN MILIH SEKOLAH
         document.getElementById("masterSchoolSelect").onchange = (e) => {
             const val = e.target.value;
-            if(!val) { document.getElementById("mainContentArea").style.display = "none"; return; }
-            document.getElementById("mainContentArea").style.display = "block";
+            if(!val) { 
+                currentSchoolId = ""; 
+                document.getElementById("inputIdSchool").readOnly = false; document.getElementById("inputIdSchool").value = "";
+                document.getElementById("inputSekolah").value = ""; document.getElementById("inputTotalHari").value = 5; document.getElementById("inputHariKe").value = 0;
+                document.getElementById("inputMasterKelas").value = ""; document.getElementById("inputBriefing").value = ""; document.getElementById("inputJadwal").value = "";
+                document.getElementById("inputGoal").value = ""; document.getElementById("inputMasterSiswa").value = ""; document.getElementById("inputVocab").value = "";
+                document.getElementById("inputSpeaking").value = ""; document.getElementById("inputGrammar").value = "";
+                document.getElementById("adminLogbookList").innerHTML = `<div class="alert alert-secondary small text-center">Pilih Handle School di atas terlebih dahulu.</div>`;
+                document.getElementById("chatBox").innerHTML = ""; document.getElementById("listTugasAdmin").innerHTML = "";
+                return; 
+            }
             
             if(val === "NEW") {
                 currentSchoolId = ""; document.getElementById("inputIdSchool").readOnly = false; document.getElementById("inputIdSchool").value = "";
                 document.getElementById("inputSekolah").value = ""; document.getElementById("inputTotalHari").value = 5; document.getElementById("inputHariKe").value = 0;
-                // Kosongkan form liyane
+                document.getElementById("adminLogbookList").innerHTML = `<div class="alert alert-warning small text-center">Simpan Handle School terlebih dahulu.</div>`;
                 new bootstrap.Tab(document.querySelector('[data-bs-target="#tab-setup"]')).show();
             } else {
                 currentSchoolId = val; document.getElementById("inputIdSchool").value = val; document.getElementById("inputIdSchool").readOnly = true;
@@ -231,6 +247,7 @@
         
         // RENDER PDF MODEL TABEL (PAK DHE EXCEL)
         document.getElementById("btnExportPDF").onclick = () => {
+            if(!currentSchoolId) return alert("Pilih sekolah dulu di bagian atas!");
             const fHari = document.getElementById("filterHari").value; let dataTampil = dataLengkap; if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari);
             const printDiv = document.createElement("div"); printDiv.style.fontFamily = "Arial, sans-serif"; printDiv.style.padding = "20px";
             let htmlString = `<h3 style="text-align:center; font-family: Arial, sans-serif; margin-bottom: 20px;">LAPORAN LOGBOOK MENTOR<br><small style="font-size:12px; font-weight:normal;">Sekolah: ${document.getElementById('inputSekolah').value} | Filter: ${fHari}</small></h3>`;
