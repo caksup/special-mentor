@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Area Mentor - Super Creative Hub AEC</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffffff">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
@@ -11,26 +13,21 @@
 <body class="bg-light">
     <div class="app-wrapper">
         
-        <!-- HEADER PROFESIONAL MENTOR V7 -->
         <nav class="navbar navbar-expand bg-white shadow-sm mb-4 border-bottom border-primary border-3">
             <div class="container-fluid px-3">
-                <a class="navbar-brand fw-bold text-primary d-flex align-items-center" href="#">
-                    <i class="bi bi-layers-half me-2" style="font-size: 1.5rem;"></i>
+                <a class="navbar-brand fw-bold d-flex align-items-center text-decoration-none" href="info.html" title="Info Jagat Kreatif">
+                    <i class="bi bi-layers-half me-2 text-primary" style="font-size: 1.5rem;"></i>
                     <div>
-                        <div style="font-size: 1rem; line-height: 1;">AREA TUTOR AEC</div>
+                        <div style="font-size: 1rem; line-height: 1;" class="text-primary">AREA TUTOR <span id="netStatus" class="ms-1"><i class="bi bi-circle-fill text-success" style="font-size: 0.6rem;"></i></span></div>
                         <div id="headHariKe" class="badge bg-danger mt-1" style="font-size: 0.65rem;">Timeline: Memuat...</div>
                     </div>
                 </a>
                 <div class="d-flex align-items-center">
-                    <!-- Jam & Tanggal Header -->
                     <div class="text-end me-3 text-secondary border-end pe-3 d-none d-sm-block">
                         <div id="headDate" class="fw-bold" style="font-size: 0.7rem;">Tanggal</div>
                         <div id="headClock" class="font-monospace fw-bold text-primary" style="font-size: 0.9rem;">00:00:00</div>
                     </div>
-                    <!-- Profil Tutor -->
-                    <div class="text-end me-3 d-none d-sm-block">
-                        <div class="text-secondary small fw-bold" id="userNameDisplay">Memuat...</div>
-                    </div>
+                    <div class="text-end me-3 d-none d-sm-block"><div class="text-secondary small fw-bold" id="userNameDisplay">Memuat...</div></div>
                     <button id="btnLogout" class="btn btn-outline-danger btn-sm fw-bold"><i class="bi bi-power"></i></button>
                 </div>
             </div>
@@ -82,25 +79,12 @@
                                     </div>
                                 </div>
 
-                                <!-- RENDER CEKLIS MATERI 3 PILAR KURIKULUM AEC -->
                                 <div class="mb-3">
                                     <label class="form-label fw-bold text-secondary small">MATERI KURIKULUM YANG DIAJARKAN</label>
                                     <div class="bg-light p-3 rounded-3 border">
-                                        <!-- Sub-Blok Vocabulary -->
-                                        <div class="mb-3">
-                                            <h6 class="text-xs fw-bold text-primary mb-1 border-bottom pb-1">A. VOCABULARY MORNING</h6>
-                                            <div id="boxVocab" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div>
-                                        </div>
-                                        <!-- Sub-Blok Speaking -->
-                                        <div class="mb-3">
-                                            <h6 class="text-xs fw-bold text-success mb-1 border-bottom pb-1">B. SPEAKING</h6>
-                                            <div id="boxSpeaking" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div>
-                                        </div>
-                                        <!-- Sub-Blok Grammar -->
-                                        <div>
-                                            <h6 class="text-xs fw-bold text-danger mb-1 border-bottom pb-1">C. GRAMMAR</h6>
-                                            <div id="boxGrammar" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div>
-                                        </div>
+                                        <div class="mb-3"><h6 class="text-xs fw-bold text-primary mb-1 border-bottom pb-1">A. VOCABULARY MORNING</h6><div id="boxVocab" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div></div>
+                                        <div class="mb-3"><h6 class="text-xs fw-bold text-success mb-1 border-bottom pb-1">B. SPEAKING</h6><div id="boxSpeaking" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div></div>
+                                        <div><h6 class="text-xs fw-bold text-danger mb-1 border-bottom pb-1">C. GRAMMAR</h6><div id="boxGrammar" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div></div>
                                     </div>
                                 </div>
 
@@ -111,10 +95,7 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label fw-bold text-success small">CATATAN & TUGAS ESTAFET UNTUK SISWA</label>
-                                    <textarea id="notesTugasSiswa" class="form-control bg-success bg-opacity-10 border-success border-opacity-50" rows="2" placeholder="Tulis catatan kurikulum untuk tutor jam berikutnya..."></textarea>
-                                </div>
+                                <div class="mb-3"><label class="form-label fw-bold text-success small">CATATAN & TUGAS ESTAFET UNTUK SISWA</label><textarea id="notesTugasSiswa" class="form-control bg-success bg-opacity-10 border-success border-opacity-50" rows="2" placeholder="Tulis catatan kurikulum untuk tutor jam berikutnya..."></textarea></div>
                                 <div class="mb-3"><label class="form-label fw-bold text-secondary small">LAPORAN UMUM / KENDALA KELAS</label><textarea id="notesSiswa" class="form-control bg-light border" rows="2"></textarea></div>
 
                                 <button id="btnSave" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm mt-2"><i class="bi bi-send-check me-2"></i> SIMPAN LOGBOOK & UPDATE PENCAPAIAN</button>
@@ -137,9 +118,7 @@
                                 <p class="small text-muted mb-3">Tugas harian yang siap didistribusikan ke grup wali murid / siswa.</p>
                                 <div class="mb-3">
                                     <select id="filterWA" class="form-select bg-light fw-bold text-dark border-success">
-                                        <option value="SEMUA">Lihat Semua Tugas WA</option>
-                                        <option value="GLOBAL (Semua Ruang A-D)">GLOBAL (Semua Ruang A-D)</option>
-                                        <option value="Kelas A">Khusus Kelas A</option><option value="Kelas B">Khusus Kelas B</option><option value="Kelas C">Khusus Kelas C</option><option value="Kelas D">Khusus Kelas D</option>
+                                        <option value="SEMUA">Lihat Semua Tugas WA</option><option value="GLOBAL (Semua Ruang A-D)">GLOBAL (Semua Ruang A-D)</option><option value="Kelas A">Khusus Kelas A</option><option value="Kelas B">Khusus Kelas B</option><option value="Kelas C">Khusus Kelas C</option><option value="Kelas D">Khusus Kelas D</option>
                                     </select>
                                 </div>
                                 <div id="listTugasWAMentor" class="space-y-3">Memuat instruksi dari Admin...</div>
@@ -153,41 +132,38 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
-        import { startClock, listenToGlobalInfo, sendLogbook, listenToLogbooks, updateLogbook, listenToTugasWA } from './script.js';
+        import { startClock, listenToGlobalInfo, sendLogbook, listenToLogbooks, updateLogbook, listenToTugasWA } from './script.js?v=8';
+
+        function updateNetworkStatus() {
+            const ind = document.getElementById('netStatus');
+            if (navigator.onLine) ind.innerHTML = '<i class="bi bi-circle-fill text-success" style="font-size: 0.6rem;"></i>';
+            else ind.innerHTML = '<i class="bi bi-circle-fill text-danger" style="font-size: 0.6rem;" title="Offline Mode: Data disimpan lokal"></i>';
+        }
+        window.addEventListener('online', updateNetworkStatus); window.addEventListener('offline', updateNetworkStatus); updateNetworkStatus();
 
         const userVal = sessionStorage.getItem("loggedInUser");
         if (!userVal || userVal === "sup") window.location.href = "index.html";
         document.getElementById("userNameDisplay").innerText = "Tutor: " + sessionStorage.getItem("loggedInName");
         
         startClock('txtClockDash', 'txtDateDash');
-        
         setInterval(() => {
-            const now = new Date();
-            document.getElementById('headClock').innerText = now.toLocaleTimeString('id-ID');
+            const now = new Date(); document.getElementById('headClock').innerText = now.toLocaleTimeString('id-ID');
             document.getElementById('headDate').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
         }, 1000);
 
         let rawMasterSiswa = "";
-
         listenToGlobalInfo((data) => {
             rawMasterSiswa = data.masterSiswa || ""; 
             document.getElementById('headHariKe').innerText = "Timeline: " + (data.hariKe || "Belum diatur");
-
             const renderChecklist = (targetDivId, arrayMateri, className) => {
                 const box = document.getElementById(targetDivId); box.innerHTML = "";
                 if(!arrayMateri || arrayMateri.length === 0) { box.innerHTML = '<span class="text-muted text-xs">Belum di-setup admin.</span>'; return; }
                 arrayMateri.forEach((m, i) => {
-                    box.innerHTML += `<div class="form-check mb-1">
-                        <input class="form-check-input ${className}" type="checkbox" value="${m}" id="${targetDivId}_${i}">
-                        <label class="form-check-label text-xs fw-bold text-dark" for="${targetDivId}_${i}">${m}</label>
-                    </div>`;
+                    box.innerHTML += `<div class="form-check mb-1"><input class="form-check-input ${className}" type="checkbox" value="${m}" id="${targetDivId}_${i}"><label class="form-check-label text-xs fw-bold text-dark" for="${targetDivId}_${i}">${m}</label></div>`;
                 });
             };
-
             const kur = data.kurikulum || { vocab: [], speaking: [], grammar: [] };
-            renderChecklist("boxVocab", kur.vocab, "check-vocab");
-            renderChecklist("boxSpeaking", kur.speaking, "check-speaking");
-            renderChecklist("boxGrammar", kur.grammar, "check-grammar");
+            renderChecklist("boxVocab", kur.vocab, "check-vocab"); renderChecklist("boxSpeaking", kur.speaking, "check-speaking"); renderChecklist("boxGrammar", kur.grammar, "check-grammar");
         });
 
         document.getElementById('inputKelas').onchange = (e) => {
@@ -216,9 +192,12 @@
             let dt = masterLogData; if (fHari !== "SEMUA") dt = dt.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari); if (fKls !== "SEMUA") dt = dt.filter(d => d.kelas === fKls);
             if (dt.length === 0) { list.innerHTML = `<div class="alert text-center border-0 mt-4">Belum ada history.</div>`; return; }
             dt.forEach((d, i) => {
-                const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'Baru saja';
+                const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'Pending...';
+                // INDIKATOR OFFLINE PENDING
+                const pendingBadge = d.isPending ? `<span class="badge bg-danger ms-2" title="Menunggu Sinyal"><i class="bi bi-hourglass-split"></i> Offline</span>` : `<span class="badge bg-success ms-2"><i class="bi bi-cloud-check"></i></span>`;
+                
                 let tb = ""; if (d.dataSiswa && d.dataSiswa.length > 0) { tb = `<table class="table table-bordered text-xs mt-2 mb-0 text-center"><tr class="bg-light"><th>Siswa</th><th>Abs</th><th>Nilai</th></tr>`; d.dataSiswa.forEach(s => { tb += `<tr><td class="text-start">${s.nama}</td><td class="text-uppercase fw-bold">${s.kehadiran}</td><td class="fw-bold">${s.nilai || '-'}</td></tr>`; }); tb += `</table>`; }
-                list.innerHTML += `<div class="p-3 bg-white border rounded-3 mb-3 shadow-sm"><div class="d-flex justify-content-between border-bottom pb-1 mb-2"><span class="fw-bold text-primary"><i class="bi bi-person-fill"></i> ${d.nama}</span><span class="text-muted text-xs">${w}</span></div><div><span class="badge bg-primary me-1">${d.kelas}</span><span class="badge bg-dark">${d.jamKe}</span></div><div class="text-xs fw-bold mt-2 text-dark">📖 Materi: ${d.materi ? d.materi.join(', ') : '-'}</div><div class="text-xs fw-bold mt-1 text-success">🎯 Catatan Estafet: ${d.tugasSiswa || '-'}</div><button class="btn btn-sm btn-outline-secondary w-100 mt-2 text-xs fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#col_${i}">Lihat Rapor ▼</button><div class="collapse" id="col_${i}">${tb}</div>${d.mentorId === userVal ? `<button class="btn btn-sm btn-warning mt-2 w-100 fw-bold" onclick='window.editPersonal(${JSON.stringify(d).replace(/'/g, "\\'")})'>Edit Sesi Saya</button>` : ''}</div>`;
+                list.innerHTML += `<div class="p-3 bg-white border rounded-3 mb-3 shadow-sm"><div class="d-flex justify-content-between border-bottom pb-1 mb-2"><span class="fw-bold text-primary"><i class="bi bi-person-fill"></i> ${d.nama}</span><span class="text-muted text-xs">${w} ${pendingBadge}</span></div><div><span class="badge bg-primary me-1">${d.kelas}</span><span class="badge bg-dark">${d.jamKe}</span></div><div class="text-xs fw-bold mt-2 text-dark">📖 Materi: ${d.materi ? d.materi.join(', ') : '-'}</div><div class="text-xs fw-bold mt-1 text-success">🎯 Catatan Estafet: ${d.tugasSiswa || '-'}</div><button class="btn btn-sm btn-outline-secondary w-100 mt-2 text-xs fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#col_${i}">Lihat Rapor ▼</button><div class="collapse" id="col_${i}">${tb}</div>${d.mentorId === userVal ? `<button class="btn btn-sm btn-warning mt-2 w-100 fw-bold" onclick='window.editPersonal(${JSON.stringify(d).replace(/'/g, "\\'")})'>Edit Sesi Saya</button>` : ''}</div>`;
             });
         }
 
@@ -226,7 +205,6 @@
             document.getElementById("editDocId").value = data.id; document.getElementById("inputKelas").value = data.kelas; document.getElementById("inputKelas").dispatchEvent(new Event('change')); 
             setTimeout(() => {
                 document.querySelectorAll('input[name="jamSesi"]').forEach(r => r.checked = r.value === data.jamKe);
-                
                 const groups = data.materiGroup || { vocab:[], speaking:[], grammar:[] };
                 document.querySelectorAll('.check-vocab').forEach(cb => cb.checked = (groups.vocab || []).includes(cb.value));
                 document.querySelectorAll('.check-speaking').forEach(cb => cb.checked = (groups.speaking || []).includes(cb.value));
@@ -246,11 +224,9 @@
         document.getElementById("btnSave").onclick = async () => {
             const kls = document.getElementById("inputKelas").value; if(!kls) return alert("Pilih Kelas!");
             const jam = document.querySelector('input[name="jamSesi"]:checked').value;
-            
             const vChecked = Array.from(document.querySelectorAll('.check-vocab:checked')).map(c => c.value);
             const sChecked = Array.from(document.querySelectorAll('.check-speaking:checked')).map(c => c.value);
             const gChecked = Array.from(document.querySelectorAll('.check-grammar:checked')).map(c => c.value);
-            
             const materiGroup = { vocab: vChecked, speaking: sChecked, grammar: gChecked };
             const flatMateri = [...vChecked, ...sChecked, ...gChecked];
 
@@ -259,20 +235,17 @@
             
             try {
                 document.getElementById("btnSave").disabled = true;
-                if (edId) {
-                    await updateLogbook(edId, { kelas: kls, jamKe: jam, materiGroup: materiGroup, materi: flatMateri, laporanSiswa: not, dataSiswa: arraySiswa, tugasSiswa: tg });
-                } else {
-                    await sendLogbook(userVal, sessionStorage.getItem("loggedInName"), kls, jam, materiGroup, flatMateri, not, "", arraySiswa, tg);
-                }
-                alert("Logbook & Progres Kurikulum Berhasil Disinkronkan!"); document.getElementById("btnBatalEdit").click(); document.getElementById("btnSave").disabled = false; new bootstrap.Tab(document.getElementById('tab-rekap')).show();
+                if (edId) { await updateLogbook(edId, { kelas: kls, jamKe: jam, materiGroup: materiGroup, materi: flatMateri, laporanSiswa: not, dataSiswa: arraySiswa, tugasSiswa: tg }); } 
+                else { await sendLogbook(userVal, sessionStorage.getItem("loggedInName"), kls, jam, materiGroup, flatMateri, not, "", arraySiswa, tg); }
+                alert(navigator.onLine ? "Sip, Data Sukses Terkirim!" : "Mode Offline: Data aman tersimpan di HP, akan otomatis terkirim saat sinyal kembali!"); 
+                document.getElementById("btnBatalEdit").click(); document.getElementById("btnSave").disabled = false; new bootstrap.Tab(document.getElementById('tab-rekap')).show();
             } catch (error) { alert("Error database!"); document.getElementById("btnSave").disabled = false; }
         };
 
-        // RENDER TUGAS WA (YANG TYPO TADI)
+        // RENDER TUGAS WA
         let masterTugasWA = [];
         listenToTugasWA((data) => { masterTugasWA = data; renderTugasWA(); });
         document.getElementById("filterWA").onchange = () => renderTugasWA();
-        
         function renderTugasWA() {
             const list = document.getElementById("listTugasWAMentor"); const fil = document.getElementById("filterWA").value; list.innerHTML = "";
             let dt = masterTugasWA; if(fil !== "SEMUA") dt = dt.filter(d => d.targetKelas === fil);
@@ -288,13 +261,11 @@
                         <button class="btn btn-outline-success btn-sm w-100 fw-bold" onclick="copyWA('txtWA_${i}')"><i class="bi bi-copy me-1"></i> Salin Instruksi Tugas</button>
                     </div>`;
             });
-        } // <-- INI YANG SUDAH DIBENARKAN
-
+        }
         window.copyWA = function(idDiv) {
             const txt = document.getElementById(idDiv).innerText;
             navigator.clipboard.writeText(txt).then(() => { alert("Teks instruksi berhasil disalin!"); }).catch(err => { alert("Gagal."); });
         }
-
         document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); window.location.href = "index.html"; };
     </script>
 </body>
