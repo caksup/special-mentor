@@ -10,6 +10,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
     <style>
+        /* CSS MENU DINAMIS ALUS (TUTOR THEME) */
+        .dynamic-menu .nav-link { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 0.6rem; color: #6c757d; display: flex; align-items: center; justify-content: center; border-radius: 12px; background-color: #fff; border: 1px solid #dee2e6; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 0.2rem; }
+        .dynamic-menu .nav-link i { font-size: 1.4rem; line-height: 1; transition: color 0.3s; }
+        .dynamic-menu .nav-link .tab-label { max-width: 0; opacity: 0; overflow: hidden; margin-left: 0; font-size: 0.85rem; font-weight: 700; white-space: nowrap; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .dynamic-menu .nav-link.active { background-color: #0d6efd; color: #fff; border-color: #0d6efd; box-shadow: 0 4px 6px rgba(13, 110, 253, 0.2); }
+        .dynamic-menu .nav-link.active i { color: #fff !important; }
+        .dynamic-menu .nav-link.active .tab-label { max-width: 150px; opacity: 1; margin-left: 8px; }
+
         .chat-box { max-height: 400px; overflow-y: auto; background-color: #f8f9fa; }
         .msg-bubble { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; }
         .msg-me { background-color: #d1e7dd; margin-left: auto; border-bottom-right-radius: 2px; }
@@ -45,14 +53,15 @@
 
         <div class="container pb-5">
             <div class="row">
+                <!-- MENU SAMPING DINAMIS -->
                 <div class="col-12 col-md-3 mb-4">
-                    <div class="card card-custom p-2 shadow-sm border-0">
-                        <ul class="nav nav-pills flex-row flex-md-column nav-fill gap-1" id="menuTabs">
-                            <li class="nav-item"><button class="nav-link active w-100 fw-bold text-start" id="tab-beranda" data-bs-toggle="pill" data-bs-target="#beranda"><i class="bi bi-house-door me-2"></i> Info AEC</button></li>
-                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start" id="tab-logbook" data-bs-toggle="pill" data-bs-target="#logbook"><i class="bi bi-pencil-square me-2"></i> Logbook</button></li>
-                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start" id="tab-rekap" data-bs-toggle="pill" data-bs-target="#rekap"><i class="bi bi-clock-history me-2"></i> History Kelas</button></li>
-                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start text-danger bg-danger bg-opacity-10" id="tab-diskusi" data-bs-toggle="pill" data-bs-target="#diskusi"><i class="bi bi-chat-dots me-2"></i> Ruang Diskusi</button></li>
-                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start text-success bg-success bg-opacity-10" id="tab-tugaswa" data-bs-toggle="pill" data-bs-target="#tugaswa"><i class="bi bi-whatsapp me-2"></i> Tugas WA</button></li>
+                    <div class="card card-custom p-2 shadow-sm border-0 bg-transparent">
+                        <ul class="nav nav-pills flex-row flex-md-column nav-fill gap-2 dynamic-menu" id="menuTabs">
+                            <li class="nav-item"><button class="nav-link active" id="tab-beranda" data-bs-toggle="pill" data-bs-target="#beranda" title="Info AEC"><i class="bi bi-house-door text-primary"></i><span class="tab-label">Info AEC</span></button></li>
+                            <li class="nav-item"><button class="nav-link" id="tab-logbook" data-bs-toggle="pill" data-bs-target="#logbook" title="Isi Logbook"><i class="bi bi-pencil-square text-success"></i><span class="tab-label">Logbook</span></button></li>
+                            <li class="nav-item"><button class="nav-link" id="tab-rekap" data-bs-toggle="pill" data-bs-target="#rekap" title="History Kelas"><i class="bi bi-clock-history text-secondary"></i><span class="tab-label">History</span></button></li>
+                            <li class="nav-item"><button class="nav-link" id="tab-diskusi" data-bs-toggle="pill" data-bs-target="#diskusi" title="Ruang Diskusi"><i class="bi bi-chat-dots-fill text-danger"></i><span class="tab-label">Diskusi</span></button></li>
+                            <li class="nav-item"><button class="nav-link" id="tab-tugaswa" data-bs-toggle="pill" data-bs-target="#tugaswa" title="Tugas WA"><i class="bi bi-whatsapp text-success"></i><span class="tab-label">Tugas WA</span></button></li>
                         </ul>
                     </div>
                 </div>
@@ -83,7 +92,7 @@
                             </div>
                         </div>
 
-                        <!-- LOGBOOK, HISTORY, CHAT, TUGAS (TETAP AMAN) -->
+                        <!-- LOGBOOK, HISTORY, CHAT, TUGAS -->
                         <div class="tab-pane fade" id="logbook"><div class="card card-custom p-4 shadow-sm border-top border-primary border-4"><h5 class="fw-bold mb-3 border-bottom pb-2">Formulir Logbook Sesi</h5><input type="hidden" id="editDocId" value=""><div class="row mb-3"><div class="col-12 col-md-6 mb-3 mb-md-0"><label class="form-label fw-bold text-secondary small">PILIH KELAS</label><div id="btnGroupKelas" class="d-flex flex-wrap gap-2">Memuat kelas...</div><input type="hidden" id="inputKelas" value=""></div><div class="col-12 col-md-6"><label class="form-label fw-bold text-secondary small">JAM SESI</label><div class="btn-group w-100" role="group"><input type="radio" class="btn-check" name="jamSesi" id="j1" value="Jam 1" checked><label class="btn btn-outline-primary fw-bold" for="j1">1</label><input type="radio" class="btn-check" name="jamSesi" id="j2" value="Jam 2"><label class="btn btn-outline-primary fw-bold" for="j2">2</label><input type="radio" class="btn-check" name="jamSesi" id="j3" value="Jam 3"><label class="btn btn-outline-primary fw-bold" for="j3">3</label><input type="radio" class="btn-check" name="jamSesi" id="j4" value="Jam 4"><label class="btn btn-outline-primary fw-bold" for="j4">4</label></div></div></div><div class="mb-3"><label class="form-label fw-bold text-secondary small">MATERI KURIKULUM (Centang yang diajarkan saja)</label><div class="bg-light p-3 rounded-3 border"><div class="mb-3"><h6 class="text-xs fw-bold text-primary mb-1 border-bottom pb-1">A. VOCABULARY MORNING</h6><div id="boxVocab" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div></div><div class="mb-3"><h6 class="text-xs fw-bold text-success mb-1 border-bottom pb-1">B. SPEAKING</h6><div id="boxSpeaking" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div></div><div><h6 class="text-xs fw-bold text-danger mb-1 border-bottom pb-1">C. GRAMMAR</h6><div id="boxGrammar" class="ps-2"><span class="text-muted text-xs">Kosong...</span></div></div></div></div><div class="mb-3" id="areaSiswa" style="display: none;"><label class="form-label fw-bold text-danger small">ABSENSI & PENILAIAN</label><div class="table-responsive bg-light p-2 rounded border"><table class="table table-sm table-bordered mb-0 align-middle text-xs"><thead class="table-secondary text-center"><tr><th style="width:25px;">No.</th><th>Nama Siswa</th><th style="width: 70px;">Abs</th><th style="width: 70px;">Nilai</th><th>Catatan Mentor</th></tr></thead><tbody id="tabelSiswaBody"></tbody></table></div><p class="text-muted mt-1" style="font-size: 0.65rem;">*Ketik <b>h</b> (Hadir), <b>s</b> (Sakit), <b>i</b> (Izin), <b>a</b> (Alpha).</p></div><div class="mb-3"><label class="form-label fw-bold text-primary small">CLASS NOTE (Laporan / Kendala Kelas)</label><textarea id="notesSiswa" class="form-control bg-light border" rows="2" placeholder="Tuliskan kendala atau catatan umum kelas ini..."></textarea></div><div class="mb-3"><label class="form-label fw-bold text-success small">TUGAS SISWA (PR / Estafet ke Sesi Berikutnya)</label><textarea id="notesTugasSiswa" class="form-control bg-success bg-opacity-10 border-success border-opacity-50" rows="2" placeholder="Tulis tugas estafet / PR untuk siswa..."></textarea></div><button id="btnSave" class="btn btn-primary btn-lg w-100 fw-bold shadow-sm mt-2"><i class="bi bi-send-check me-2"></i> SIMPAN LOGBOOK SESI</button><button id="btnBatalEdit" class="btn btn-secondary w-100 fw-bold mt-2 d-none">Batal Edit</button></div></div>
                         <div class="tab-pane fade" id="rekap"><div class="card card-custom p-4 shadow-sm"><h5 class="fw-bold text-primary mb-3">History Harian AEC</h5><div class="row g-2 mb-3"><div class="col-6"><select id="filterHari" class="form-select form-select-sm bg-light fw-bold text-danger"><option value="SEMUA">Memuat...</option></select></div><div class="col-6"><select id="filterKelas" class="form-select form-select-sm bg-light fw-bold text-secondary"></select></div></div><div id="logbookList" class="overflow-auto pe-2" style="max-height: 500px;"></div></div></div>
                         <div class="tab-pane fade h-100" id="diskusi"><div class="card card-custom p-3 shadow-sm border-top border-danger border-4 h-100 d-flex flex-column bg-white"><h5 class="fw-bold text-danger mb-1"><i class="bi bi-chat-dots me-2"></i> Ruang Diskusi Terbuka</h5><div id="chatBox" class="chat-box flex-grow-1 p-3 rounded border mb-3 d-flex flex-column gap-2" style="min-height: 300px;"></div><div class="input-group"><input type="text" id="inputChat" class="form-control text-sm" placeholder="Ketik pesan Anda..."><button class="btn btn-danger fw-bold px-4" id="btnSendChat"><i class="bi bi-send-fill"></i></button></div></div></div>
@@ -96,7 +105,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
-        import { db, startClock, listenToGlobalInfo, sendLogbook, listenToLogbooks, updateLogbook, listenToTugasWA, generateTimelineHTML, getActiveSchedule } from './script.js?v=12';
+        import { db, startClock, listenToGlobalInfo, sendLogbook, listenToLogbooks, updateLogbook, listenToTugasWA, generateTimelineHTML, getActiveSchedule } from './script.js?v=13';
         import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const userVal = sessionStorage.getItem("loggedInUser"); if (!userVal) window.location.replace("index.html");
@@ -112,7 +121,6 @@
             document.getElementById('tutorBriefing').innerText = data.briefing || "-"; document.getElementById('tutorJadwal').innerText = data.jadwal || "-"; 
             document.getElementById('tutorGoal').innerText = data.goal || "-";
 
-            // Live Schedule Tracking
             document.getElementById('tutorJadwalHarian').innerText = getActiveSchedule(data.jadwal);
 
             const arrKelas = (data.masterKelas || "Kelas A").split(',').map(k=>k.trim()).filter(k=>k!==""); const boxKelas = document.getElementById("btnGroupKelas"); boxKelas.innerHTML = "";
