@@ -31,42 +31,55 @@
         .msg-me { background-color: #d1e7dd; margin-left: auto; border-bottom-right-radius: 2px; }
         .msg-other { background-color: #fff; border: 1px solid #dee2e6; margin-right: auto; border-bottom-left-radius: 2px; }
         
-        /* FIX TIMELINE HEADER BIAR KECIL */
-        #headTimeline span { font-size: 0.9rem !important; margin: 0 1px !important; }
+        /* FIX SEDOT LEMAK HEADER (ANTI-MONTOK) */
+        #headTimeline > div { margin-top: 0 !important; } /* Mbusak margin atas bawaane script */
+        #headTimeline span { font-size: 0.85rem !important; margin: 0 1px !important; }
     </style>
 </head>
 <body class="bg-light">
     <div class="app-wrapper">
         
-        <!-- HEADER FLOATING (STICKY TOP) -->
-        <nav class="navbar navbar-expand bg-white sticky-top shadow-sm mb-4 border-bottom border-primary border-3" style="z-index: 1020; padding-top: 10px; padding-bottom: 10px;">
-            <div class="container-fluid px-3 d-flex justify-content-between align-items-start">
+        <!-- HEADER FLOATING SLIM (RAPET & LANGSING) -->
+        <nav class="navbar navbar-expand bg-white sticky-top shadow-sm mb-3 border-bottom border-primary border-3" style="z-index: 1020; padding: 6px 0;">
+            <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
                 
-                <!-- KIRI: INFO STATUS MENTOR -->
-                <div class="d-flex flex-column text-start" style="font-size: 0.75rem; line-height: 1.4;">
-                    <div class="fw-bold text-primary mb-1 d-flex align-items-center" style="font-size: 0.9rem;">
-                        <span id="netStatus" class="me-2"></span> AREA TUTOR
+                <!-- KIRI: INFO STATUS MENTOR (RAPET) -->
+                <div class="d-flex flex-column text-start flex-grow-1 overflow-hidden" style="font-size: 0.75rem; line-height: 1.25;">
+                    
+                    <!-- BARIS 1: AREA TUTOR -->
+                    <div class="d-flex align-items-center mb-1">
+                        <span id="netStatus" class="me-1"></span>
+                        <span class="fw-bold text-primary" style="font-size: 0.85rem;">AREA TUTOR</span>
                     </div>
                     
-                    <div class="fw-bold text-dark" style="font-size: 1.2rem; letter-spacing: 1px;"><span id="headClock">00:00:00</span></div>
-                    <div class="text-muted mb-2 fw-medium" style="font-size: 0.75rem;"><span id="headDate">Tanggal</span></div>
-                    
-                    <div class="fw-bold text-info"><i class="bi bi-broadcast"></i> Live: <span id="tutorJadwalHarian" class="text-dark">Mendeteksi...</span></div>
-                    
-                    <div class="d-flex align-items-center mt-1">
-                        <span class="badge bg-danger text-white px-1 py-0 me-1" style="font-size: 0.6rem;">DAY</span>
-                        <div id="headTimeline">...</div>
+                    <!-- BARIS 2: JAM | TANGGAL -->
+                    <div class="mb-1 text-truncate">
+                        <span id="headClock" class="fw-bold text-dark font-monospace" style="font-size: 0.95rem; letter-spacing: 0.5px;">00:00:00</span>
+                        <span class="text-secondary mx-1 fw-bold">|</span>
+                        <span id="headDate" class="text-secondary fw-medium">Tanggal</span>
                     </div>
                     
-                    <div class="text-secondary fw-bold mt-1 text-uppercase"><i class="bi bi-geo-alt-fill text-danger"></i> <span id="headSekolah">Memuat Lokasi...</span></div>
+                    <!-- BARIS 3: LIVE JADWAL -->
+                    <div class="mb-1 text-truncate">
+                        <i class="bi bi-broadcast text-info me-1"></i><span class="fw-bold text-dark">Live:</span> <span id="tutorJadwalHarian" class="text-dark">Mendeteksi...</span>
+                    </div>
+                    
+                    <!-- BARIS 4: DAY & SEKOLAH -->
+                    <div class="d-flex align-items-center text-truncate pe-1">
+                        <i class="bi bi-calendar2-day-fill text-danger me-1"></i><span class="fw-bold text-dark me-1">Day</span>
+                        <div id="headTimeline" class="d-inline-flex align-items-center me-1">...</div>
+                        <span class="text-secondary mx-1 fw-bold">|</span>
+                        <i class="bi bi-geo-alt-fill text-danger me-1"></i><span id="headSekolah" class="fw-bold text-secondary text-uppercase text-truncate">Lokasi</span>
+                    </div>
+
                 </div>
 
-                <!-- KANAN: DROPDOWN MENU -->
-                <div class="dropdown">
-                    <button class="btn btn-outline-primary btn-sm dropdown-toggle fw-bold shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-list"></i> Menu
+                <!-- KANAN: DROPDOWN HAMBURGER MENU -->
+                <div class="dropdown ms-2">
+                    <button class="btn btn-light shadow-sm border-0 bg-white" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 4px 8px;">
+                        <i class="bi bi-list text-primary" style="font-size: 1.5rem;"></i>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width: 200px;">
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" style="min-width: 200px; border-radius: 12px;">
                         <li><h6 class="dropdown-header text-dark fw-bold text-wrap" id="userNameDisplay">Login: Memuat...</h6></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item fw-medium py-2" href="#" onclick="alert('Fitur Roadmap dalam pengembangan!')"><i class="bi bi-signpost-split text-primary me-2"></i> Roadmap</a></li>
@@ -97,7 +110,6 @@
                 <div class="col-12 col-md-9">
                     <div class="tab-content h-100">
                         <div class="tab-pane fade show active" id="beranda">
-                            <!-- KONTEN DASHBOARD LEBIH BERSIH KARENA JAM & TANGGAL PINDAH KE HEADER -->
                             <div class="row g-3">
                                 <div class="col-12">
                                     <div class="p-3 bg-danger bg-opacity-10 border border-danger border-opacity-50 rounded-3 shadow-sm h-100">
@@ -156,13 +168,7 @@
         document.getElementById("userNameDisplay").innerText = "Login: " + userVal + " (" + myName + ")";
         const myRole = sessionStorage.getItem("userRole") || "mentor";
 
-        // WIFI ICON UPDATE LOGIC
-        function updateNetworkStatus() { 
-            document.getElementById('netStatus').innerHTML = navigator.onLine ? 
-                '<i class="bi bi-wifi text-success" title="Online"></i>' : 
-                '<i class="bi bi-wifi-off text-danger" title="Offline Mode"></i>'; 
-        }
-        window.addEventListener('online', updateNetworkStatus); window.addEventListener('offline', updateNetworkStatus); updateNetworkStatus();
+        function updateNetworkStatus() { document.getElementById('netStatus').innerHTML = navigator.onLine ? '<i class="bi bi-wifi text-success" title="Online"></i>' : '<i class="bi bi-wifi-off text-danger" title="Offline Mode"></i>'; } window.addEventListener('online', updateNetworkStatus); window.addEventListener('offline', updateNetworkStatus); updateNetworkStatus();
         
         startClock('headClock', 'headDate'); setInterval(() => { const now = new Date(); document.getElementById('headClock').innerText = now.toLocaleTimeString('id-ID'); document.getElementById('headDate').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }, 1000);
 
@@ -212,7 +218,6 @@
                     let nameColor = isMe ? 'text-success' : 'text-primary'; 
                     let roleBadge = ""; if(c.role === "admin") { nameColor = 'text-danger'; roleBadge = '<i class="bi bi-shield-lock-fill ms-1"></i>'; } else if(c.role === "direktur") { nameColor = 'text-warning'; roleBadge = '<i class="bi bi-star-fill ms-1"></i>'; } 
                     const badgeJapri = c.type === 'private' ? `<span class="badge bg-secondary ms-1" style="font-size:0.6rem;">JAPRI ${c.sender === myName ? 'ke ' + c.receiver : ''}</span>` : '';
-                    
                     box.innerHTML += `<div class="msg-bubble ${isMe ? 'msg-me' : 'msg-other'} shadow-sm"><div class="fw-bold text-xs ${nameColor}">${c.sender} ${roleBadge} <span class="fw-normal text-muted ms-1" style="font-size:0.6rem;">${time}</span> ${badgeJapri}</div><div class="mt-1">${c.message}</div></div>`; 
                 }
             }); 
