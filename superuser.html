@@ -61,13 +61,12 @@
             </div>
         </nav>
 
-        <!-- KONTEN UTAMA SAAT INI SELALU TAMPIL (TIDAK ADA DISPLAY NONE) -->
+        <!-- KONTEN UTAMA -->
         <div class="container pb-5" id="mainContentArea">
             <div class="row">
                 <div class="col-12 col-lg-7 mb-4">
                     
                     <ul class="nav nav-pills mb-3 shadow-sm bg-white rounded p-2 dynamic-tabs" id="adminTabs" role="tablist">
-                        <!-- TAB TUTOR (GLOBAL) JADI YANG PERTAMA MUNCUL -->
                         <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-tutor" title="Manajemen Tutor"><i class="bi bi-person-badge"></i><span class="tab-label">Tutor (Global)</span></button></li>
                         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-setup" title="Setup Sekolah"><i class="bi bi-gear-fill"></i><span class="tab-label">Setup Sekolah</span></button></li>
                         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-siswa" title="Data Siswa"><i class="bi bi-mortarboard"></i><span class="tab-label">Siswa</span></button></li>
@@ -78,8 +77,8 @@
 
                     <div class="tab-content h-100">
                         
-                        <!-- TAB TUTOR (SEKARANG DEFAULT AKTIF) -->
-                        <div class="tab-pane fade show active" id="tab-tutor"><div class="card card-custom p-3 shadow-sm bg-white border-primary border-2 mb-3"><h6 class="fw-bold text-primary mb-3"><i class="bi bi-person-fill-add me-2"></i> Kelola Tutor (Global)</h6><div class="row g-2 mb-2"><div class="col-4"><input type="text" id="newUser" class="form-control form-control-sm text-xs text-lowercase fw-bold" placeholder="username"></div><div class="col-4"><input type="text" id="newPin" class="form-control form-control-sm text-xs text-danger fw-bold" placeholder="PIN Angka"></div><div class="col-4"><input type="text" id="newName" class="form-control form-control-sm text-xs" placeholder="Julukan"></div></div><div class="row g-2 mb-3"><div class="col-6"><select id="newRole" class="form-select form-select-sm text-xs"><option value="mentor">Mentor</option><option value="direktur">Direktur</option><option value="admin">Admin</option></select></div><div class="col-6"><button id="btnAddUser" class="btn btn-sm btn-primary w-100 fw-bold">Tambah Akun</button></div></div><div class="table-responsive"><table class="table table-sm table-bordered text-xs align-middle text-center"><thead class="table-light"><tr><th>User</th><th>Nama</th><th>Role</th><th>PIN</th><th>Aksi</th></tr></thead><tbody id="listUsersTable"></tbody></table></div></div><div class="card card-custom p-3 shadow-sm bg-white"><h6 class="fw-bold text-dark mb-2"><i class="bi bi-trophy text-warning me-2"></i> Kinerja Tutor (Berdasarkan Sekolah yg Dipilih)</h6><div id="leaderboardTutor" class="space-y-2">Pilih sekolah di atas untuk melihat ranking...</div></div></div>
+                        <!-- TAB TUTOR -->
+                        <div class="tab-pane fade show active" id="tab-tutor"><div class="card card-custom p-3 shadow-sm bg-white border-primary border-2 mb-3"><h6 class="fw-bold text-primary mb-3"><i class="bi bi-person-fill-add me-2"></i> Kelola Tutor (Global)</h6><div class="row g-2 mb-2"><div class="col-4"><input type="text" id="newUser" class="form-control form-control-sm text-xs text-lowercase fw-bold" placeholder="username"></div><div class="col-4"><input type="text" id="newPin" class="form-control form-control-sm text-xs text-danger fw-bold" placeholder="PIN Angka"></div><div class="col-4"><input type="text" id="newName" class="form-control form-control-sm text-xs" placeholder="Julukan"></div></div><div class="row g-2 mb-3"><div class="col-6"><select id="newRole" class="form-select form-select-sm text-xs"><option value="mentor">Mentor</option><option value="direktur">Direktur</option><option value="admin">Admin</option></select></div><div class="col-6"><button id="btnAddUser" class="btn btn-sm btn-primary w-100 fw-bold">Tambah Akun</button></div></div><div class="table-responsive"><table class="table table-sm table-bordered text-xs align-middle text-center"><thead class="table-light"><tr><th>User</th><th>Nama</th><th>Role</th><th>PIN</th><th>Aksi</th></tr></thead><tbody id="listUsersTable"></tbody></table></div></div><div class="card card-custom p-3 shadow-sm bg-white"><h6 class="fw-bold text-dark mb-2"><i class="bi bi-trophy text-warning me-2"></i> Kinerja Tutor (Di Sekolah Yg Dipilih)</h6><div id="leaderboardTutor" class="space-y-2">Pilih sekolah di atas untuk melihat ranking...</div></div></div>
 
                         <div class="tab-pane fade" id="tab-setup">
                             <div class="card card-custom p-3 shadow-sm bg-white mb-3 border-top border-warning border-3">
@@ -137,7 +136,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
-        import { db, startClock, listenToSchools, listenToSingleSchool, saveSchool, archiveSchool, listenToLogbooks, deleteLogbook, sendTugasWA, listenToTugasWA, deleteTugasWA, listenToChats, sendGlobalChat, sendJapri, deleteChat } from './script.js?v=14';
+        import { db, startClock, listenToSchools, listenToSingleSchool, saveSchool, archiveSchool, listenToLogbooks, deleteLogbook, sendTugasWA, listenToTugasWA, deleteTugasWA, listenToChats, sendGlobalChat, sendJapri, deleteChat } from './script.js?v=14.1';
         import { collection, setDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const actUser = sessionStorage.getItem("loggedInUser"); if (actUser !== "sup" && actUser !== "afif") window.location.replace("index.html");
@@ -147,6 +146,18 @@
         window.addEventListener('online', updateNetworkStatus); window.addEventListener('offline', updateNetworkStatus); updateNetworkStatus(); startClock('headClock', 'headDate');
 
         let currentSchoolId = ""; let rawKurikulum = {}; let dataLengkap = [];
+        
+        // VARIABEL PENYIMPAN LISTENER (PIPA) BEN ISO DITUTUP
+        let unsubSchool = null; let unsubLogbooks = null; let unsubChats = null; let unsubWA = null;
+
+        // FUNGSI RESIK-RESIK PIPA BOCOR
+        function bersihkanListener() {
+            if(unsubSchool) { unsubSchool(); unsubSchool = null; }
+            if(unsubLogbooks) { unsubLogbooks(); unsubLogbooks = null; }
+            if(unsubChats) { unsubChats(); unsubChats = null; }
+            if(unsubWA) { unsubWA(); unsubWA = null; }
+            dataLengkap = []; // Kosongkan array data
+        }
 
         // 1. INIT MASTER DROPDOWN
         listenToSchools((schools) => {
@@ -159,6 +170,10 @@
         // KETIKA ADMIN MILIH SEKOLAH
         document.getElementById("masterSchoolSelect").onchange = (e) => {
             const val = e.target.value;
+            
+            // TUTUP SEMUA PIPA DATA SEKOLAH SEBELUMNYA! (ANTI AMBURADUL)
+            bersihkanListener();
+
             if(!val) { 
                 currentSchoolId = ""; 
                 document.getElementById("inputIdSchool").readOnly = false; document.getElementById("inputIdSchool").value = "";
@@ -168,6 +183,7 @@
                 document.getElementById("inputSpeaking").value = ""; document.getElementById("inputGrammar").value = "";
                 document.getElementById("adminLogbookList").innerHTML = `<div class="alert alert-secondary small text-center">Pilih Handle School di atas terlebih dahulu.</div>`;
                 document.getElementById("chatBox").innerHTML = ""; document.getElementById("listTugasAdmin").innerHTML = "";
+                document.getElementById("leaderboardTutor").innerHTML = "Pilih sekolah di atas untuk melihat ranking...";
                 return; 
             }
             
@@ -184,7 +200,7 @@
 
         // 2. MUAT DATA SPESIFIK SEKOLAH
         function muatDataSekolah(sid) {
-            listenToSingleSchool(sid, (data) => {
+            unsubSchool = listenToSingleSchool(sid, (data) => {
                 if(!data) return;
                 document.getElementById('inputSekolah').value = data.namaSekolah || ""; document.getElementById('inputTotalHari').value = data.totalHari || 5; document.getElementById('inputHariKe').value = data.hariBerjalan || 0; document.getElementById('inputMasterKelas').value = data.masterKelas || "";
                 document.getElementById('inputBriefing').value = data.briefing || ""; document.getElementById('inputJadwal').value = data.jadwal || ""; document.getElementById('inputGoal').value = data.goal || ""; document.getElementById('inputMasterSiswa').value = data.masterSiswa || "";
@@ -196,9 +212,11 @@
                 renderTracker();
             });
 
-            // MUAT LOGBOOK, CHAT, TUGAS WA SPESIFIK SEKOLAH INI
-            listenToLogbooks(sid, (logs) => { dataLengkap = logs; ekstrakHari(); renderListAdmin(); renderTracker(); kalkulasiDataSiswa(); kalkulasiKinerjaMentor(); });
-            listenToChats(sid, (chats) => {
+            // BUKA PIPA LOGBOOK BARU
+            unsubLogbooks = listenToLogbooks(sid, (logs) => { dataLengkap = logs; ekstrakHari(); renderListAdmin(); renderTracker(); kalkulasiDataSiswa(); kalkulasiKinerjaMentor(); });
+            
+            // BUKA PIPA CHAT BARU
+            unsubChats = listenToChats(sid, (chats) => {
                 const box = document.getElementById("chatBox"); box.innerHTML = ""; const myName = sessionStorage.getItem("loggedInName");
                 chats.forEach(c => {
                     if (c.type === 'global' || (c.type === 'private' && (c.sender === myName || c.receiver === "admin" || c.receiver === myName))) {
@@ -208,7 +226,9 @@
                     }
                 }); box.scrollTop = box.scrollHeight;
             });
-            listenToTugasWA(sid, (tugas) => {
+
+            // BUKA PIPA WA BARU
+            unsubWA = listenToTugasWA(sid, (tugas) => {
                 const list = document.getElementById("listTugasAdmin"); list.innerHTML = "";
                 tugas.forEach(d => { const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-'; list.innerHTML += `<div class="p-2 border rounded bg-light mb-2"><div class="d-flex justify-content-between"><span class="badge bg-success mb-1">${d.targetKelas}</span><span class="text-xs text-muted">${w}</span></div><p class="text-xs mb-1 text-truncate">${d.instruksi}</p><button class="btn btn-xs btn-outline-danger w-100" onclick="aksidminHapusTugas('${d.id}')">Hapus Template</button></div>`; });
             });
