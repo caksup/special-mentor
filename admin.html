@@ -49,6 +49,13 @@
     <script type="module">
         import { mentorData, listenToGlobalInfo } from './script.js?v=8';
 
+        // 1. SISTEM ANTI-BACK & AUTO REDIRECT (JIKA SUDAH LOGIN)
+        const activeUser = sessionStorage.getItem("loggedInUser");
+        if (activeUser) {
+            if (activeUser === "sup" || activeUser === "afif") window.location.replace("superuser.html");
+            else window.location.replace("mentor.html");
+        }
+
         function updateNetworkStatus() {
             const ind = document.getElementById('netStatus');
             if (navigator.onLine) ind.innerHTML = '<i class="bi bi-circle-fill text-success" style="font-size: 0.6rem;"></i>';
@@ -66,7 +73,10 @@
             const userVal = document.getElementById('userInput').value.toLowerCase().trim(); const pin = document.getElementById('pinInput').value;
             if (!userVal) return alert("Ketik username!"); if (!mentorData[userVal]) return alert("Username tidak ditemukan!");
             if (userVal !== "afif" && userVal !== "sup") return alert("Akses Ilegal!"); if (pin !== mentorData[userVal].pin) return alert("PIN salah.");
-            sessionStorage.setItem("loggedInUser", userVal); sessionStorage.setItem("loggedInName", mentorData[userVal].julukan); window.location.href = "superuser.html"; 
+            sessionStorage.setItem("loggedInUser", userVal); sessionStorage.setItem("loggedInName", mentorData[userVal].julukan); 
+            
+            // 2. GANTI PERINTAH JADI REPLACE (BIAR NGGAK BISA DI BACK)
+            window.location.replace("superuser.html"); 
         };
     </script>
 </body>
