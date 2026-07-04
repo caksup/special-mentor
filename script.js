@@ -1,5 +1,5 @@
 /* ==================================================
-   script.js - AEC HUB (V14 - Multi Handle School Engine)
+   script.js - AEC HUB (V14.1 - Multi School + Anti Bocor)
    ================================================== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, enableIndexedDbPersistence, doc, getDoc, setDoc, collection, addDoc, serverTimestamp, query, onSnapshot, updateDoc, deleteDoc, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -18,7 +18,6 @@ export const db = getFirestore(app);
 enableIndexedDbPersistence(db).catch((err) => { console.warn("Offline mode err:", err.code); });
 if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
 
-// LOGIN SEDERHANA (Admin sing ngatur njero panel, dadi mlebu disik wae)
 export async function verifyLogin(username, pin) {
     const userDoc = await getDoc(doc(db, "users", username));
     if (userDoc.exists()) {
@@ -56,11 +55,11 @@ export function startClock(clockId, dateId) {
 }
 
 // ==========================================
-// FUNGSI MULTI HANDLE SCHOOL (BARU!)
+// FUNGSI MULTI SEKOLAH (RETURN UNSUBSCRIBE)
 // ==========================================
 
 export function listenToSchools(callback) { 
-    onSnapshot(collection(db, "schools"), (snap) => { 
+    return onSnapshot(collection(db, "schools"), (snap) => { 
         let list = []; snap.forEach(doc => { if(doc.data().status !== 'archived') list.push({ id: doc.id, ...doc.data() }); }); callback(list); 
     }); 
 }
@@ -68,29 +67,26 @@ export async function saveSchool(schoolId, dataData) { await setDoc(doc(db, "sch
 export async function archiveSchool(schoolId) { await setDoc(doc(db, "schools", schoolId), { status: 'archived' }, {merge:true}); }
 
 export function listenToSingleSchool(schoolId, callback) {
-    if(!schoolId) return;
-    onSnapshot(doc(db, "schools", schoolId), (docSnap) => { if(docSnap.exists()) callback(docSnap.data()); else callback(null); });
+    if(!schoolId) return null;
+    return onSnapshot(doc(db, "schools", schoolId), (docSnap) => { if(docSnap.exists()) callback(docSnap.data()); else callback(null); });
 }
 
-// LOGBOOK BERDASARKAN SCHOOL ID (Anti Index Error Firestore)
 export function listenToLogbooks(schoolId, callback) { 
-    if(!schoolId) return;
+    if(!schoolId) return null;
     const q = query(collection(db, "logbooks"), where("schoolId", "==", schoolId));
-    onSnapshot(q, { includeMetadataChanges: true }, (snap) => { 
+    return onSnapshot(q, { includeMetadataChanges: true }, (snap) => { 
         let list = []; snap.forEach(doc => { list.push({ id: doc.id, ...doc.data(), isPending: doc.metadata.hasPendingWrites }); }); 
-        list.sort((a, b) => (b.waktu?.toMillis() || 0) - (a.waktu?.toMillis() || 0)); // Urutkan client-side
-        callback(list); 
+        list.sort((a, b) => (b.waktu?.toMillis() || 0) - (a.waktu?.toMillis() || 0)); callback(list); 
     }); 
 }
 export async function sendLogbook(schoolId, mentorId, namaMentor, kelas, jamKe, materiGroup, flatMateri, laporanSiswa, catatanKendala, arraySiswa, tugasSiswa) { return await addDoc(collection(db, "logbooks"), { schoolId, mentorId, nama: namaMentor, kelas, jamKe, materiGroup: materiGroup || { vocab:[], speaking:[], grammar:[] }, materi: flatMateri || [], laporanSiswa, catatanKendala, dataSiswa: arraySiswa || [], tugasSiswa: tugasSiswa || "", waktu: serverTimestamp() }); }
 export async function updateLogbook(docId, dataBaru) { return await updateDoc(doc(db, "logbooks", docId), dataBaru); }
 export async function deleteLogbook(docId) { return await deleteDoc(doc(db, "logbooks", docId)); }
 
-// CHAT & JAPRI BERDASARKAN SCHOOL ID
 export function listenToChats(schoolId, callback) {
-    if(!schoolId) return;
+    if(!schoolId) return null;
     const q = query(collection(db, "chats"), where("schoolId", "==", schoolId));
-    onSnapshot(q, (snap) => { 
+    return onSnapshot(q, (snap) => { 
         let list = []; snap.forEach(doc => list.push({ id: doc.id, ...doc.data() })); 
         list.sort((a, b) => (a.waktu?.toMillis() || 0) - (b.waktu?.toMillis() || 0)); callback(list); 
     });
@@ -99,11 +95,10 @@ export async function sendJapri(schoolId, dariNama, keUsername, isiPesan, roleSe
 export async function sendGlobalChat(schoolId, dariNama, isiPesan, roleSender) { return await addDoc(collection(db, "chats"), { schoolId, sender: dariNama, message: isiPesan, waktu: serverTimestamp(), type: 'global', role: roleSender }); }
 export async function deleteChat(chatId) { return await deleteDoc(doc(db, "chats", chatId)); }
 
-// TUGAS WA BERDASARKAN SCHOOL ID
 export function listenToTugasWA(schoolId, callback) { 
-    if(!schoolId) return;
+    if(!schoolId) return null;
     const q = query(collection(db, "tugas_wa"), where("schoolId", "==", schoolId));
-    onSnapshot(q, (snap) => { 
+    return onSnapshot(q, (snap) => { 
         let list = []; snap.forEach(doc => list.push({ id: doc.id, ...doc.data() })); 
         list.sort((a, b) => (b.waktu?.toMillis() || 0) - (a.waktu?.toMillis() || 0)); callback(list); 
     }); 
