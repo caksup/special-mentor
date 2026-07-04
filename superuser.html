@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Direktur - AEC Hub</title>
+    <title>Panel Pengendali VIP - AEC Hub</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e293b">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,21 +11,29 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        .chat-box { max-height: 400px; overflow-y: auto; background-color: #f8f9fa; }
-        .msg-bubble { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; }
-        .msg-me { background-color: #fff3cd; border: 1px solid #ffecb5; margin-left: auto; border-bottom-right-radius: 2px; }
+        .dynamic-tabs .nav-link { transition: all 0.3s ease; padding: 0.6rem 0.8rem; border: none; border-bottom: 3px solid transparent; color: #6c757d; }
+        .dynamic-tabs .nav-link i { font-size: 1.3rem; }
+        .dynamic-tabs .nav-link .tab-label { display: none; margin-left: 6px; font-size: 0.8rem; white-space: nowrap; }
+        .dynamic-tabs .nav-link.active { border-bottom: 3px solid #0d6efd; background-color: transparent; color: #000; font-weight: bold; }
+        .dynamic-tabs .nav-link.active .tab-label { display: inline-block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; width: 0; } to { opacity: 1; width: auto; } }
+
+        .chat-box { max-height: 300px; overflow-y: auto; background-color: #f8f9fa; }
+        .msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.8rem; position: relative; }
+        .msg-me { background-color: #d1e7dd; margin-left: auto; border-bottom-right-radius: 2px; }
         .msg-other { background-color: #fff; border: 1px solid #dee2e6; margin-right: auto; border-bottom-left-radius: 2px; }
+        .del-chat-btn { cursor: pointer; opacity: 0.5; font-size: 0.8rem; padding: 2px 5px; } .del-chat-btn:hover { opacity: 1; color: red; }
     </style>
 </head>
-<body style="background-color: #f1f5f9;">
+<body style="background-color: #1e293b;">
     <div class="app-wrapper">
         
-        <nav class="navbar navbar-expand shadow-sm mb-4 border-bottom border-warning border-3" style="background-color: #0f172a;">
+        <nav class="navbar navbar-expand bg-dark navbar-dark shadow-sm mb-4 border-bottom border-warning border-3">
             <div class="container-fluid px-3">
-                <a class="navbar-brand fw-bold d-flex align-items-center text-decoration-none" href="info.html">
-                    <i class="bi bi-star-fill text-warning me-2" style="font-size: 1.5rem;"></i>
+                <a class="navbar-brand fw-bold text-white d-flex align-items-center" href="info.html">
+                    <i class="bi bi-shield-fill-check text-warning me-2" style="font-size: 1.5rem;"></i>
                     <div class="d-flex flex-column text-start">
-                        <div style="font-size: 1rem; line-height: 1;" class="text-white">PANEL DIREKTUR <span id="netStatus" class="ms-1"></span></div>
+                        <div style="font-size: 1rem; line-height: 1;">KONTROL V13 <span id="netStatus" class="ms-1"></span></div>
                         <div class="mt-1 d-flex flex-column align-items-start">
                             <span class="badge bg-danger text-white px-2 py-1 mb-1" style="font-size: 0.65rem;">Day</span>
                             <div id="headTimeline">...</div>
@@ -38,55 +46,99 @@
                         <div id="headDate" class="fw-bold text-warning" style="font-size: 0.7rem;">Tanggal</div>
                         <div id="headClock" class="font-monospace fw-bold" style="font-size: 0.9rem;">00:00:00</div>
                     </div>
-                    <div class="text-end me-3 d-none d-sm-block"><div class="text-light small fw-bold" id="userNameDisplay">Memuat...</div></div>
-                    <button id="btnLogout" class="btn btn-outline-warning btn-sm fw-bold"><i class="bi bi-power"></i></button>
+                    <div class="text-end me-3 d-none d-sm-block"><div class="text-light small fw-bold" id="userNameDisplay">Otoritas...</div></div>
+                    <button id="btnLogout" class="btn btn-outline-danger btn-sm fw-bold"><i class="bi bi-power"></i></button>
                 </div>
             </div>
         </nav>
 
         <div class="container pb-5">
             <div class="row">
-                <div class="col-12 col-md-3 mb-4">
-                    <div class="card card-custom p-2 shadow-sm border-0">
-                        <ul class="nav nav-pills flex-row flex-md-column nav-fill gap-1" id="menuTabs">
-                            <li class="nav-item"><button class="nav-link active w-100 fw-bold text-start text-dark" id="tab-beranda" data-bs-toggle="pill" data-bs-target="#beranda"><i class="bi bi-display me-2 text-primary"></i> Info Dashboard</button></li>
-                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start text-dark" id="tab-pantau" data-bs-toggle="pill" data-bs-target="#pantau"><i class="bi bi-graph-up-arrow me-2 text-success"></i> Monitoring Kinerja</button></li>
-                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start text-dark" id="tab-rekap" data-bs-toggle="pill" data-bs-target="#rekap"><i class="bi bi-clock-history me-2 text-secondary"></i> History Logbook</button></li>
-                            <li class="nav-item"><button class="nav-link w-100 fw-bold text-start text-danger bg-danger bg-opacity-10" id="tab-diskusi" data-bs-toggle="pill" data-bs-target="#diskusi"><i class="bi bi-chat-dots-fill me-2"></i> Ruang Diskusi</button></li>
-                        </ul>
-                    </div>
-                </div>
+                <div class="col-12 col-lg-7 mb-4">
+                    
+                    <ul class="nav nav-tabs mb-3 shadow-sm bg-white rounded pt-2 px-2 dynamic-tabs d-flex justify-content-between flex-nowrap overflow-auto hide-scrollbar" id="adminTabs" role="tablist">
+                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-setup" title="Setup Global"><i class="bi bi-gear-fill text-secondary"></i><span class="tab-label">Setup</span></button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tutor" title="Manajemen Tutor"><i class="bi bi-person-badge text-primary"></i><span class="tab-label">Tutor</span></button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-siswa" title="Data Siswa"><i class="bi bi-mortarboard text-success"></i><span class="tab-label">Siswa</span></button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-diskusi" title="Ruang Diskusi"><i class="bi bi-chat-dots text-danger"></i><span class="tab-label">Diskusi</span></button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-kurikulum" title="Tracker Materi"><i class="bi bi-bar-chart-fill text-warning"></i><span class="tab-label">Tracker</span></button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-tugas" title="Tugas WA"><i class="bi bi-whatsapp text-success"></i><span class="tab-label">WA</span></button></li>
+                    </ul>
 
-                <div class="col-12 col-md-9">
                     <div class="tab-content h-100">
-                        
-                        <div class="tab-pane fade show active" id="beranda">
-                            <div class="card card-custom p-4 text-center mb-4 shadow-sm border-0 bg-white">
-                                <h1 id="txtClockDash" class="digital-clock-dash mb-0" style="color: #0f172a;">00:00:00</h1>
-                                <p id="txtDateDash" class="text-muted fw-bold text-uppercase mb-3">Tanggal</p>
-                                <hr class="border-secondary opacity-25">
-                                <div class="row text-start mt-4 g-3">
-                                    <div class="col-12">
-                                        <div class="p-3 bg-danger bg-opacity-10 border border-danger border-opacity-50 rounded-3 h-100">
-                                            <h6 class="fw-bold text-danger mb-2 text-xs"><i class="bi bi-megaphone"></i> BRIEFING & NOTIFIKASI SAYA</h6>
-                                            <p id="tutorBriefing" class="text-sm mb-0 text-dark fw-bold" style="white-space: pre-line;">Memuat...</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="p-3 bg-white bg-opacity-10 border border-info border-opacity-50 rounded-3 shadow-sm h-100">
-                                            <h6 class="fw-bold text-info mb-2 text-xs"><i class="bi bi-clock-history"></i> KELAS SAAT INI (LIVE)</h6>
-                                            <p id="tutorJadwalHarian" class="text-sm mb-0 text-primary fw-bold" style="white-space: pre-line; font-size: 0.95rem;">Mendeteksi jadwal...</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6"><div class="p-3 bg-primary bg-opacity-10 border border-primary border-opacity-50 rounded-3 h-100"><h6 class="fw-bold text-primary mb-2 text-xs"><i class="bi bi-calendar-week"></i> JADWAL FULL GLOBAL</h6><p id="tutorJadwal" class="text-sm mb-0 text-dark fw-medium" style="white-space: pre-line;">Memuat...</p></div></div>
+                        <div class="tab-pane fade show active" id="tab-setup">
+                            <div class="card card-custom p-3 shadow-lg bg-white mb-3">
+                                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-broadcast text-danger me-2"></i> Konfigurasi Sistem Utama</h6>
+                                <div class="row g-2 mb-3 p-2 border border-warning rounded bg-warning bg-opacity-10">
+                                    <div class="col-12"><label class="form-label fw-bold text-danger text-xs mb-0">NAMA SEKOLAH / LOKASI</label><input type="text" id="inputSekolah" class="form-control form-control-sm fw-bold border-warning"></div>
+                                    <div class="col-6"><label class="form-label fw-bold text-danger text-xs mb-0">TOTAL HARI KURSUS</label><input type="number" id="inputTotalHari" class="form-control form-control-sm fw-bold border-warning text-center"></div>
+                                    <div class="col-6"><label class="form-label fw-bold text-danger text-xs mb-0">HARI SAAT INI</label><input type="number" id="inputHariKe" class="form-control form-control-sm fw-bold border-warning text-center"></div>
+                                    <div class="col-12 mt-2"><label class="form-label fw-bold text-danger text-xs mb-0">DAFTAR KELAS (Pisahkan dgn koma)</label><input type="text" id="inputMasterKelas" class="form-control form-control-sm fw-bold border-danger text-danger" placeholder="Cth: Kelas A, Kelas B, Kelas C, Kelas D"></div>
                                 </div>
+                                <div class="mb-2"><label class="form-label fw-bold text-info text-xs mb-0">1. NOTIF / BRIEFING DIREKTUR</label><textarea id="inputBriefing" class="form-control bg-light text-xs border-info" rows="2"></textarea></div>
+                                <div class="mb-2"><label class="form-label fw-bold text-primary text-xs mb-0">2. JADWAL FULL GLOBAL</label><textarea id="inputJadwal" class="form-control bg-light text-xs" rows="3" placeholder="Contoh:&#10;1 Vocabulary (07.00 - 08.00)&#10;2 Main Class (08.00 - 09.00)"></textarea></div>
+                                <div class="mb-2"><label class="form-label fw-bold text-success text-xs mb-0">3. GOAL HARIAN</label><textarea id="inputGoal" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                                <div class="mb-3"><label class="form-label fw-bold text-danger text-xs mb-0">4. DATA SISWA (Cth: Kelas A: Budi, Andi)</label><textarea id="inputMasterSiswa" class="form-control bg-light text-xs border-danger border-opacity-25" rows="2"></textarea></div>
+                                
+                                <div class="p-2 border rounded bg-light mb-3">
+                                    <h6 class="text-xs fw-bold text-dark mb-2 border-bottom pb-1">5. MASTER MATERI KURIKULUM</h6>
+                                    <label class="form-label fw-bold text-primary text-xs mb-0">VOCABULARY</label><textarea id="inputVocab" class="form-control text-xs mb-1" rows="2"></textarea>
+                                    <label class="form-label fw-bold text-success text-xs mb-0">SPEAKING</label><textarea id="inputSpeaking" class="form-control text-xs mb-1" rows="2"></textarea>
+                                    <label class="form-label fw-bold text-danger text-xs mb-0">GRAMMAR</label><textarea id="inputGrammar" class="form-control text-xs" rows="2"></textarea>
+                                </div>
+                                <button id="btnSaveGlobal" class="btn btn-primary w-100 fw-bold shadow-sm py-2"><i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI SELURUH SISTEM</button>
                             </div>
                         </div>
 
-                        <!-- TAB PANTAU, HISTORY & DISKUSI -->
-                        <div class="tab-pane fade" id="pantau"><div class="row g-4"><div class="col-12 col-lg-6"><div class="card card-custom p-3 shadow-sm border-top border-warning border-4 bg-white h-100"><h6 class="fw-bold text-warning mb-2"><i class="bi bi-clipboard-data me-2"></i> Tracker Kurikulum Otomatis</h6><select id="trackerKelas" class="form-select form-select-sm border-warning fw-bold mb-3"></select><div id="areaTracker" class="overflow-auto pe-1" style="max-height: 400px;">Memuat pencapaian...</div></div></div><div class="col-12 col-lg-6"><div class="card card-custom p-3 shadow-sm border-top border-success border-4 bg-white mb-4"><h6 class="fw-bold text-success mb-3"><i class="bi bi-star-fill me-2"></i> Top 10 Siswa (Leaderboard)</h6><select id="filterKelasSiswa" class="form-select form-select-sm fw-bold border-success mb-3"></select><div id="listTop10" class="space-y-2 overflow-auto" style="max-height: 200px;">Memuat peringkat...</div></div><div class="card card-custom p-3 shadow-sm border-top border-primary border-4 bg-white"><h6 class="fw-bold text-primary mb-2"><i class="bi bi-trophy-fill me-2"></i> Keaktifan Logbook Tutor</h6><div id="leaderboardTutor" class="space-y-2 overflow-auto" style="max-height: 150px;">Memuat ranking...</div></div></div></div></div>
-                        <div class="tab-pane fade" id="rekap"><div class="card card-custom p-4 shadow-sm border-top border-secondary border-4"><div class="d-flex justify-content-between align-items-center mb-3"><h5 class="fw-bold text-secondary mb-0"><i class="bi bi-server me-2"></i> Pantau Logbook Sesi</h5><button id="btnExportPDF" class="btn btn-danger btn-sm fw-bold"><i class="bi bi-file-earmark-pdf-fill"></i> Ekspor PDF</button></div><div class="row g-2 mb-3"><div class="col-6"><select id="filterHari" class="form-select form-select-sm bg-light fw-bold text-danger"></select></div><div class="col-6"><select id="filterKelas" class="form-select form-select-sm bg-light fw-bold text-secondary"></select></div></div><div id="logbookList" class="overflow-auto pe-2" style="max-height: 500px;"></div></div></div>
-                        <div class="tab-pane fade h-100" id="diskusi"><div class="card card-custom p-3 shadow-sm border-top border-danger border-4 h-100 d-flex flex-column bg-white"><h5 class="fw-bold text-danger mb-1"><i class="bi bi-chat-dots-fill me-2"></i> Ruang Diskusi Terbuka</h5><div id="chatBox" class="chat-box flex-grow-1 p-3 rounded border mb-3 d-flex flex-column gap-2" style="min-height: 350px;"></div><div class="input-group"><input type="text" id="inputChat" class="form-control text-sm" placeholder="Ketik arahan Anda..."><button class="btn btn-warning fw-bold px-4" id="btnSendChat"><i class="bi bi-send-fill text-dark"></i></button></div></div></div>
+                        <div class="tab-pane fade" id="tab-tutor">
+                            <div class="card card-custom p-3 shadow-lg bg-white border-primary border-2 mb-3">
+                                <h6 class="fw-bold text-primary mb-3"><i class="bi bi-person-fill-add me-2"></i> Tambah / Edit Akses Tutor</h6>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-4"><input type="text" id="newUser" class="form-control form-control-sm text-xs text-lowercase fw-bold" placeholder="username"></div>
+                                    <div class="col-4"><input type="text" id="newPin" class="form-control form-control-sm text-xs text-danger fw-bold" placeholder="PIN Angka"></div>
+                                    <div class="col-4"><input type="text" id="newName" class="form-control form-control-sm text-xs" placeholder="Julukan"></div>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6"><select id="newRole" class="form-select form-select-sm text-xs"><option value="mentor">Role: Mentor</option><option value="direktur">Role: Direktur</option><option value="admin">Role: Admin</option></select></div>
+                                    <div class="col-6"><button id="btnAddUser" class="btn btn-sm btn-primary w-100 fw-bold">Tambah Akun</button></div>
+                                </div>
+                                <div class="table-responsive"><table class="table table-sm table-bordered text-xs align-middle text-center"><thead class="table-light"><tr><th>User</th><th>Nama</th><th>Role</th><th>PIN</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="listUsersTable"></tbody></table></div>
+                            </div>
+                            <div class="card card-custom p-3 shadow-lg bg-white"><h6 class="fw-bold text-dark mb-2"><i class="bi bi-trophy text-warning me-2"></i> Pencapaian Kinerja Tutor (Keaktifan)</h6><div id="leaderboardTutor" class="space-y-2">Memuat ranking...</div></div>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-siswa"><div class="card card-custom p-3 shadow-lg bg-white border-success border-2"><h6 class="fw-bold text-success mb-2"><i class="bi bi-mortarboard-fill me-2"></i> Rapor Kelas & Leaderboard Siswa</h6><select id="filterKelasSiswa" class="form-select form-select-sm fw-bold border-success mb-3"></select><ul class="nav nav-pills mb-3 text-xs" id="siswaTabs" role="tablist"><li class="nav-item"><button class="nav-link active py-1" data-bs-toggle="pill" data-bs-target="#sub-absen">Rekap Absen & Nilai</button></li><li class="nav-item"><button class="nav-link py-1 text-warning bg-warning bg-opacity-10" data-bs-toggle="pill" data-bs-target="#sub-top10"><i class="bi bi-star-fill"></i> Top 10 Kelas</button></li></ul><div class="tab-content"><div class="tab-pane fade show active" id="sub-absen"><div class="table-responsive" style="max-height: 400px; overflow-y: auto;"><table class="table table-sm table-bordered text-xs align-middle text-center mb-0"><thead class="table-success sticky-top"><tr><th style="width: 30px;">No</th><th>Nama Siswa</th><th>✔</th><th>✖</th><th>S</th><th>I</th><th>Total Poin/A</th></tr></thead><tbody id="tabelRekapSiswa"></tbody></table></div></div><div class="tab-pane fade" id="sub-top10"><div id="listTop10" class="space-y-2">Memuat peringkat...</div></div></div></div></div>
+                        
+                        <div class="tab-pane fade" id="tab-diskusi">
+                            <div class="card card-custom p-3 shadow-lg bg-white border-danger border-2 h-100 d-flex flex-column">
+                                <h6 class="fw-bold text-danger mb-2"><i class="bi bi-chat-dots-fill me-2"></i> Ruang Diskusi & Japri</h6>
+                                <div id="chatBox" class="chat-box flex-grow-1 p-2 rounded border mb-2 d-flex flex-column gap-2"></div>
+                                <div class="input-group">
+                                    <select id="chatTarget" class="form-select form-select-sm" style="max-width: 120px; font-size: 0.75rem; font-weight: bold;">
+                                        <option value="GLOBAL">Grup Semua</option>
+                                        </select>
+                                    <input type="text" id="inputChat" class="form-control form-control-sm text-sm" placeholder="Ketik pesan/japri...">
+                                    <button class="btn btn-danger btn-sm fw-bold" id="btnSendChat"><i class="bi bi-send"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="tab-kurikulum"><div class="card card-custom p-3 shadow-lg bg-white border-warning border-2"><h6 class="fw-bold text-warning mb-2"><i class="bi bi-clipboard-data me-2"></i> Tracker Otomatis</h6><select id="trackerKelas" class="form-select form-select-sm border-warning fw-bold mb-3"></select><div id="areaTracker" class="overflow-auto pe-1" style="max-height: 380px;">Memuat pencapaian...</div></div></div>
+                        <div class="tab-pane fade" id="tab-tugas"><div class="card card-custom p-3 shadow-lg bg-white border-success border-2"><h6 class="fw-bold text-success mb-3"><i class="bi bi-send-fill me-2"></i> Penugasan (Jam 16:00)</h6><div class="mb-2"><select id="waTarget" class="form-select form-select-sm border-success"></select></div><div class="mb-2"><input type="text" id="waGambar" class="form-control form-control-sm bg-light" placeholder="URL Gambar..."></div><div class="mb-3"><textarea id="waInstruksi" class="form-control bg-light text-sm" rows="3" placeholder="Instruksi..."></textarea></div><button id="btnKirimTugasWA" class="btn btn-success btn-sm w-100 fw-bold shadow-sm py-2">Buat Template WA</button><hr class="my-3"><div id="listTugasAdmin" style="max-height: 200px; overflow-y: auto;"></div></div></div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-5">
+                    <div class="card card-custom p-3 shadow-lg bg-white h-100">
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                            <h6 class="fw-bold text-primary mb-0"><i class="bi bi-server me-1"></i> Logbook Harian</h6>
+                            <button id="btnExportPDF" class="btn btn-danger btn-sm fw-bold"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</button>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6"><select id="filterHari" class="form-select form-select-sm border-2 fw-bold text-danger text-xs"><option value="SEMUA">Semua Data</option></select></div>
+                            <div class="col-6"><select id="filterKelasHistori" class="form-select form-select-sm border-2 fw-bold text-secondary text-xs"></select></div>
+                        </div>
+                        <div id="adminLogbookList" class="overflow-auto pe-1" style="max-height: 520px;">Memuat...</div>
                     </div>
                 </div>
             </div>
@@ -95,51 +147,118 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
-        import { db, startClock, listenToGlobalInfo, listenToLogbooks, generateTimelineHTML, getActiveSchedule } from './script.js?v=12';
-        import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { db, startClock, listenToGlobalInfo, updateGlobalInfo, listenToLogbooks, deleteLogbook, sendTugasWA, listenToTugasWA, deleteTugasWA, generateTimelineHTML, deleteChat, sendJapri } from './script.js?v=13';
+        import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const activeRole = sessionStorage.getItem("userRole"); if (activeRole !== "direktur") window.location.replace("index.html");
-        const myName = sessionStorage.getItem("loggedInName"); document.getElementById("userNameDisplay").innerText = "Dir: " + myName;
-        function updateNetworkStatus() { document.getElementById('netStatus').innerHTML = navigator.onLine ? '<i class="bi bi-circle-fill text-success" style="font-size: 0.6rem;"></i>' : '<i class="bi bi-circle-fill text-danger" style="font-size: 0.6rem;"></i>'; } window.addEventListener('online', updateNetworkStatus); window.addEventListener('offline', updateNetworkStatus); updateNetworkStatus(); startClock('txtClockDash', 'txtDateDash'); setInterval(() => { const now = new Date(); document.getElementById('headClock').innerText = now.toLocaleTimeString('id-ID'); document.getElementById('headDate').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }); }, 1000);
+        const actUser = sessionStorage.getItem("loggedInUser"); if (actUser !== "sup" && actUser !== "afif") window.location.replace("index.html");
+        const myName = sessionStorage.getItem("loggedInName"); document.getElementById("userNameDisplay").innerText = "Admin: " + myName;
 
-        let rawKurikulum = { vocab: [], speaking: [], grammar: [] };
+        function updateNetworkStatus() { document.getElementById('netStatus').innerHTML = navigator.onLine ? '<i class="bi bi-circle-fill text-success" style="font-size: 0.6rem;"></i>' : '<i class="bi bi-circle-fill text-danger" style="font-size: 0.6rem;"></i>'; }
+        window.addEventListener('online', updateNetworkStatus); window.addEventListener('offline', updateNetworkStatus); updateNetworkStatus(); startClock('headClock', 'headDate');
+
+        let rawKurikulum = { vocab: [], speaking: [], grammar: [] }; let arrayKelasMaster = [];
         function updateSelectsClass(arr) {
-            const sels = ['filterKelasSiswa', 'trackerKelas', 'filterKelas'];
-            sels.forEach(id => { const el = document.getElementById(id); if(!el) return; const prev = el.value; el.innerHTML = `<option value="SEMUA">Semua Kelas</option>`; arr.forEach(k => el.innerHTML += `<option value="${k}">${k}</option>`); if(Array.from(el.options).some(o=>o.value===prev)) el.value = prev; });
+            const sels = ['filterKelasSiswa', 'trackerKelas', 'filterKelasHistori', 'waTarget'];
+            sels.forEach(id => { const el = document.getElementById(id); if(!el) return; const prev = el.value; el.innerHTML = ""; if(id === 'waTarget') el.innerHTML += `<option value="GLOBAL (Semua Ruang)">GLOBAL (Semua Ruang)</option>`; else el.innerHTML += `<option value="SEMUA">Semua Kelas</option>`; arr.forEach(k => el.innerHTML += `<option value="${k}">${k}</option>`); if(Array.from(el.options).some(o=>o.value===prev)) el.value = prev; });
         }
 
         listenToGlobalInfo((data) => {
-            document.getElementById('headSekolah').innerText = data.namaSekolah || "AEC Hub Pusat"; document.getElementById('headTimeline').innerHTML = generateTimelineHTML(data.totalHari, data.hariBerjalan);
-            document.getElementById('tutorBriefing').innerText = data.briefing || "-"; document.getElementById('tutorJadwal').innerText = data.jadwal || "-";
-            document.getElementById('tutorJadwalHarian').innerText = getActiveSchedule(data.jadwal);
-            const arrKelas = (data.masterKelas || "Kelas A").split(',').map(k=>k.trim()).filter(k=>k!==""); updateSelectsClass(arrKelas); rawKurikulum = data.kurikulum || { vocab: [], speaking: [], grammar: [] }; renderTracker();
+            if (data) {
+                document.getElementById('inputSekolah').value = data.namaSekolah || "AEC Hub Pusat"; document.getElementById('inputTotalHari').value = data.totalHari || 5; document.getElementById('inputHariKe').value = data.hariBerjalan || 0; document.getElementById('inputMasterKelas').value = data.masterKelas || "Kelas A, Kelas B, Kelas C, Kelas D";
+                document.getElementById('headSekolah').innerText = data.namaSekolah || "AEC Hub Pusat"; document.getElementById('headTimeline').innerHTML = generateTimelineHTML(data.totalHari, data.hariBerjalan);
+                document.getElementById('inputBriefing').value = data.briefing || ""; document.getElementById('inputJadwal').value = data.jadwal || ""; document.getElementById('inputGoal').value = data.goal || ""; document.getElementById('inputMasterSiswa').value = data.masterSiswa || "";
+                rawKurikulum = data.kurikulum || { vocab: [], speaking: [], grammar: [] }; document.getElementById('inputVocab').value = rawKurikulum.vocab ? rawKurikulum.vocab.join('\n') : ""; document.getElementById('inputSpeaking').value = rawKurikulum.speaking ? rawKurikulum.speaking.join('\n') : ""; document.getElementById('inputGrammar').value = rawKurikulum.grammar ? rawKurikulum.grammar.join('\n') : "";
+                arrayKelasMaster = (data.masterKelas || "Kelas A").split(',').map(k=>k.trim()).filter(k=>k!==""); updateSelectsClass(arrayKelasMaster); renderTracker(); 
+            }
         });
-        setInterval(() => { const globalJadwal = document.getElementById('tutorJadwal').innerText; document.getElementById('tutorJadwalHarian').innerText = getActiveSchedule(globalJadwal); }, 60000);
 
-        onSnapshot(query(collection(db, "chats"), orderBy("waktu", "asc")), (snap) => { const box = document.getElementById("chatBox"); box.innerHTML = ""; snap.forEach(doc => { const c = doc.data(); const isMe = c.sender === myName; const time = c.waktu ? c.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '..'; let nameColor = isMe ? 'text-warning text-darken-2' : 'text-primary'; let roleBadge = ""; if(c.role === "admin") { nameColor = 'text-danger'; roleBadge = '<i class="bi bi-shield-lock-fill ms-1"></i>'; } else if(c.role === "direktur") { nameColor = 'text-warning'; roleBadge = '<i class="bi bi-star-fill ms-1"></i>'; } box.innerHTML += `<div class="msg-bubble ${isMe ? 'msg-me' : 'msg-other'} shadow-sm"><div class="fw-bold text-xs ${nameColor}">${c.sender} ${roleBadge} <span class="fw-normal text-muted ms-1" style="font-size:0.6rem;">${time}</span></div><div class="mt-1">${c.message}</div></div>`; }); box.scrollTop = box.scrollHeight; });
-        document.getElementById("btnSendChat").onclick = async () => { const msg = document.getElementById("inputChat").value.trim(); if(!msg) return; await addDoc(collection(db, "chats"), { sender: myName, role: "direktur", message: msg, waktu: serverTimestamp(), type: 'global' }); document.getElementById("inputChat").value = ""; }; document.getElementById("inputChat").addEventListener("keypress", function(e) { if (e.key === "Enter") { e.preventDefault(); document.getElementById("btnSendChat").click(); } });
+        document.getElementById("btnSaveGlobal").onclick = async () => {
+            const getArr = (id) => document.getElementById(id).value.split('\n').map(i => i.trim()).filter(i => i !== "");
+            try {
+                await updateGlobalInfo({ 
+                    namaSekolah: document.getElementById('inputSekolah').value, totalHari: parseInt(document.getElementById('inputTotalHari').value) || 5, hariBerjalan: parseInt(document.getElementById('inputHariKe').value) || 0,
+                    masterKelas: document.getElementById('inputMasterKelas').value, jadwal: document.getElementById('inputJadwal').value, 
+                    briefing: document.getElementById('inputBriefing').value, goal: document.getElementById('inputGoal').value, masterSiswa: document.getElementById('inputMasterSiswa').value, 
+                    kurikulum: { vocab: getArr('inputVocab'), speaking: getArr('inputSpeaking'), grammar: getArr('inputGrammar') }
+                }); alert("Setup Tersimpan!");
+            } catch (e) { alert("Gagal update."); }
+        };
 
-        let dataLengkap = []; listenToLogbooks((logData) => { dataLengkap = logData; ekstrakHari(); renderLogbookList(); renderTracker(); kalkulasiDataSiswa(); kalkulasiKinerjaMentor(); });
-        document.getElementById('filterKelas').onchange = () => renderLogbookList(); document.getElementById('filterHari').onchange = () => renderLogbookList(); document.getElementById('trackerKelas').onchange = () => renderTracker(); document.getElementById('filterKelasSiswa').onchange = () => kalkulasiDataSiswa();
-        
+        // BACA DATA USER SEKALIGUS ISI DROPDOWN TARGET JAPRI
+        onSnapshot(collection(db, "users"), (snap) => { 
+            const tbody = document.getElementById("listUsersTable"); tbody.innerHTML = ""; 
+            const chatTarget = document.getElementById("chatTarget"); 
+            const prevTarget = chatTarget ? chatTarget.value : "GLOBAL";
+            if(chatTarget) chatTarget.innerHTML = `<option value="GLOBAL">Grup Semua</option>`;
+
+            snap.forEach(d => { 
+                const ud = d.data(); const uid = d.id; 
+                const btnStatus = ud.status === 'aktif' ? `<button class="btn btn-sm btn-outline-danger py-0 px-1" onclick="window.toggleUser('${uid}', 'nonaktif')" title="Nonaktifkan"><i class="bi bi-person-dash"></i></button>` : `<button class="btn btn-sm btn-outline-success py-0 px-1" onclick="window.toggleUser('${uid}', 'aktif')" title="Aktifkan"><i class="bi bi-person-check"></i></button>`; 
+                const btnEdit = `<button class="btn btn-sm btn-outline-primary py-0 px-1 ms-1" onclick="window.editUser('${uid}', '${ud.pin}', '${ud.julukan}', '${ud.role}')" title="Edit Akun"><i class="bi bi-pencil"></i></button>`;
+                const badge = ud.status === 'aktif' ? '<span class="badge bg-success">Aktif</span>' : '<span class="badge bg-secondary">Cuti</span>'; 
+                tbody.innerHTML += `<tr><td class="fw-bold text-primary">${uid}</td><td>${ud.julukan}</td><td class="text-uppercase" style="font-size:0.6rem;">${ud.role}</td><td class="font-monospace text-danger fw-bold">${ud.pin}</td><td>${badge}</td><td>${btnStatus}${btnEdit}</td></tr>`; 
+                
+                // Tambah ke dropdown Japri jika bukan akun admin sendiri
+                if(chatTarget && ud.julukan !== myName) { chatTarget.innerHTML += `<option value="${ud.julukan}">Japri: ${ud.julukan}</option>`; }
+            }); 
+            if(chatTarget) chatTarget.value = prevTarget;
+        });
+
+        window.editUser = function(uid, pin, nama, role) { document.getElementById("newUser").value = uid; document.getElementById("newUser").readOnly = true; document.getElementById("newPin").value = pin; document.getElementById("newName").value = nama; document.getElementById("newRole").value = role; const btn = document.getElementById("btnAddUser"); btn.innerHTML = "Update Akun"; btn.classList.replace("btn-primary", "btn-warning"); btn.classList.replace("text-white", "text-dark"); };
+        document.getElementById("btnAddUser").onclick = async () => { const u = document.getElementById("newUser").value.toLowerCase().trim(); const p = document.getElementById("newPin").value; const n = document.getElementById("newName").value; const r = document.getElementById("newRole").value; if(!u || !p || !n) return alert("Isi semua form!"); await setDoc(doc(db, "users", u), { pin: p, julukan: n, role: r, status: "aktif" }, { merge: true }); const isEdit = document.getElementById("newUser").readOnly; alert(isEdit ? "Data Akun Berhasil Diupdate!" : "Akun Baru Ditambahkan!"); document.getElementById("newUser").value=""; document.getElementById("newUser").readOnly = false; document.getElementById("newPin").value=""; document.getElementById("newName").value=""; const btn = document.getElementById("btnAddUser"); btn.innerHTML = "Tambah Akun"; btn.classList.replace("btn-warning", "btn-primary"); btn.classList.remove("text-dark"); }; 
+        window.toggleUser = async function(uid, setStatus) { await setDoc(doc(db, "users", uid), { status: setStatus }, {merge: true}); };
+
+        let dataLengkap = []; listenToLogbooks((logData) => { dataLengkap = logData; ekstrakHari(); renderListAdmin(); renderTracker(); kalkulasiDataSiswa(); kalkulasiKinerjaMentor(); });
+        document.getElementById('filterHari').onchange = () => renderListAdmin(); document.getElementById('filterKelasHistori').onchange = () => renderListAdmin(); document.getElementById('trackerKelas').onchange = () => renderTracker(); document.getElementById('filterKelasSiswa').onchange = () => kalkulasiDataSiswa();
         function renderTracker() { const area = document.getElementById("areaTracker"); const kelasAktif = document.getElementById("trackerKelas").value; if(!rawKurikulum || Object.keys(rawKurikulum).length === 0) { area.innerHTML = "<div class='small text-muted'>Kosong.</div>"; return; } let materiSelesai = new Set(); dataLengkap.forEach(log => { if (log.kelas === kelasAktif && log.materi) { log.materi.forEach(m => materiSelesai.add(m)); } }); const renderBlok = (judul, arrayMateri, warna) => { if(!arrayMateri || arrayMateri.length === 0) return ''; let listHtml = ""; arrayMateri.forEach(mat => { const isDone = materiSelesai.has(mat); const icon = isDone ? `<i class="bi bi-check-circle-fill text-${warna}"></i>` : `<i class="bi bi-circle text-secondary opacity-50"></i>`; const bg = isDone ? `bg-${warna} bg-opacity-10 border-${warna}` : 'bg-white text-muted'; listHtml += `<div class="d-flex justify-content-between align-items-center p-2 mb-1 border rounded text-xs ${bg}"><span class="${isDone ? 'fw-bold' : ''}">${mat}</span> <span>${icon}</span></div>`; }); return `<div class="mb-3"><h6 class="text-xs fw-bold text-${warna} mb-1 border-bottom pb-1">${judul}</h6>${listHtml}</div>`; }; area.innerHTML = renderBlok("VOCABULARY", rawKurikulum.vocab, "primary") + renderBlok("SPEAKING", rawKurikulum.speaking, "success") + renderBlok("GRAMMAR", rawKurikulum.grammar, "danger"); }
-        function kalkulasiDataSiswa() { const kls = document.getElementById("filterKelasSiswa").value; let rekap = {}; dataLengkap.forEach(log => { if(log.kelas === kls && log.dataSiswa) { log.dataSiswa.forEach(s => { if(!rekap[s.nama]) rekap[s.nama] = { poin:0 }; let nStr = (s.nilai || "").toString().toLowerCase().trim(); if(nStr === 'a' || nStr === 'a+') rekap[s.nama].poin += 90; else if(parseInt(nStr) > 0) rekap[s.nama].poin += parseInt(nStr); }); } }); const listTop = document.getElementById("listTop10"); listTop.innerHTML = ""; let arrPeringkat = Object.entries(rekap).map(([nama, data]) => ({ nama, poin: data.poin })).sort((a,b) => b.poin - a.poin).slice(0, 10); if(arrPeringkat.length === 0) { listTop.innerHTML = "<div class='text-muted small'>Belum ada data nilai.</div>"; return; } arrPeringkat.forEach((item, idx) => { let badge = idx === 0 ? "bg-warning text-dark" : (idx === 1 ? "bg-secondary text-white" : "bg-primary text-white"); listTop.innerHTML += `<div class="d-flex justify-content-between align-items-center p-2 border rounded mb-1 bg-light text-sm"><div class="fw-bold"><span class="badge ${badge} me-2">#${idx+1}</span> ${item.nama}</div><div class="fw-bold text-success">${item.poin} Pts</div></div>`; }); }
+        function kalkulasiDataSiswa() { const kls = document.getElementById("filterKelasSiswa").value; let rekap = {}; dataLengkap.forEach(log => { if(log.kelas === kls && log.dataSiswa) { log.dataSiswa.forEach(s => { if(!rekap[s.nama]) rekap[s.nama] = { h:0, a:0, s:0, i:0, poin:0 }; if(s.kehadiran === 'h') rekap[s.nama].h++; else if(s.kehadiran === 'a') rekap[s.nama].a++; else if(s.kehadiran === 's') rekap[s.nama].s++; else if(s.kehadiran === 'i') rekap[s.nama].i++; let nStr = (s.nilai || "").toString().toLowerCase().trim(); if(nStr === 'a' || nStr === 'a+') rekap[s.nama].poin += 90; else if(parseInt(nStr) > 0) rekap[s.nama].poin += parseInt(nStr); }); } }); const tBody = document.getElementById("tabelRekapSiswa"); tBody.innerHTML = ""; let arrSiswa = Object.keys(rekap).sort(); arrSiswa.forEach((nm, idx) => { const r = rekap[nm]; tBody.innerHTML += `<tr><td>${idx+1}</td><td class="text-start fw-bold">${nm}</td><td>${r.h}</td><td>${r.a}</td><td>${r.s}</td><td>${r.i}</td><td class="fw-bold text-success">${r.poin}</td></tr>`; }); const listTop = document.getElementById("listTop10"); listTop.innerHTML = ""; let arrPeringkat = Object.entries(rekap).map(([nama, data]) => ({ nama, poin: data.poin })).sort((a,b) => b.poin - a.poin).slice(0, 10); if(arrPeringkat.length === 0) { listTop.innerHTML = "<div class='text-muted small'>Belum ada data.</div>"; return; } arrPeringkat.forEach((item, idx) => { let badge = idx === 0 ? "bg-warning" : (idx === 1 ? "bg-secondary" : "bg-primary"); listTop.innerHTML += `<div class="d-flex justify-content-between align-items-center p-2 border rounded mb-1 bg-light text-sm"><div class="fw-bold"><span class="badge ${badge} me-2">#${idx+1}</span> ${item.nama}</div><div class="fw-bold text-success">${item.poin} Pts</div></div>`; }); }
         function kalkulasiKinerjaMentor() { let rekapMentor = {}; dataLengkap.forEach(log => { if(!rekapMentor[log.nama]) rekapMentor[log.nama] = 0; rekapMentor[log.nama]++; }); const board = document.getElementById("leaderboardTutor"); board.innerHTML = ""; let arrMentor = Object.entries(rekapMentor).map(([nama, count]) => ({nama, count})).sort((a,b) => b.count - a.count); arrMentor.forEach((m, idx) => { let med = idx === 0 ? "🥇" : (idx === 1 ? "🥈" : "🏅"); board.innerHTML += `<div class="d-flex justify-content-between p-2 border rounded mb-1 bg-white shadow-sm text-sm"><div class="fw-bold">${med} ${m.nama}</div><div class="badge bg-primary">${m.count} Logbook</div></div>`; }); }
-
-        function ekstrakHari() { const daysMap = new Map(); dataLengkap.forEach(d => { if(d.waktu) { const dStr = d.waktu.toDate().toLocaleDateString('id-ID'); if(!daysMap.has(dStr)) daysMap.set(dStr, d.waktu.toDate()); } }); const sortedDays = Array.from(daysMap.entries()).sort((a,b) => a[1] - b[1]); const selHari = document.getElementById("filterHari"); const valSkg = selHari.value; selHari.innerHTML = '<option value="SEMUA">Semua History</option>'; sortedDays.forEach((entry, idx) => { selHari.innerHTML += `<option value="${entry[0]}">Hari ke-${idx+1} (${entry[0]})</option>`; }); if (Array.from(selHari.options).some(o=>o.value===valSkg) && valSkg !== "SEMUA") selHari.value = valSkg; else if (sortedDays.length > 0 && valSkg === "SEMUA" && selHari.options.length <= 2) selHari.value = sortedDays[sortedDays.length-1][0]; }
-        function renderLogbookList() {
-            const list = document.getElementById("logbookList"); const fKls = document.getElementById("filterKelas").value; const fHari = document.getElementById("filterHari").value; list.innerHTML = "";
-            let dt = dataLengkap; if (fHari !== "SEMUA") dt = dt.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari); if (fKls !== "SEMUA") dt = dt.filter(d => d.kelas === fKls);
-            if (dt.length === 0) { list.innerHTML = `<div class="alert text-center border-0 mt-4">Belum ada history.</div>`; return; }
-            dt.forEach((d, i) => {
-                const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'Pending...';
-                let tb = ""; if (d.dataSiswa && d.dataSiswa.length > 0) { tb = `<table class="table table-bordered text-xs mt-2 mb-0 text-center"><tr class="bg-light"><th style="width:25px;">No.</th><th>Nama Siswa</th><th>Abs</th><th>Nilai</th></tr>`; d.dataSiswa.forEach((s, idx) => { let ikon = s.kehadiran === 'h' ? '✔' : (s.kehadiran === 'a' ? '✖' : s.kehadiran.toUpperCase()); tb += `<tr><td>${idx+1}</td><td class="text-start">${s.nama}</td><td class="text-uppercase fw-bold">${ikon}</td><td class="fw-bold">${s.nilai || '-'}</td></tr>`; }); tb += `</table>`; }
+        function ekstrakHari() { const daysMap = new Map(); dataLengkap.forEach(d => { if(d.waktu) { const dStr = d.waktu.toDate().toLocaleDateString('id-ID'); if(!daysMap.has(dStr)) daysMap.set(dStr, d.waktu.toDate()); } }); const sortedDays = Array.from(daysMap.entries()).sort((a,b) => a[1] - b[1]); const selHari = document.getElementById("filterHari"); const valSkg = selHari.value; selHari.innerHTML = '<option value="SEMUA">Semua Data (Global)</option>'; sortedDays.forEach((entry, idx) => { selHari.innerHTML += `<option value="${entry[0]}">Hari ke-${idx+1} (${entry[0]})</option>`; }); if (Array.from(selHari.options).some(o=>o.value===valSkg) && valSkg !== "SEMUA") selHari.value = valSkg; else if (sortedDays.length > 0 && valSkg === "SEMUA" && selHari.options.length <= 2) selHari.value = sortedDays[sortedDays.length-1][0]; }
+        function renderListAdmin() {
+            const container = document.getElementById("adminLogbookList"); container.innerHTML = ""; const fHari = document.getElementById("filterHari").value; const fKelas = document.getElementById("filterKelasHistori").value;
+            let dataTampil = dataLengkap; if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari); if (fKelas !== "SEMUA") dataTampil = dataTampil.filter(d => d.kelas === fKelas);
+            if(dataTampil.length === 0) { container.innerHTML = `<div class="alert alert-secondary text-center small">Kosong.</div>`; return; }
+            dataTampil.forEach(d => {
+                const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-'; 
+                let txtNilai = d.dataSiswa && d.dataSiswa.length > 0 ? d.dataSiswa.map(s => { let ikon = s.kehadiran === 'h' ? '✔' : (s.kehadiran === 'a' ? '✖' : s.kehadiran.toUpperCase()); return `<b>${s.nama}</b>(${ikon}, ${s.nilai||'-'})`; }).join(' | ') : 'Belum ada data';
                 let displayJam = (d.jamKe || "").replace('Jam ', 'Jam ke-'); let displayMateri = d.materi && d.materi.length > 0 ? d.materi.join(', ') : '-';
-                list.innerHTML += `<div class="p-3 bg-white border rounded-3 mb-3 shadow-sm"><div class="d-flex justify-content-between border-bottom pb-1 mb-2"><span class="fw-bold text-primary"><i class="bi bi-person-fill"></i> ${d.nama}</span><span class="text-muted text-xs">${w}</span></div><div><span class="badge bg-primary me-1">${d.kelas}</span><span class="badge bg-dark">${displayJam}</span></div><div class="text-xs fw-bold mt-2 text-dark">📖 Materi: <span class="fw-normal">${displayMateri}</span></div><div class="text-xs mt-2 text-danger">📝 <b>Class Note:</b><br><span class="text-dark">${d.laporanSiswa || '-'}</span></div><div class="text-xs mt-2 text-success">🎯 <b>Tugas Siswa:</b><br><span class="text-dark">${d.tugasSiswa || '-'}</span></div><button class="btn btn-sm btn-outline-secondary w-100 mt-2 text-xs fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#col_${i}">Lihat Rapor ▼</button><div class="collapse" id="col_${i}">${tb}</div></div>`;
+                container.innerHTML += `<div class="p-2 bg-light rounded-3 border mb-2 shadow-sm text-xs"><div class="d-flex justify-content-between border-bottom pb-1 mb-1"><span class="fw-bold text-primary">${d.nama.toUpperCase()}</span><span class="text-muted">${w}</span></div><div class="mb-1"><span class="badge bg-primary me-1">${d.kelas}</span><span class="badge bg-dark">${displayJam}</span></div><div class="mb-1">✔ Materi: <b>${displayMateri}</b></div><div class="mb-1 mt-2 text-danger">📝 <b>Class Note:</b><br><span class="text-dark">${d.laporanSiswa || '-'}</span></div><div class="mb-1 text-success">🎯 <b>Tugas Siswa:</b><br><span class="text-dark">${d.tugasSiswa || '-'}</span></div><div class="p-1 mt-2 bg-warning bg-opacity-10 border border-warning mb-1">📊 <b>Rapor Siswa:</b> <br> ${txtNilai}</div><div class="text-end"><button class="btn btn-xs btn-outline-danger py-0" onclick="aksidminHapus('${d.id}')"><i class="bi bi-trash"></i></button></div></div>`;
             });
         }
-        document.getElementById("btnExportPDF").onclick = () => { const fHari = document.getElementById("filterHari").value; let dataTampil = dataLengkap; if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari); const printDiv = document.createElement("div"); printDiv.style.fontFamily = "Arial, sans-serif"; let htmlString = `<h3 style="text-align:center;">LAPORAN AEC (DIREKTUR) - ${fHari}</h3><table style="width: 100%; border-collapse: collapse; font-size: 11px;" border="1"><tr style="background:#ddd;"><th>Wkt</th><th>Tutor</th><th>Kls</th><th>Materi & Tugas Estafet</th><th>Nilai</th></tr>`; dataTampil.forEach(d => { const w = d.waktu ? d.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '-'; let ds = d.dataSiswa ? d.dataSiswa.map(s=>`<b>${s.nama}</b>:${s.kehadiran}(${s.nilai || '-'})`).join('<br>') : '-'; let dJam = (d.jamKe||"").replace('Jam ','Jam ke-'); htmlString += `<tr><td>${w}</td><td>${d.nama}</td><td>${d.kelas}<br>${dJam}</td><td><b>Materi:</b> ${d.materi.join(', ')}<br><b>Class Note:</b> ${d.laporanSiswa}<br><b>Tugas:</b> ${d.tugasSiswa}</td><td>${ds}</td></tr>`; }); htmlString += `</table>`; printDiv.innerHTML = htmlString; html2pdf().set({ margin: 0.3, filename: `AEC_Dir_${fHari.replace(/\//g, "-")}.pdf`, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }}).from(printDiv).save(); };
-        
+        window.aksidminHapus = async function(id) { if (confirm(`Hapus permanen sesi ini?`)) await deleteLogbook(id); };
+
+        // ==========================================
+        // V13 LOGIC: RENDER CHAT JAPRI DI ADMIN
+        // ==========================================
+        onSnapshot(query(collection(db, "chats"), orderBy("waktu", "asc")), (snap) => { 
+            const box = document.getElementById("chatBox"); box.innerHTML = ""; 
+            snap.forEach(docSnap => { 
+                const c = docSnap.data(); const cid = docSnap.id; 
+                // Filter: Tampilkan Global, ATAU Japri yg nyangkut sama Admin
+                if (c.type === 'global' || (c.type === 'private' && (c.sender === myName || c.receiver === "admin" || c.receiver === myName))) {
+                    const isMe = c.sender === myName; 
+                    const time = c.waktu ? c.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '..'; 
+                    const delBtn = `<i class="bi bi-trash del-chat-btn ms-2" onclick="window.hapusPesan('${cid}')" title="Hapus (Hanya Admin)"></i>`; 
+                    const badgeJapri = c.type === 'private' ? `<span class="badge bg-secondary ms-1" style="font-size:0.6rem;">JAPRI ${c.sender === myName ? 'ke ' + c.receiver : ''}</span>` : '';
+                    
+                    box.innerHTML += `<div class="msg-bubble ${isMe ? 'msg-me' : 'msg-other'} shadow-sm"><div class="d-flex justify-content-between align-items-start"><div class="fw-bold text-xs ${isMe ? 'text-success' : 'text-primary'}">${c.sender} <span class="fw-normal text-muted" style="font-size:0.6rem;">${time}</span> ${badgeJapri}</div>${delBtn}</div><div>${c.message}</div></div>`; 
+                }
+            }); 
+            box.scrollTop = box.scrollHeight; 
+        });
+
+        document.getElementById("btnSendChat").onclick = async () => { 
+            const msg = document.getElementById("inputChat").value.trim(); 
+            const target = document.getElementById("chatTarget").value;
+            if(!msg) return; 
+            if (target === "GLOBAL") { await addDoc(collection(db, "chats"), { sender: myName, role: "admin", message: msg, waktu: serverTimestamp(), type: 'global' }); } 
+            else { await sendJapri(myName, target, msg, "admin"); }
+            document.getElementById("inputChat").value = ""; 
+        }; 
+        window.hapusPesan = async function(cid) { if(confirm("Hapus pesan ini dari ruang diskusi?")) await deleteChat(cid); };
+
+        document.getElementById("btnKirimTugasWA").onclick = async () => { const t = document.getElementById("waTarget").value; const g = document.getElementById("waGambar").value; const i = document.getElementById("waInstruksi").value; if(!i) return alert("Instruksi wajib!"); await sendTugasWA(t, g, i); alert("Tugas WA Dibuat!"); document.getElementById("waInstruksi").value = ""; document.getElementById("waGambar").value = ""; }; listenToTugasWA((data) => { const list = document.getElementById("listTugasAdmin"); list.innerHTML = ""; data.forEach(d => { const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-'; list.innerHTML += `<div class="p-2 border rounded bg-light mb-2"><div class="d-flex justify-content-between"><span class="badge bg-success mb-1">${d.targetKelas}</span><span class="text-xs text-muted">${w}</span></div><p class="text-xs mb-1 text-truncate">${d.instruksi}</p><button class="btn btn-xs btn-outline-danger w-100" onclick="aksidminHapusTugas('${d.id}')">Hapus Template</button></div>`; }); }); window.aksidminHapusTugas = async function(id) { if (confirm(`Hapus template tugas ini?`)) await deleteTugasWA(id); };
+        document.getElementById("btnExportPDF").onclick = () => { const fHari = document.getElementById("filterHari").value; let dataTampil = dataLengkap; if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari); const printDiv = document.createElement("div"); printDiv.style.fontFamily = "Arial, sans-serif"; let htmlString = `<h3 style="text-align:center;">LAPORAN AEC - ${fHari}</h3><table style="width: 100%; border-collapse: collapse; font-size: 11px;" border="1"><tr style="background:#ddd;"><th>Wkt</th><th>Tutor</th><th>Kls</th><th>Materi & Tugas Estafet</th><th>Nilai</th></tr>`; dataTampil.forEach(d => { const w = d.waktu ? d.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '-'; let ds = d.dataSiswa ? d.dataSiswa.map(s=>`<b>${s.nama}</b>:${s.kehadiran}(${s.nilai || '-'})`).join('<br>') : '-'; let dJam = (d.jamKe||"").replace('Jam ','Jam ke-'); htmlString += `<tr><td>${w}</td><td>${d.nama}</td><td>${d.kelas}<br>${dJam}</td><td><b>Materi:</b> ${d.materi.join(', ')}<br><b>Class Note:</b> ${d.laporanSiswa}<br><b>Tugas:</b> ${d.tugasSiswa}</td><td>${ds}</td></tr>`; }); htmlString += `</table>`; printDiv.innerHTML = htmlString; html2pdf().set({ margin: 0.3, filename: `AEC_${fHari.replace(/\//g, "-")}.pdf`, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }}).from(printDiv).save(); };
         document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); window.location.replace("index.html"); };
     </script>
 </body>
