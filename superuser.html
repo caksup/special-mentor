@@ -3,23 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Pengendali - Super Creative Hub AEC</title>
+    <title>Panel Pengendali VIP - AEC Hub</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e293b">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        .nav-tabs .nav-link { font-size: 0.75rem; padding: 0.5rem; }
+        .chat-box { max-height: 300px; overflow-y: auto; background-color: #f8f9fa; }
+        .msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.8rem; }
+        .msg-me { background-color: #d1e7dd; margin-left: auto; border-bottom-right-radius: 2px; }
+        .msg-other { background-color: #fff; border: 1px solid #dee2e6; margin-right: auto; border-bottom-left-radius: 2px; }
+    </style>
 </head>
 <body style="background-color: #1e293b;">
     <div class="app-wrapper">
+        
+        <!-- HEADER V10 -->
         <nav class="navbar navbar-expand bg-dark navbar-dark shadow-sm mb-4 border-bottom border-warning border-3">
             <div class="container-fluid px-3">
                 <a class="navbar-brand fw-bold text-white d-flex align-items-center" href="info.html">
                     <i class="bi bi-shield-fill-check text-warning me-2" style="font-size: 1.5rem;"></i>
                     <div>
-                        <div style="font-size: 1rem; line-height: 1;">KONTROL V9</div>
-                        <div id="headHariKe" class="badge bg-danger mt-1" style="font-size: 0.65rem;">Timeline: Memuat...</div>
+                        <div style="font-size: 1rem; line-height: 1;">KONTROL V10 <span id="netStatus" class="ms-1"></span></div>
+                        <div class="d-flex align-items-center mt-1">
+                            <span class="badge bg-danger text-white me-2" style="font-size: 0.7rem;">Hari Ke: <span id="headTimeline">Memuat...</span></span>
+                            <span id="headSekolah" class="text-xs fw-bold text-warning text-uppercase">Memuat Lokasi...</span>
+                        </div>
                     </div>
                 </a>
                 <div class="d-flex align-items-center">
@@ -35,75 +47,129 @@
 
         <div class="container pb-5">
             <div class="row">
-                <!-- Kolom Kiri: KONSOL & KURIKULUM & TUGAS -->
-                <div class="col-12 col-lg-5 mb-4">
-                    <ul class="nav nav-tabs mb-3 text-xs" id="adminTabs" role="tablist">
-                        <li class="nav-item"><button class="nav-link active fw-bold" data-bs-toggle="tab" data-bs-target="#tab-konsol" type="button"><i class="bi bi-gear-fill"></i> Setup</button></li>
-                        <li class="nav-item"><button class="nav-link fw-bold text-primary" data-bs-toggle="tab" data-bs-target="#tab-kurikulum" type="button"><i class="bi bi-bar-chart-fill"></i> Kurikulum</button></li>
-                        <li class="nav-item"><button class="nav-link fw-bold text-success" data-bs-toggle="tab" data-bs-target="#tab-tugas" type="button"><i class="bi bi-whatsapp"></i> WA</button></li>
+                
+                <!-- KOLOM KIRI (TABS MENU) - DIBUAT LEBIH LEBAR -->
+                <div class="col-12 col-lg-7 mb-4">
+                    <ul class="nav nav-tabs mb-3 shadow-sm bg-white rounded-top pt-2 px-2" id="adminTabs" role="tablist">
+                        <li class="nav-item"><button class="nav-link active fw-bold text-dark" data-bs-toggle="tab" data-bs-target="#tab-setup"><i class="bi bi-gear-fill text-secondary"></i> Setup</button></li>
+                        <li class="nav-item"><button class="nav-link fw-bold text-dark" data-bs-toggle="tab" data-bs-target="#tab-tutor"><i class="bi bi-person-badge text-primary"></i> Data Tutor</button></li>
+                        <li class="nav-item"><button class="nav-link fw-bold text-dark" data-bs-toggle="tab" data-bs-target="#tab-siswa"><i class="bi bi-mortarboard text-success"></i> Data Siswa</button></li>
+                        <li class="nav-item"><button class="nav-link fw-bold text-dark" data-bs-toggle="tab" data-bs-target="#tab-diskusi"><i class="bi bi-chat-dots text-danger"></i> Diskusi</button></li>
+                        <li class="nav-item"><button class="nav-link fw-bold text-dark" data-bs-toggle="tab" data-bs-target="#tab-kurikulum"><i class="bi bi-bar-chart-fill text-warning"></i> Tracker</button></li>
+                        <li class="nav-item"><button class="nav-link fw-bold text-dark" data-bs-toggle="tab" data-bs-target="#tab-tugas"><i class="bi bi-whatsapp text-success"></i> WA</button></li>
                     </ul>
 
-                    <div class="tab-content">
-                        <!-- Sub-Tab 1: Konsol Master (Jadwal & Notif KEMBALI!) -->
-                        <div class="tab-pane fade show active" id="tab-konsol">
-                            <div class="card card-custom p-3 shadow-lg bg-white h-100">
-                                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-broadcast text-danger me-2"></i> Master Info & Kurikulum</h6>
+                    <div class="tab-content h-100">
+                        
+                        <!-- 1. SETUP MASTER -->
+                        <div class="tab-pane fade show active" id="tab-setup">
+                            <div class="card card-custom p-3 shadow-lg bg-white mb-3">
+                                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-broadcast text-danger me-2"></i> Konfigurasi Sistem Utama</h6>
                                 
-                                <div class="mb-3 p-2 border border-warning rounded bg-warning bg-opacity-10">
-                                    <label class="form-label fw-bold text-danger text-xs mb-1">0. TIMELINE HARI KURSUS</label>
-                                    <input type="text" id="inputHariKe" class="form-control form-control-sm fw-bold text-primary border-warning" placeholder="Contoh: Hari ke-1 (Orientasi)">
+                                <div class="row g-2 mb-3 p-2 border border-warning rounded bg-warning bg-opacity-10">
+                                    <div class="col-12"><label class="form-label fw-bold text-danger text-xs mb-0">NAMA SEKOLAH / LOKASI</label><input type="text" id="inputSekolah" class="form-control form-control-sm fw-bold border-warning" placeholder="Misal: SMPN 1 Pakem Sleman"></div>
+                                    <div class="col-6"><label class="form-label fw-bold text-danger text-xs mb-0">TOTAL HARI KURSUS</label><input type="number" id="inputTotalHari" class="form-control form-control-sm fw-bold border-warning text-center" placeholder="Batas akhir..."></div>
+                                    <div class="col-6"><label class="form-label fw-bold text-danger text-xs mb-0">HARI SAAT INI</label><input type="number" id="inputHariKe" class="form-control form-control-sm fw-bold border-warning text-center" placeholder="Hari ke berapa?"></div>
                                 </div>
 
-                                <div class="mb-2"><label class="form-label fw-bold text-primary text-xs mb-1">1. JADWAL FULL GLOBAL</label><textarea id="inputJadwal" class="form-control bg-light text-xs" rows="2"></textarea></div>
-                                <div class="mb-2"><label class="form-label fw-bold text-primary text-xs mb-1">2. JADWAL HARIAN</label><textarea id="inputJadwalHarian" class="form-control bg-light text-xs" rows="2"></textarea></div>
-                                <div class="mb-2"><label class="form-label fw-bold text-info text-xs mb-1">3. NOTIF / BRIEFING</label><textarea id="inputBriefing" class="form-control bg-light text-xs" rows="2"></textarea></div>
-                                <div class="mb-2"><label class="form-label fw-bold text-success text-xs mb-1">4. GOAL HARIAN</label><textarea id="inputGoal" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                                <div class="mb-2"><label class="form-label fw-bold text-primary text-xs mb-0">1. JADWAL FULL GLOBAL</label><textarea id="inputJadwal" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                                <div class="mb-2"><label class="form-label fw-bold text-primary text-xs mb-0">2. JADWAL HARIAN</label><textarea id="inputJadwalHarian" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                                <div class="mb-2"><label class="form-label fw-bold text-info text-xs mb-0">3. NOTIF / BRIEFING</label><textarea id="inputBriefing" class="form-control bg-light text-xs" rows="2"></textarea></div>
+                                <div class="mb-2"><label class="form-label fw-bold text-success text-xs mb-0">4. GOAL HARIAN</label><textarea id="inputGoal" class="form-control bg-light text-xs" rows="2"></textarea></div>
                                 <div class="mb-3"><label class="form-label fw-bold text-danger text-xs mb-0">5. DATA SISWA (Cth: Kelas A: Budi, Andi)</label><textarea id="inputMasterSiswa" class="form-control bg-light text-xs border-danger border-opacity-25" rows="2"></textarea></div>
                                 
                                 <div class="p-2 border rounded bg-light mb-3">
-                                    <h6 class="text-xs fw-bold text-dark mb-2 border-bottom pb-1">6. MASTER MATERI (Pisahkan dgn Enter)</h6>
-                                    <label class="form-label fw-bold text-primary text-xs mb-0">A. VOCABULARY</label><textarea id="inputVocab" class="form-control text-xs mb-2 border-primary border-opacity-25" rows="2"></textarea>
-                                    <label class="form-label fw-bold text-success text-xs mb-0">B. SPEAKING</label><textarea id="inputSpeaking" class="form-control text-xs mb-2 border-success border-opacity-25" rows="2"></textarea>
-                                    <label class="form-label fw-bold text-danger text-xs mb-0">C. GRAMMAR</label><textarea id="inputGrammar" class="form-control text-xs border-danger border-opacity-25" rows="2"></textarea>
+                                    <h6 class="text-xs fw-bold text-dark mb-2 border-bottom pb-1">6. MASTER MATERI KURIKULUM</h6>
+                                    <label class="form-label fw-bold text-primary text-xs mb-0">VOCABULARY</label><textarea id="inputVocab" class="form-control text-xs mb-1" rows="2"></textarea>
+                                    <label class="form-label fw-bold text-success text-xs mb-0">SPEAKING</label><textarea id="inputSpeaking" class="form-control text-xs mb-1" rows="2"></textarea>
+                                    <label class="form-label fw-bold text-danger text-xs mb-0">GRAMMAR</label><textarea id="inputGrammar" class="form-control text-xs" rows="2"></textarea>
                                 </div>
-                                <button id="btnSaveGlobal" class="btn btn-primary w-100 fw-bold shadow-sm py-2"><i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI SISTEM</button>
+                                <button id="btnSaveGlobal" class="btn btn-primary w-100 fw-bold shadow-sm py-2"><i class="bi bi-cloud-upload-fill me-2"></i> PERBARUI SELURUH SISTEM</button>
                             </div>
                         </div>
 
-                        <!-- Sub-Tab 2: Monitor Kurikulum -->
+                        <!-- 2. DATA TUTOR (MANAJEMEN & LEADERBOARD) -->
+                        <div class="tab-pane fade" id="tab-tutor">
+                            <div class="card card-custom p-3 shadow-lg bg-white border-primary border-2 mb-3">
+                                <h6 class="fw-bold text-primary mb-3"><i class="bi bi-person-fill-add me-2"></i> Tambah / Kelola Akses Tutor</h6>
+                                <div class="row g-2 mb-2">
+                                    <div class="col-4"><input type="text" id="newUser" class="form-control form-control-sm text-xs text-lowercase" placeholder="username (cth: budi)"></div>
+                                    <div class="col-4"><input type="text" id="newPin" class="form-control form-control-sm text-xs" placeholder="PIN Angka (cth: 1234)"></div>
+                                    <div class="col-4"><input type="text" id="newName" class="form-control form-control-sm text-xs" placeholder="Julukan (cth: Mr. Budi)"></div>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6"><select id="newRole" class="form-select form-select-sm text-xs"><option value="mentor">Role: Mentor Biasa</option><option value="direktur">Role: Direktur (Pemantau)</option><option value="admin">Role: Admin Super</option></select></div>
+                                    <div class="col-6"><button id="btnAddUser" class="btn btn-sm btn-primary w-100 fw-bold"><i class="bi bi-plus-circle"></i> Tambah Akun</button></div>
+                                </div>
+                                <div class="table-responsive"><table class="table table-sm table-bordered text-xs align-middle text-center"><thead class="table-light"><tr><th>Username</th><th>Nama</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="listUsersTable"></tbody></table></div>
+                            </div>
+                            
+                            <div class="card card-custom p-3 shadow-lg bg-white">
+                                <h6 class="fw-bold text-dark mb-2"><i class="bi bi-trophy text-warning me-2"></i> Pencapaian Kinerja Tutor (Keaktifan)</h6>
+                                <div id="leaderboardTutor" class="space-y-2">Memuat ranking...</div>
+                            </div>
+                        </div>
+
+                        <!-- 3. DATA SISWA (ABSENSI & TOP 10) -->
+                        <div class="tab-pane fade" id="tab-siswa">
+                            <div class="card card-custom p-3 shadow-lg bg-white border-success border-2">
+                                <h6 class="fw-bold text-success mb-2"><i class="bi bi-mortarboard-fill me-2"></i> Rapor Kelas & Leaderboard Siswa</h6>
+                                <select id="filterKelasSiswa" class="form-select form-select-sm fw-bold border-success mb-3"><option value="Kelas A">Pilih: Kelas A</option><option value="Kelas B">Pilih: Kelas B</option><option value="Kelas C">Pilih: Kelas C</option><option value="Kelas D">Pilih: Kelas D</option></select>
+                                
+                                <ul class="nav nav-pills mb-3 text-xs" id="siswaTabs" role="tablist">
+                                    <li class="nav-item"><button class="nav-link active py-1" data-bs-toggle="pill" data-bs-target="#sub-absen">Rekap Absen & Nilai</button></li>
+                                    <li class="nav-item"><button class="nav-link py-1 text-warning bg-warning bg-opacity-10" data-bs-toggle="pill" data-bs-target="#sub-top10"><i class="bi bi-star-fill"></i> Top 10 Kelas</button></li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active" id="sub-absen">
+                                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                            <table class="table table-sm table-bordered text-xs align-middle text-center mb-0">
+                                                <thead class="table-success sticky-top"><tr><th style="width: 30px;">No</th><th>Nama Siswa</th><th>✔</th><th>✖</th><th>S</th><th>I</th><th>Total Poin/A</th></tr></thead>
+                                                <tbody id="tabelRekapSiswa"></tbody>
+                                            </table>
+                                            <p class="text-xs text-muted mt-2">* ✔ (Hadir), ✖ (Alpha), S (Sakit), I (Izin). Poin dihitung dari akumulasi nilai huruf A/Angka.</p>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="sub-top10">
+                                        <div id="listTop10" class="space-y-2">Memuat peringkat...</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. DISKUSI / CHAT -->
+                        <div class="tab-pane fade" id="tab-diskusi">
+                            <div class="card card-custom p-3 shadow-lg bg-white border-danger border-2 h-100 d-flex flex-column">
+                                <h6 class="fw-bold text-danger mb-2"><i class="bi bi-chat-dots-fill me-2"></i> Ruang Diskusi & Koordinasi</h6>
+                                <div id="chatBox" class="chat-box flex-grow-1 p-2 rounded border mb-2 d-flex flex-column gap-2"></div>
+                                <div class="input-group">
+                                    <input type="text" id="inputChat" class="form-control form-control-sm text-sm" placeholder="Ketik pesan untuk semua...">
+                                    <button class="btn btn-danger btn-sm fw-bold" id="btnSendChat"><i class="bi bi-send"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 5. TRACKER KURIKULUM & 6. TUGAS WA (SAMA SEPERTI SEBELUMNYA) -->
                         <div class="tab-pane fade" id="tab-kurikulum">
-                            <div class="card card-custom p-3 shadow-lg bg-white h-100 border-primary border-2">
-                                <h6 class="fw-bold text-primary mb-2"><i class="bi bi-clipboard-data me-2"></i> Tracker Kurikulum Otomatis</h6>
-                                <p class="text-xs text-muted mb-3 border-bottom pb-2">Pantau materi yang sudah tuntas diajarkan di tiap ruang kelas.</p>
-                                <select id="trackerKelas" class="form-select form-select-sm border-primary fw-bold mb-3"><option value="Kelas A">Pencapaian: Kelas A</option><option value="Kelas B">Pencapaian: Kelas B</option><option value="Kelas C">Pencapaian: Kelas C</option><option value="Kelas D">Pencapaian: Kelas D</option></select>
-                                <div id="areaTracker" class="overflow-auto pe-1" style="max-height: 380px;">Memuat pencapaian...</div>
-                            </div>
+                            <div class="card card-custom p-3 shadow-lg bg-white border-warning border-2"><h6 class="fw-bold text-warning mb-2"><i class="bi bi-clipboard-data me-2"></i> Tracker Otomatis</h6><select id="trackerKelas" class="form-select form-select-sm border-warning fw-bold mb-3"><option value="Kelas A">Pilih: Kelas A</option><option value="Kelas B">Pilih: Kelas B</option><option value="Kelas C">Pilih: Kelas C</option><option value="Kelas D">Pilih: Kelas D</option></select><div id="areaTracker" class="overflow-auto pe-1" style="max-height: 380px;">Memuat pencapaian...</div></div>
                         </div>
-
-                        <!-- Sub-Tab 3: Tugas WA -->
                         <div class="tab-pane fade" id="tab-tugas">
-                            <div class="card card-custom p-3 shadow-lg bg-white h-100 border-success border-2">
-                                <h6 class="fw-bold text-success mb-3"><i class="bi bi-send-fill me-2"></i> Penugasan (Jam 16:00)</h6>
-                                <div class="mb-2"><label class="form-label fw-bold text-xs mb-1">Target Kiriman</label><select id="waTarget" class="form-select form-select-sm border-success"><option value="GLOBAL (Semua Ruang A-D)">GLOBAL (Semua Ruang A-D)</option><option value="Kelas A">Khusus Kelas A</option><option value="Kelas B">Khusus Kelas B</option><option value="Kelas C">Khusus Kelas C</option><option value="Kelas D">Khusus Kelas D</option></select></div>
-                                <div class="mb-2"><label class="form-label fw-bold text-xs mb-1">Link URL Gambar (Opsional)</label><input type="text" id="waGambar" class="form-control form-control-sm bg-light" placeholder="https://contoh.com/gambar.jpg"></div>
-                                <div class="mb-3"><label class="form-label fw-bold text-xs mb-1">Instruksi Tugas Siswa</label><textarea id="waInstruksi" class="form-control bg-light text-sm" rows="4"></textarea></div>
-                                <button id="btnKirimTugasWA" class="btn btn-success w-100 fw-bold shadow-sm py-2"><i class="bi bi-plus-circle me-2"></i> Buat Template WA</button>
-                                <hr class="my-3"><h6 class="fw-bold text-dark text-xs mb-2">Riwayat Template Aktif:</h6><div id="listTugasAdmin" style="max-height: 250px; overflow-y: auto;"></div>
-                            </div>
+                            <div class="card card-custom p-3 shadow-lg bg-white border-success border-2"><h6 class="fw-bold text-success mb-3"><i class="bi bi-send-fill me-2"></i> Penugasan (Jam 16:00)</h6><div class="mb-2"><select id="waTarget" class="form-select form-select-sm border-success"><option value="GLOBAL (Semua Ruang A-D)">GLOBAL (Semua Ruang A-D)</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option></select></div><div class="mb-2"><input type="text" id="waGambar" class="form-control form-control-sm bg-light" placeholder="URL Gambar..."></div><div class="mb-3"><textarea id="waInstruksi" class="form-control bg-light text-sm" rows="3" placeholder="Instruksi..."></textarea></div><button id="btnKirimTugasWA" class="btn btn-success btn-sm w-100 fw-bold shadow-sm py-2">Buat Template WA</button><hr class="my-3"><div id="listTugasAdmin" style="max-height: 200px; overflow-y: auto;"></div></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Kolom Kanan MODERASI & HISTORY -->
-                <div class="col-12 col-lg-7">
-                    <div class="card card-custom p-4 shadow-lg bg-white h-100">
+                <!-- KOLOM KANAN (MODERASI LOGBOOK) - DIBUAT LEBIH RAMPING -->
+                <div class="col-12 col-lg-5">
+                    <div class="card card-custom p-3 shadow-lg bg-white h-100">
                         <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                            <div><h5 class="fw-bold text-primary mb-1"><i class="bi bi-server me-2"></i> Moderasi & History</h5></div>
-                            <button id="btnExportPDF" class="btn btn-danger fw-bold shadow-sm"><i class="bi bi-file-earmark-pdf-fill me-1"></i> PDF</button>
+                            <h6 class="fw-bold text-primary mb-0"><i class="bi bi-server me-1"></i> Logbook Harian</h6>
+                            <button id="btnExportPDF" class="btn btn-danger btn-sm fw-bold"><i class="bi bi-file-earmark-pdf-fill"></i> PDF</button>
                         </div>
                         <div class="row g-2 mb-3">
-                            <div class="col-6"><select id="filterHari" class="form-select form-select-sm border-2 fw-bold text-danger"><option value="SEMUA">Semua History</option></select></div>
-                            <div class="col-6"><select id="filterKelasHistori" class="form-select form-select-sm border-2 fw-bold text-secondary"><option value="SEMUA">Semua Kelas</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option></select></div>
+                            <div class="col-6"><select id="filterHari" class="form-select form-select-sm border-2 fw-bold text-danger text-xs"><option value="SEMUA">Semua Data</option></select></div>
+                            <div class="col-6"><select id="filterKelasHistori" class="form-select form-select-sm border-2 fw-bold text-secondary text-xs"><option value="SEMUA">Semua Kelas</option><option value="Kelas A">Kelas A</option><option value="Kelas B">Kelas B</option><option value="Kelas C">Kelas C</option><option value="Kelas D">Kelas D</option></select></div>
                         </div>
                         <div id="adminLogbookList" class="overflow-auto pe-1" style="max-height: 520px;">Memuat...</div>
                     </div>
@@ -112,19 +178,34 @@
         </div>
     </div>
 
+    <!-- SCRIPT INTI V10 + DATABASE LANGSUNG -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
-        import { startClock, listenToGlobalInfo, updateGlobalInfo, listenToLogbooks, deleteLogbook, sendTugasWA, listenToTugasWA, deleteTugasWA } from './script.js?v=9';
-        if (sessionStorage.getItem("loggedInUser") !== "sup" && sessionStorage.getItem("loggedInUser") !== "afif") window.location.href = "index.html";
-        document.getElementById("userNameDisplay").innerText = "Otoritas: " + sessionStorage.getItem("loggedInName");
-        
-        startClock('headClock', 'headDate');
-        let rawKurikulum = { vocab: [], speaking: [], grammar: [] };
+        import { db, startClock, listenToGlobalInfo, updateGlobalInfo, listenToLogbooks, deleteLogbook, sendTugasWA, listenToTugasWA, deleteTugasWA, generateTimelineHTML } from './script.js?v=10';
+        import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        const actUser = sessionStorage.getItem("loggedInUser");
+        if (actUser !== "sup" && actUser !== "afif") window.location.replace("index.html");
+        const myName = sessionStorage.getItem("loggedInName");
+        document.getElementById("userNameDisplay").innerText = "Otoritas: " + myName;
+
+        function updateNetworkStatus() { document.getElementById('netStatus').innerHTML = navigator.onLine ? '<i class="bi bi-circle-fill text-success" style="font-size: 0.6rem;"></i>' : '<i class="bi bi-circle-fill text-danger" style="font-size: 0.6rem;"></i>'; }
+        window.addEventListener('online', updateNetworkStatus); window.addEventListener('offline', updateNetworkStatus); updateNetworkStatus();
+        startClock('headClock', 'headDate');
+
+        // ==============================
+        // A. GLOBAL INFO & SETUP
+        // ==============================
+        let rawKurikulum = { vocab: [], speaking: [], grammar: [] };
         listenToGlobalInfo((data) => {
             if (data) {
-                document.getElementById('inputHariKe').value = data.hariKe || "";
-                document.getElementById('headHariKe').innerText = "Timeline: " + (data.hariKe || "Belum diatur");
+                document.getElementById('inputSekolah').value = data.namaSekolah || "AEC Hub Pusat";
+                document.getElementById('inputTotalHari').value = data.totalHari || 5;
+                document.getElementById('inputHariKe').value = data.hariBerjalan || 0;
+                
+                document.getElementById('headSekolah').innerText = data.namaSekolah || "AEC Hub Pusat";
+                document.getElementById('headTimeline').innerText = generateTimelineHTML(data.totalHari, data.hariBerjalan);
+
                 document.getElementById('inputJadwal').value = data.jadwal || ""; 
                 document.getElementById('inputJadwalHarian').value = data.jadwalHarian || ""; 
                 document.getElementById('inputBriefing').value = data.briefing || "";
@@ -132,51 +213,67 @@
                 document.getElementById('inputMasterSiswa').value = data.masterSiswa || "";
                 
                 rawKurikulum = data.kurikulum || { vocab: [], speaking: [], grammar: [] };
-                document.getElementById('inputVocab').value = rawKurikulum.vocab ? rawKurikulum.vocab.join('\n') : "";
-                document.getElementById('inputSpeaking').value = rawKurikulum.speaking ? rawKurikulum.speaking.join('\n') : "";
-                document.getElementById('inputGrammar').value = rawKurikulum.grammar ? rawKurikulum.grammar.join('\n') : "";
+                document.getElementById('inputVocab').value = rawKurikulum.vocab ? rawKurikulum.vocab.join('\n') : ""; document.getElementById('inputSpeaking').value = rawKurikulum.speaking ? rawKurikulum.speaking.join('\n') : ""; document.getElementById('inputGrammar').value = rawKurikulum.grammar ? rawKurikulum.grammar.join('\n') : "";
                 renderTracker(); 
             }
         });
 
         document.getElementById("btnSaveGlobal").onclick = async () => {
             const getArr = (id) => document.getElementById(id).value.split('\n').map(i => i.trim()).filter(i => i !== "");
-            const cur = { vocab: getArr('inputVocab'), speaking: getArr('inputSpeaking'), grammar: getArr('inputGrammar') };
             try {
                 await updateGlobalInfo({ 
-                    hariKe: document.getElementById('inputHariKe').value, 
-                    jadwal: document.getElementById('inputJadwal').value, 
-                    jadwalHarian: document.getElementById('inputJadwalHarian').value, 
-                    briefing: document.getElementById('inputBriefing').value, 
-                    goal: document.getElementById('inputGoal').value,
+                    namaSekolah: document.getElementById('inputSekolah').value,
+                    totalHari: parseInt(document.getElementById('inputTotalHari').value) || 5,
+                    hariBerjalan: parseInt(document.getElementById('inputHariKe').value) || 0,
+                    jadwal: document.getElementById('inputJadwal').value, jadwalHarian: document.getElementById('inputJadwalHarian').value, 
+                    briefing: document.getElementById('inputBriefing').value, goal: document.getElementById('inputGoal').value,
                     masterSiswa: document.getElementById('inputMasterSiswa').value, 
-                    kurikulum: cur
+                    kurikulum: { vocab: getArr('inputVocab'), speaking: getArr('inputSpeaking'), grammar: getArr('inputGrammar') }
                 });
-                alert("Sistem V9 (Jadwal & Notif) Diperbarui!");
+                alert("Setup V10 Tersimpan!");
             } catch (e) { alert("Gagal update."); }
         };
 
-        document.getElementById("btnKirimTugasWA").onclick = async () => {
-            const target = document.getElementById("waTarget").value; const gbr = document.getElementById("waGambar").value; const ins = document.getElementById("waInstruksi").value;
-            if(!ins) return alert("Instruksi wajib diisi!");
-            await sendTugasWA(target, gbr, ins); alert("Template Tugas WA Berhasil Dibuat!"); document.getElementById("waInstruksi").value = ""; document.getElementById("waGambar").value = "";
-        };
-
-        listenToTugasWA((data) => {
-            const list = document.getElementById("listTugasAdmin"); list.innerHTML = "";
-            data.forEach(d => {
-                const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-';
-                list.innerHTML += `<div class="p-2 border rounded bg-light mb-2"><div class="d-flex justify-content-between"><span class="badge bg-success mb-1">${d.targetKelas}</span><span class="text-xs text-muted">${w}</span></div><p class="text-xs mb-1 text-truncate">${d.instruksi}</p><button class="btn btn-xs btn-outline-danger w-100" onclick="aksidminHapusTugas('${d.id}')">Hapus Template</button></div>`;
+        // ==============================
+        // B. MANAJEMEN USER (TUTOR)
+        // ==============================
+        function listenToUsers() {
+            onSnapshot(collection(db, "users"), (snap) => {
+                const tbody = document.getElementById("listUsersTable"); tbody.innerHTML = "";
+                snap.forEach(d => {
+                    const ud = d.data(); const uid = d.id;
+                    const btnStatus = ud.status === 'aktif' 
+                        ? `<button class="btn btn-xs btn-danger w-100" onclick="window.toggleUser('${uid}', 'nonaktif')">Nonaktifkan</button>`
+                        : `<button class="btn btn-xs btn-success w-100" onclick="window.toggleUser('${uid}', 'aktif')">Aktifkan</button>`;
+                    const badge = ud.status === 'aktif' ? '<span class="badge bg-success">Aktif</span>' : '<span class="badge bg-secondary">Cuti</span>';
+                    tbody.innerHTML += `<tr><td class="fw-bold text-primary">${uid}</td><td>${ud.julukan}</td><td>${badge}</td><td>${btnStatus}</td></tr>`;
+                });
             });
+        }
+        listenToUsers();
+
+        document.getElementById("btnAddUser").onclick = async () => {
+            const u = document.getElementById("newUser").value.toLowerCase().trim(); const p = document.getElementById("newPin").value; const n = document.getElementById("newName").value; const r = document.getElementById("newRole").value;
+            if(!u || !p || !n) return alert("Isi semua data user!");
+            await setDoc(doc(db, "users", u), { pin: p, julukan: n, role: r, status: "aktif" });
+            alert("Tutor Baru Ditambahkan!"); document.getElementById("newUser").value=""; document.getElementById("newPin").value=""; document.getElementById("newName").value="";
+        };
+        window.toggleUser = async function(uid, setStatus) { await setDoc(doc(db, "users", uid), { status: setStatus }, {merge: true}); };
+
+        // ==============================
+        // C. LOGBOOK (DATA SISWA & MENTOR)
+        // ==============================
+        let dataLengkap = []; 
+        listenToLogbooks((logData) => { 
+            dataLengkap = logData; ekstrakHari(); renderListAdmin(); renderTracker(); 
+            kalkulasiDataSiswa(); kalkulasiKinerjaMentor();
         });
-        window.aksidminHapusTugas = async function(id) { if (confirm(`Hapus template tugas ini?`)) await deleteTugasWA(id); };
+        document.getElementById('filterHari').onchange = () => renderListAdmin(); document.getElementById('filterKelasHistori').onchange = () => renderListAdmin(); document.getElementById('trackerKelas').onchange = () => renderTracker(); document.getElementById('filterKelasSiswa').onchange = () => kalkulasiDataSiswa();
 
-        let dataLengkap = []; listenToLogbooks((logData) => { dataLengkap = logData; ekstrakHari(); renderListAdmin(); renderTracker(); });
-        document.getElementById('filterHari').onchange = () => renderListAdmin(); document.getElementById('filterKelasHistori').onchange = () => renderListAdmin(); document.getElementById('trackerKelas').onchange = () => renderTracker();
-
+        // Tracker Kurikulum
         function renderTracker() {
             const area = document.getElementById("areaTracker"); const kelasAktif = document.getElementById("trackerKelas").value;
-            if(!rawKurikulum || Object.keys(rawKurikulum).length === 0) { area.innerHTML = "<div class='small text-muted'>Belum ada setup kurikulum.</div>"; return; }
+            if(!rawKurikulum || Object.keys(rawKurikulum).length === 0) { area.innerHTML = "<div class='small text-muted'>Kosong.</div>"; return; }
             let materiSelesai = new Set(); dataLengkap.forEach(log => { if (log.kelas === kelasAktif && log.materi) { log.materi.forEach(m => materiSelesai.add(m)); } });
             const renderBlok = (judul, arrayMateri, warna) => {
                 if(!arrayMateri || arrayMateri.length === 0) return '';
@@ -188,6 +285,55 @@
             area.innerHTML = renderBlok("VOCABULARY", rawKurikulum.vocab, "primary") + renderBlok("SPEAKING", rawKurikulum.speaking, "success") + renderBlok("GRAMMAR", rawKurikulum.grammar, "danger");
         }
 
+        // Kalkulasi Siswa (Absen Singkat & Leaderboard Top 10)
+        function kalkulasiDataSiswa() {
+            const kls = document.getElementById("filterKelasSiswa").value;
+            let rekap = {}; 
+            dataLengkap.forEach(log => {
+                if(log.kelas === kls && log.dataSiswa) {
+                    log.dataSiswa.forEach(s => {
+                        if(!rekap[s.nama]) rekap[s.nama] = { h:0, a:0, s:0, i:0, poin:0 };
+                        if(s.kehadiran === 'h') rekap[s.nama].h++; else if(s.kehadiran === 'a') rekap[s.nama].a++; else if(s.kehadiran === 's') rekap[s.nama].s++; else if(s.kehadiran === 'i') rekap[s.nama].i++;
+                        let nStr = (s.nilai || "").toString().toLowerCase().trim();
+                        if(nStr === 'a' || nStr === 'a+') rekap[s.nama].poin += 90; else if(parseInt(nStr) > 0) rekap[s.nama].poin += parseInt(nStr);
+                    });
+                }
+            });
+            
+            // Render Tabel Absen
+            const tBody = document.getElementById("tabelRekapSiswa"); tBody.innerHTML = "";
+            let arrSiswa = Object.keys(rekap).sort();
+            arrSiswa.forEach((nm, idx) => {
+                const r = rekap[nm];
+                tBody.innerHTML += `<tr><td>${idx+1}</td><td class="text-start fw-bold">${nm}</td><td>${r.h}</td><td>${r.a}</td><td>${r.s}</td><td>${r.i}</td><td class="fw-bold text-success">${r.poin}</td></tr>`;
+            });
+
+            // Render Top 10
+            const listTop = document.getElementById("listTop10"); listTop.innerHTML = "";
+            let arrPeringkat = Object.entries(rekap).map(([nama, data]) => ({ nama, poin: data.poin })).sort((a,b) => b.poin - a.poin).slice(0, 10);
+            if(arrPeringkat.length === 0) { listTop.innerHTML = "<div class='text-muted small'>Belum ada data nilai.</div>"; return; }
+            arrPeringkat.forEach((item, idx) => {
+                let badge = idx === 0 ? "bg-warning" : (idx === 1 ? "bg-secondary" : "bg-primary");
+                listTop.innerHTML += `<div class="d-flex justify-content-between align-items-center p-2 border rounded mb-1 bg-light text-sm"><div class="fw-bold"><span class="badge ${badge} me-2">#${idx+1}</span> ${item.nama}</div><div class="fw-bold text-success">${item.poin} Pts</div></div>`;
+            });
+        }
+
+        // Kalkulasi Kinerja Mentor
+        function kalkulasiKinerjaMentor() {
+            let rekapMentor = {};
+            dataLengkap.forEach(log => {
+                if(!rekapMentor[log.nama]) rekapMentor[log.nama] = 0;
+                rekapMentor[log.nama]++;
+            });
+            const board = document.getElementById("leaderboardTutor"); board.innerHTML = "";
+            let arrMentor = Object.entries(rekapMentor).map(([nama, count]) => ({nama, count})).sort((a,b) => b.count - a.count);
+            arrMentor.forEach((m, idx) => {
+                let med = idx === 0 ? "🥇" : (idx === 1 ? "🥈" : "🏅");
+                board.innerHTML += `<div class="d-flex justify-content-between p-2 border rounded mb-1 bg-white shadow-sm text-sm"><div class="fw-bold">${med} ${m.nama}</div><div class="badge bg-primary">${m.count} Logbook</div></div>`;
+            });
+        }
+
+        // Histori Kanan (Sama seperti sebelumnya)
         function ekstrakHari() {
             const daysMap = new Map(); dataLengkap.forEach(d => { if(d.waktu) { const dStr = d.waktu.toDate().toLocaleDateString('id-ID'); if(!daysMap.has(dStr)) daysMap.set(dStr, d.waktu.toDate()); } });
             const sortedDays = Array.from(daysMap.entries()).sort((a,b) => a[1] - b[1]); const selHari = document.getElementById("filterHari"); const valSkg = selHari.value;
@@ -195,29 +341,54 @@
             sortedDays.forEach((entry, idx) => { selHari.innerHTML += `<option value="${entry[0]}">Hari ke-${idx+1} (${entry[0]})</option>`; });
             if (Array.from(selHari.options).some(o=>o.value===valSkg) && valSkg !== "SEMUA") selHari.value = valSkg; else if (sortedDays.length > 0 && valSkg === "SEMUA" && selHari.options.length <= 2) selHari.value = sortedDays[sortedDays.length-1][0];
         }
-
         function renderListAdmin() {
             const container = document.getElementById("adminLogbookList"); container.innerHTML = ""; const fHari = document.getElementById("filterHari").value; const fKelas = document.getElementById("filterKelasHistori").value;
             let dataTampil = dataLengkap; if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari); if (fKelas !== "SEMUA") dataTampil = dataTampil.filter(d => d.kelas === fKelas);
             if(dataTampil.length === 0) { container.innerHTML = `<div class="alert alert-secondary text-center small">Kosong.</div>`; return; }
             dataTampil.forEach(d => {
-                const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-'; let txtNilai = d.dataSiswa && d.dataSiswa.length > 0 ? d.dataSiswa.map(s => `<b>${s.nama}</b>(${s.kehadiran}, ${s.nilai})`).join(' | ') : 'Belum ada data';
-                container.innerHTML += `<div class="p-3 bg-light rounded-3 border mb-3 shadow-sm"><div class="d-flex justify-content-between border-bottom pb-1 mb-2"><span class="fw-bold small">${d.nama.toUpperCase()}</span><span class="text-muted text-xs">${w}</span></div><div class="mb-1"><span class="badge bg-primary text-xs me-1">${d.kelas}</span><span class="badge bg-dark text-xs">${d.jamKe}</span></div><div class="text-xs mb-1">✔ Materi: ${d.materi.join(', ')}</div><div class="text-xs mb-1 p-1 bg-white border">📝 Tugas Mentor: <b>${d.tugasSiswa || '-'}</b></div><div class="text-xs p-1 bg-warning bg-opacity-10 border border-warning mb-2">📊 <b>Rapor Siswa:</b> <br> ${txtNilai}</div><div class="text-end mt-2"><button class="btn btn-xs btn-danger py-0" onclick="aksidminHapus('${d.id}')">Hapus Sesi</button></div></div>`;
+                const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-'; 
+                
+                // Ubah Tampilan Absensi jadi Singkat ✔ ✖ S I
+                let txtNilai = d.dataSiswa && d.dataSiswa.length > 0 ? d.dataSiswa.map(s => {
+                    let ikon = s.kehadiran === 'h' ? '✔' : (s.kehadiran === 'a' ? '✖' : s.kehadiran.toUpperCase());
+                    return `<b>${s.nama}</b>(${ikon}, ${s.nilai||'-'})`;
+                }).join(' | ') : 'Belum ada data';
+                
+                container.innerHTML += `<div class="p-2 bg-light rounded-3 border mb-2 shadow-sm text-xs"><div class="d-flex justify-content-between border-bottom pb-1 mb-1"><span class="fw-bold text-primary">${d.nama.toUpperCase()}</span><span class="text-muted">${w}</span></div><div class="mb-1"><span class="badge bg-primary me-1">${d.kelas}</span><span class="badge bg-dark">${d.jamKe}</span></div><div class="mb-1">✔ Materi: ${d.materi.join(', ')}</div><div class="mb-1 p-1 bg-white border">📝 Tugas Mentor: <b>${d.tugasSiswa || '-'}</b></div><div class="p-1 bg-warning bg-opacity-10 border border-warning mb-1">📊 <b>Rapor Siswa:</b> <br> ${txtNilai}</div><div class="text-end"><button class="btn btn-xs btn-outline-danger py-0" onclick="aksidminHapus('${d.id}')"><i class="bi bi-trash"></i></button></div></div>`;
             });
         }
         window.aksidminHapus = async function(id) { if (confirm(`Hapus permanen sesi ini?`)) await deleteLogbook(id); };
 
-        document.getElementById("btnExportPDF").onclick = () => {
-            const fHari = document.getElementById("filterHari").value; let dataTampil = dataLengkap;
-            if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari);
-            const printDiv = document.createElement("div"); printDiv.style.fontFamily = "Arial, sans-serif";
-            let htmlString = `<h3 style="text-align:center;">LAPORAN AEC - ${fHari}</h3><table style="width: 100%; border-collapse: collapse; font-size: 11px;" border="1"><tr style="background:#ddd;"><th>Wkt</th><th>Tutor</th><th>Kls</th><th>Materi & Tugas Estafet</th><th>Nilai</th></tr>`;
-            dataTampil.forEach(d => {
-                const w = d.waktu ? d.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '-'; let ds = d.dataSiswa ? d.dataSiswa.map(s=>`<b>${s.nama}</b>:${s.kehadiran}(${s.nilai || '-'})`).join('<br>') : '-';
-                htmlString += `<tr><td>${w}</td><td>${d.nama}</td><td>${d.kelas}<br>${d.jamKe}</td><td><b>Materi:</b> ${d.materi.join(', ')}<br><b>Tugas:</b> ${d.tugasSiswa}</td><td>${ds}</td></tr>`;
-            }); htmlString += `</table>`; printDiv.innerHTML = htmlString; html2pdf().set({ margin: 0.3, filename: `AEC_${fHari.replace(/\//g, "-")}.pdf`, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }}).from(printDiv).save();
+        // ==============================
+        // D. DISKUSI CHAT GLOBAL
+        // ==============================
+        onSnapshot(query(collection(db, "chats"), orderBy("waktu", "asc")), (snap) => {
+            const box = document.getElementById("chatBox"); box.innerHTML = "";
+            snap.forEach(doc => {
+                const c = doc.data(); const isMe = c.sender === myName;
+                const time = c.waktu ? c.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '..';
+                box.innerHTML += `<div class="msg-bubble ${isMe ? 'msg-me' : 'msg-other'} shadow-sm">
+                    <div class="fw-bold text-xs ${isMe ? 'text-success' : 'text-primary'}">${c.sender} <span class="fw-normal text-muted" style="font-size:0.6rem;">${time}</span></div>
+                    <div>${c.message}</div>
+                </div>`;
+            });
+            box.scrollTop = box.scrollHeight; // Auto scroll ke bawah
+        });
+
+        document.getElementById("btnSendChat").onclick = async () => {
+            const msg = document.getElementById("inputChat").value.trim(); if(!msg) return;
+            await addDoc(collection(db, "chats"), { sender: myName, role: sessionStorage.getItem("userRole"), message: msg, waktu: serverTimestamp(), type: 'global' });
+            document.getElementById("inputChat").value = "";
         };
-        document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); window.location.href = "index.html"; };
+
+        // ==============================
+        // E. TUGAS WA & EKSPOR
+        // ==============================
+        document.getElementById("btnKirimTugasWA").onclick = async () => { const t = document.getElementById("waTarget").value; const g = document.getElementById("waGambar").value; const i = document.getElementById("waInstruksi").value; if(!i) return alert("Instruksi wajib!"); await sendTugasWA(t, g, i); alert("Tugas WA Dibuat!"); document.getElementById("waInstruksi").value = ""; document.getElementById("waGambar").value = ""; };
+        listenToTugasWA((data) => { const list = document.getElementById("listTugasAdmin"); list.innerHTML = ""; data.forEach(d => { const w = d.waktu ? d.waktu.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-'; list.innerHTML += `<div class="p-2 border rounded bg-light mb-2"><div class="d-flex justify-content-between"><span class="badge bg-success mb-1">${d.targetKelas}</span><span class="text-xs text-muted">${w}</span></div><p class="text-xs mb-1 text-truncate">${d.instruksi}</p><button class="btn btn-xs btn-outline-danger w-100" onclick="aksidminHapusTugas('${d.id}')">Hapus Template</button></div>`; }); }); window.aksidminHapusTugas = async function(id) { if (confirm(`Hapus template tugas ini?`)) await deleteTugasWA(id); };
+
+        document.getElementById("btnExportPDF").onclick = () => { const fHari = document.getElementById("filterHari").value; let dataTampil = dataLengkap; if (fHari !== "SEMUA") dataTampil = dataTampil.filter(d => d.waktu && d.waktu.toDate().toLocaleDateString('id-ID') === fHari); const printDiv = document.createElement("div"); printDiv.style.fontFamily = "Arial, sans-serif"; let htmlString = `<h3 style="text-align:center;">LAPORAN AEC - ${fHari}</h3><table style="width: 100%; border-collapse: collapse; font-size: 11px;" border="1"><tr style="background:#ddd;"><th>Wkt</th><th>Tutor</th><th>Kls</th><th>Materi & Tugas Estafet</th><th>Nilai</th></tr>`; dataTampil.forEach(d => { const w = d.waktu ? d.waktu.toDate().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'}) : '-'; let ds = d.dataSiswa ? d.dataSiswa.map(s=>`<b>${s.nama}</b>:${s.kehadiran}(${s.nilai || '-'})`).join('<br>') : '-'; htmlString += `<tr><td>${w}</td><td>${d.nama}</td><td>${d.kelas}<br>${d.jamKe}</td><td><b>Materi:</b> ${d.materi.join(', ')}<br><b>Tugas:</b> ${d.tugasSiswa}</td><td>${ds}</td></tr>`; }); htmlString += `</table>`; printDiv.innerHTML = htmlString; html2pdf().set({ margin: 0.3, filename: `AEC_${fHari.replace(/\//g, "-")}.pdf`, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }}).from(printDiv).save(); };
+        document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); window.location.replace("index.html"); };
     </script>
 </body>
 </html>
