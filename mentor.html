@@ -13,10 +13,10 @@
         .dynamic-tabs::-webkit-scrollbar { display: none; }
         .nav-pills .nav-link { background: #fff; border: 1px solid #dee2e6; border-radius: 30px; padding: 8px 20px; color: #495057; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
         .nav-pills .nav-link.active { background: #0d6efd; color: white; border-color: #0d6efd; }
+        .chat-box { max-height: 320px; overflow-y: auto; background: #f8f9fa; border-radius: 8px; p-2; }
     </style>
 </head>
 <body>
-    <!-- NAVBAR -->
     <nav class="navbar bg-white shadow-sm sticky-top mb-3">
         <div class="container-fluid px-3 d-flex justify-content-between align-items-center">
             <div>
@@ -28,8 +28,6 @@
     </nav>
 
     <div class="container pb-5">
-        
-        <!-- INFO SEKOLAH (AUTO LOCK) -->
         <div class="bg-primary bg-opacity-10 border border-primary border-opacity-50 rounded p-3 mb-4 d-flex align-items-center shadow-sm">
             <i class="bi bi-geo-alt-fill text-primary fs-3 me-3"></i>
             <div>
@@ -42,10 +40,10 @@
             <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-info"><i class="bi bi-info-circle me-1"></i> Info Kelas</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-logbook"><i class="bi bi-pencil-square me-1"></i> Isi Logbook</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-history"><i class="bi bi-clock-history me-1"></i> History</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-diskusi"><i class="bi bi-chat-dots me-1"></i> Ruang Diskusi</button></li>
         </ul>
 
         <div class="tab-content">
-            <!-- TAB INFO -->
             <div class="tab-pane fade show active" id="tab-info">
                 <div class="card card-custom p-3 mb-3 border-start border-danger border-4">
                     <h6 class="fw-bold text-danger small">BRIEFING DIREKTUR</h6>
@@ -57,17 +55,14 @@
                 </div>
             </div>
 
-            <!-- TAB LOGBOOK -->
             <div class="tab-pane fade" id="tab-logbook">
                 <div class="card card-custom p-4">
                     <h5 class="fw-bold mb-3 border-bottom pb-2">Formulir Sesi</h5>
-                    
                     <div class="mb-3">
                         <label class="fw-bold small text-secondary">Pilih Kelas</label>
                         <div id="btnGroupKelas" class="d-flex flex-wrap gap-2">Memuat kelas...</div>
                         <input type="hidden" id="inputKelas" value="">
                     </div>
-                    
                     <div class="mb-3">
                         <label class="fw-bold small text-secondary">Jam Sesi</label>
                         <select id="inputJam" class="form-select fw-bold">
@@ -75,12 +70,10 @@
                             <option value="Jam 3">Jam 3</option><option value="Jam 4">Jam 4</option>
                         </select>
                     </div>
-
                     <div class="mb-3">
                         <label class="fw-bold small text-secondary">Materi (Ketik singkat)</label>
                         <input type="text" id="inputMateri" class="form-control" placeholder="Contoh: Fruits, Greeting">
                     </div>
-                    
                     <div class="mb-3" id="areaSiswa" style="display: none;">
                         <label class="fw-bold small text-danger">Absensi & Nilai</label>
                         <div class="table-responsive border rounded bg-light p-2">
@@ -90,80 +83,78 @@
                             </table>
                         </div>
                     </div>
-
                     <div class="mb-3">
                         <label class="fw-bold small text-primary">Class Note (Laporan)</label>
                         <textarea id="notesSiswa" class="form-control" rows="2" placeholder="Laporan kendala atau keaktifan kelas..."></textarea>
                     </div>
-
                     <button id="btnSaveLogbook" class="btn btn-primary w-100 fw-bold py-2 shadow-sm"><i class="bi bi-send-check-fill me-2"></i>KIRIM LOGBOOK</button>
                 </div>
             </div>
 
-            <!-- TAB HISTORY -->
             <div class="tab-pane fade" id="tab-history">
                 <div class="card card-custom p-3">
                     <h6 class="fw-bold mb-3"><i class="bi bi-card-checklist me-2"></i>Riwayat Sesi Terkirim</h6>
                     <div id="mentorLogbookList" class="overflow-auto pe-1" style="max-height: 400px;">Memuat riwayat...</div>
                 </div>
             </div>
+
+            <div class="tab-pane fade" id="tab-diskusi">
+                <div class="card card-custom p-3">
+                    <h6 class="fw-bold text-danger mb-3"><i class="bi bi-chat-dots-fill me-2"></i>Grup Diskusi Sekolah</h6>
+                    <div id="chatBox" class="chat-box p-3 border mb-3 d-flex flex-column gap-2" style="height: 300px;"></div>
+                    <div class="input-group">
+                        <input type="text" id="inputChat" class="form-control" placeholder="Ketik pesan ke Admin & Mentor lain...">
+                        <button class="btn btn-danger fw-bold" id="btnSendChat"><i class="bi bi-send-fill"></i></button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script type="module">
-        import { listenToSingleSchool, listenToLogbooks, sendLogbook } from './script.js?v=16';
+        import { listenToSingleSchool, listenToLogbooks, sendLogbook, listenToChats, sendGlobalChat } from './script.js?v=16';
 
-        // 1. CEK OTORISASI & TUGAS
         const myName = sessionStorage.getItem("loggedInName");
         const assignedSchoolId = sessionStorage.getItem("assignedSchool");
         
         if (!myName || !assignedSchoolId) {
-            alert("Akses Ditolak: Anda belum ditugaskan ke sekolah manapun. Hubungi Admin.");
-            sessionStorage.clear();
-            window.location.replace("index.html");
+            alert("Akses Ditolak: Anda belum ditugaskan ke sekolah manapun!");
+            sessionStorage.clear(); window.location.replace("index.html");
         }
-
         document.getElementById("namaMentor").innerText = myName;
         let rawMasterSiswa = "";
 
-        // 2. LOAD DATA SEKOLAH (AUTO LOCK KE ASSIGNED SCHOOL)
+        // 1. LOAD DATA SEKOLAH
         listenToSingleSchool(assignedSchoolId, (data) => {
-            if(!data) return document.getElementById("namaSekolahTugas").innerText = "Data Sekolah Tidak Ditemukan!";
-            
+            if(!data) return;
             document.getElementById("namaSekolahTugas").innerText = data.namaSekolah;
             document.getElementById("tutorBriefing").innerText = data.briefing || "-";
             document.getElementById("tutorJadwal").innerText = data.jadwal || "-";
             rawMasterSiswa = data.masterSiswa || "";
 
-            // Render Tombol Kelas
-            const arrKelas = (data.masterKelas || "").split(',').map(k=>k.trim()).filter(k=>k!=="");
+            const arrKelas = (data.masterKelas || "").split(',').map(k=>k.trim()).filter(k=>k);
             const boxKelas = document.getElementById("btnGroupKelas"); boxKelas.innerHTML = "";
             arrKelas.forEach((kls, idx) => { 
                 boxKelas.innerHTML += `<input type="radio" class="btn-check class-radio" name="pilihKelas" id="kls_${idx}" value="${kls}">
                 <label class="btn btn-outline-primary fw-bold text-xs" for="kls_${idx}">${kls}</label>`; 
             });
 
-            // Logic saat kelas dipilih -> Munculkan Siswa
             document.querySelectorAll('.class-radio').forEach(radio => {
                 radio.addEventListener('change', (e) => {
-                    const kls = e.target.value; 
-                    document.getElementById("inputKelas").value = kls; 
-                    const area = document.getElementById('areaSiswa'); 
-                    const tbody = document.getElementById('tabelSiswaBody'); tbody.innerHTML = "";
-                    
-                    if(!kls) { area.style.display = 'none'; return; } 
-                    area.style.display = 'block'; 
+                    const kls = e.target.value; document.getElementById("inputKelas").value = kls; 
+                    const area = document.getElementById('areaSiswa'); const tbody = document.getElementById('tabelSiswaBody'); tbody.innerHTML = "";
+                    if(!kls) { area.style.display = 'none'; return; } area.style.display = 'block'; 
                     
                     const lines = rawMasterSiswa.split('\n'); let foundSiswa = [];
-                    lines.forEach(line => { if(line.includes(':') && line.startsWith(kls)) foundSiswa = line.split(':')[1].split(',').map(s => s.trim()).filter(s => s !== ""); });
+                    lines.forEach(line => { if(line.includes(':') && line.startsWith(kls)) foundSiswa = line.split(':')[1].split(',').map(s => s.trim()).filter(s => s); });
                     
-                    if(foundSiswa.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted">Belum ada siswa di kelas ini.</td></tr>`; } 
+                    if(foundSiswa.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="text-center text-muted">Belum ada siswa.</td></tr>`; } 
                     else { 
                         foundSiswa.forEach(nama => { 
                             tbody.innerHTML += `<tr class="baris-siswa" data-nama="${nama}">
                                 <td class="fw-bold">${nama}</td>
-                                <td><select class="form-select form-select-sm sel-hadir px-1 fw-bold text-center"><option value="h">h</option><option value="a">a</option><option value="i">i</option><option value="s">s</option></select></td>
-                                <td><input type="text" class="form-control form-control-sm in-nilai px-1 text-center" placeholder="..."></td>
+                                <td><select class="form-select form-select-sm sel-hadir p-1 fw-bold text-center"><option value="h">h</option><option value="a">a</option><option value="i">i</option><option value="s">s</option></select></td>
+                                <td><input type="text" class="form-control form-control-sm in-nilai p-1 text-center" placeholder="..."></td>
                             </tr>`; 
                         }); 
                     }
@@ -171,7 +162,7 @@
             });
         });
 
-        // 3. LOAD HISTORY LOGBOOK
+        // 2. LOAD HISTORY LOGBOOK
         listenToLogbooks(assignedSchoolId, (logs) => {
             const list = document.getElementById("mentorLogbookList");
             if(logs.length === 0) { list.innerHTML = "<div class='text-muted small text-center mt-3'>Belum ada riwayat.</div>"; return; }
@@ -186,32 +177,34 @@
             }).join('');
         });
 
+        // 3. LOAD CHAT DISKUSI
+        listenToChats(assignedSchoolId, (chats) => {
+            const box = document.getElementById("chatBox"); box.innerHTML = "";
+            chats.forEach(c => {
+                if(c.type === 'global') {
+                    const isMe = c.sender === myName;
+                    box.innerHTML += `<div class="p-2 rounded mb-1 shadow-sm ${isMe ? 'bg-primary text-white ms-auto' : 'bg-white border me-auto'}" style="max-width:80%; font-size:0.8rem;"><b>${c.sender}</b><br>${c.message}</div>`;
+                }
+            }); box.scrollTop = box.scrollHeight;
+        });
+
+        document.getElementById("btnSendChat").onclick = async () => {
+            const m = document.getElementById("inputChat").value.trim(); if(!m) return;
+            await sendGlobalChat(assignedSchoolId, myName, m, "mentor"); document.getElementById("inputChat").value = "";
+        };
+
         // 4. KIRIM LOGBOOK
         document.getElementById("btnSaveLogbook").onclick = async () => {
-            const btn = document.getElementById("btnSaveLogbook");
-            const kls = document.getElementById("inputKelas").value; 
+            const btn = document.getElementById("btnSaveLogbook"); const kls = document.getElementById("inputKelas").value; 
             if(!kls) return alert("Pilih Kelas terlebih dahulu!");
-            
-            const jam = document.getElementById("inputJam").value;
-            const materiText = document.getElementById("inputMateri").value.trim();
-            const notes = document.getElementById("notesSiswa").value.trim();
-            
-            let arraySiswa = []; 
-            document.querySelectorAll('.baris-siswa').forEach(b => { 
-                arraySiswa.push({ nama: b.dataset.nama, kehadiran: b.querySelector('.sel-hadir').value, nilai: b.querySelector('.in-nilai').value }); 
-            });
-
+            const jam = document.getElementById("inputJam").value; const materiText = document.getElementById("inputMateri").value.trim(); const notes = document.getElementById("notesSiswa").value.trim();
+            let arraySiswa = []; document.querySelectorAll('.baris-siswa').forEach(b => { arraySiswa.push({ nama: b.dataset.nama, Box: b.querySelector('.sel-hadir').value, nilai: b.querySelector('.in-nilai').value }); });
             btn.disabled = true; btn.innerHTML = "MEMPROSES...";
             try {
-                await sendLogbook(assignedSchoolId, sessionStorage.getItem("loggedInUser"), myName, kls, jam, {}, [materiText], notes, "", arraySiswa, "");
-                alert("Logbook Sukses Terkirim!");
-                document.getElementById("inputMateri").value = "";
-                document.getElementById("notesSiswa").value = "";
-                document.querySelectorAll('.in-nilai').forEach(i => i.value = "");
+                await sendLogbook(assignedSchoolId, sessionStorage.getItem("loggedInUser"), myName, kls, jam, {}, [materiText], notes, arraySiswa, "");
+                alert("Logbook Sukses Terkirim!"); document.getElementById("inputMateri").value = ""; document.getElementById("notesSiswa").value = "";
                 new bootstrap.Tab(document.querySelector('[data-bs-target="#tab-history"]')).show();
-            } catch (err) {
-                alert("Gagal mengirim: " + err.message);
-            }
+            } catch (err) { alert("Gagal!"); }
             btn.disabled = false; btn.innerHTML = `<i class="bi bi-send-check-fill me-2"></i>KIRIM LOGBOOK`;
         };
 
