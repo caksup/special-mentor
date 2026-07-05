@@ -43,10 +43,24 @@
                         <div class="col-12 col-md-3"><label class="small fw-bold">Username</label><input type="text" id="newUser" class="form-control" placeholder="Contoh: budi"></div>
                         <div class="col-12 col-md-3"><label class="small fw-bold">Nama Julukan</label><input type="text" id="newName" class="form-control" placeholder="Contoh: Mr. Budi"></div>
                         <div class="col-12 col-md-2"><label class="small fw-bold text-danger">PIN Angka</label><input type="text" id="newPin" class="form-control border-danger" placeholder="1234"></div>
-                        <div class="col-12 col-md-2"><label class="small fw-bold text-primary">ID Sekolah</label><input type="text" id="newSchool" class="form-control border-primary" placeholder="sdn1jatirogo"></div>
-                        <div class="col-12 col-md-2 d-flex align-items-end"><button id="btnAddUser" class="btn btn-danger w-100 fw-bold">SIMPAN</button></div>
+                        <div class="col-12 col-md-2">
+                            <label class="small fw-bold text-primary">Tugas Sekolah</label>
+                            <!-- IKI DROPDOWN SEKOLAH -->
+                            <select id="newSchool" class="form-select border-primary">
+                                <option value="">-- Tanpa Tugas --</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-2 d-flex align-items-end">
+                            <button id="btnAddUser" class="btn btn-danger w-100 fw-bold">SIMPAN</button>
+                            <button id="btnBatalEdit" class="btn btn-secondary w-100 fw-bold d-none ms-1"><i class="bi bi-x-lg"></i></button>
+                        </div>
                     </div>
-                    <div class="table-responsive"><table class="table table-hover align-middle"><thead class="table-light"><tr><th>Username</th><th>Nama Mentor</th><th>PIN</th><th>Tugas Sekolah</th><th>Status</th></tr></thead><tbody id="listUsersTable"></tbody></table></div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light"><tr><th>Username</th><th>Nama Mentor</th><th>PIN</th><th>Tugas Sekolah</th><th>Aksi</th></tr></thead>
+                            <tbody id="listUsersTable"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
@@ -87,7 +101,7 @@
                             <div id="adminLogbookList" class="overflow-auto" style="max-height: 500px;">Memuat data...</div>
                         </div>
 
-                        <!-- 2. SETUP -->
+                        <!-- 2. SETUP (DENGAN TOMBOL ARSIP) -->
                         <div class="tab-pane fade" id="sub-setup">
                             <div class="row g-2">
                                 <div class="col-12 col-md-6"><label class="fw-bold small">ID Handle (Otomatis)</label><input type="text" id="inputIdSchool" class="form-control bg-light"></div>
@@ -102,7 +116,12 @@
                                 <div class="col-12 col-md-4"><label class="fw-bold small text-primary">Vocab</label><textarea id="inputVocab" class="form-control text-xs" rows="3"></textarea></div>
                                 <div class="col-12 col-md-4"><label class="fw-bold small text-success">Speaking</label><textarea id="inputSpeaking" class="form-control text-xs" rows="3"></textarea></div>
                                 <div class="col-12 col-md-4"><label class="fw-bold small text-danger">Grammar</label><textarea id="inputGrammar" class="form-control text-xs" rows="3"></textarea></div>
-                                <div class="col-12 mt-3"><button class="btn btn-success w-100 fw-bold py-2" id="btnSaveSchool"><i class="bi bi-cloud-check-fill me-2"></i>SIMPAN DATA SEKOLAH INI</button></div>
+                                
+                                <div class="col-12 mt-3">
+                                    <button class="btn btn-success w-100 fw-bold py-2 mb-2" id="btnSaveSchool"><i class="bi bi-cloud-check-fill me-2"></i>SIMPAN DATA SEKOLAH INI</button>
+                                    <!-- TOMBOL ARSIP -->
+                                    <button class="btn btn-outline-danger w-100 fw-bold py-2" id="btnArchiveSchool"><i class="bi bi-archive-fill me-2"></i>ARSIPKAN SEKOLAH INI</button>
+                                </div>
                             </div>
                         </div>
 
@@ -156,8 +175,8 @@
     </div>
 
     <script type="module">
-        import { db, listenToSchools, listenToSingleSchool, listenToLogbooks, listenToChats, listenToTugasWA, saveSchool, sendGlobalChat, sendTugasWA, deleteTugasWA, deleteLogbook } from './script.js?v=16';
-        import { collection, onSnapshot, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { db, listenToSchools, listenToSingleSchool, listenToLogbooks, listenToChats, listenToTugasWA, saveSchool, archiveSchool, sendGlobalChat, sendTugasWA, deleteTugasWA, deleteLogbook } from './script.js?v=16.1';
+        import { collection, onSnapshot, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const actUser = sessionStorage.getItem("loggedInUser"); if (actUser !== "sup" && actUser !== "afif") window.location.replace("index.html");
         document.getElementById("adminName").innerText = sessionStorage.getItem("loggedInName");
@@ -172,10 +191,20 @@
             dataLengkap = [];
         }
 
-        // 1. DASHBOARD
+        // 1. DASHBOARD & DROPDOWN SEKOLAH
         listenToSchools((schools) => {
             const container = document.getElementById("schoolListContainer"); container.innerHTML = "";
-            schools.forEach(s => { container.innerHTML += `<div class="col-12 col-md-4"><div class="card card-custom p-3 school-card" onclick="window.bukaPanelSekolah('${s.id}', '${s.namaSekolah}')"><h6 class="fw-bold text-dark m-0">${s.namaSekolah}</h6><span class="text-muted small">ID: ${s.id}</span></div></div>`; });
+            const selSchool = document.getElementById("newSchool"); 
+            
+            // Render Dropdown Tugas Sekolah
+            selSchool.innerHTML = '<option value="">-- Tanpa Tugas --</option>';
+            
+            schools.forEach(s => { 
+                // Render Kartu Dashboard
+                container.innerHTML += `<div class="col-12 col-md-4"><div class="card card-custom p-3 school-card" onclick="window.bukaPanelSekolah('${s.id}', '${s.namaSekolah}')"><h6 class="fw-bold text-dark m-0">${s.namaSekolah}</h6><span class="text-muted small">ID: ${s.id}</span></div></div>`; 
+                // Render Option Dropdown
+                selSchool.innerHTML += `<option value="${s.id}">${s.namaSekolah}</option>`;
+            });
         });
 
         // 2. BUKA PANEL
@@ -184,12 +213,14 @@
             document.getElementById("judulSekolahAktif").innerText = "Buat Sekolah Baru"; document.getElementById("inputIdSchool").readOnly = false; document.getElementById("inputIdSchool").value = "";
             ['inputSekolah','inputTotalHari','inputHariKe','inputMasterKelas','inputJadwal','inputBriefing','inputMasterSiswa','inputVocab','inputSpeaking','inputGrammar'].forEach(id => document.getElementById(id).value = "");
             new bootstrap.Tab(document.querySelector('[data-bs-target="#sub-setup"]')).show();
+            document.getElementById("btnArchiveSchool").classList.add("d-none"); // Sembunyikan tombol arsip pas buat baru
         };
 
         window.bukaPanelSekolah = (sid, nama) => {
             bersihkanListener(); activeSchoolId = sid;
             document.getElementById("dashboardSekolah").style.display = "none"; document.getElementById("panelSekolah").style.display = "block";
             document.getElementById("judulSekolahAktif").innerText = "Kelola: " + nama; document.getElementById("inputIdSchool").readOnly = true;
+            document.getElementById("btnArchiveSchool").classList.remove("d-none"); // Tampilkan tombol arsip
             new bootstrap.Tab(document.querySelector('[data-bs-target="#sub-logbook"]')).show();
 
             // Load Setup
@@ -209,10 +240,7 @@
             });
 
             // Load Logbooks
-            unsubLogs = listenToLogbooks(sid, (logs) => {
-                dataLengkap = logs; renderLogbook(); renderTracker(); kalkulasiDataSiswa();
-            });
-
+            unsubLogs = listenToLogbooks(sid, (logs) => { dataLengkap = logs; renderLogbook(); renderTracker(); kalkulasiDataSiswa(); });
             // Load Chats
             unsubChats = listenToChats(sid, (chats) => {
                 const box = document.getElementById("chatBox"); box.innerHTML = "";
@@ -223,13 +251,10 @@
                     }
                 }); box.scrollTop = box.scrollHeight;
             });
-
             // Load WA
             unsubWA = listenToTugasWA(sid, (tugas) => {
                 const list = document.getElementById("listTugasAdmin"); list.innerHTML = "";
-                tugas.forEach(d => {
-                    list.innerHTML += `<div class="p-2 border rounded bg-light mb-1 d-flex justify-content-between align-items-center"><div class="text-xs"><b>${d.targetKelas}:</b> ${d.instruksi}</div><button class="btn btn-xs btn-outline-danger py-0" onclick="window.hapusTugasWA('${d.id}')"><i class="bi bi-trash"></i></button></div>`;
-                });
+                tugas.forEach(d => { list.innerHTML += `<div class="p-2 border rounded bg-light mb-1 d-flex justify-content-between align-items-center"><div class="text-xs"><b>${d.targetKelas}:</b> ${d.instruksi}</div><button class="btn btn-xs btn-outline-danger py-0" onclick="window.hapusTugasWA('${d.id}')"><i class="bi bi-trash"></i></button></div>`; });
             });
         };
 
@@ -262,7 +287,7 @@
             html2pdf().set({ margin: 0.3, filename: `Report_${activeSchoolId}.pdf`, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }}).from(printDiv).save();
         };
 
-        // 4. SAVE SCHOOL
+        // 4. SAVE & ARSIVE SCHOOL
         document.getElementById("btnSaveSchool").onclick = async () => {
             const sid = document.getElementById("inputIdSchool").value.toLowerCase().trim().replace(/\s+/g, ''); if(!sid) return alert("ID Kosong!");
             const getArr = (id) => document.getElementById(id).value.split('\n').map(i => i.trim()).filter(i => i !== "");
@@ -272,6 +297,15 @@
                     kurikulum: { vocab: getArr('inputVocab'), speaking: getArr('inputSpeaking'), grammar: getArr('inputGrammar') }
                 }); alert("Sukses Disimpan!");
             } catch (e) { alert("Gagal!"); }
+        };
+
+        document.getElementById("btnArchiveSchool").onclick = async () => {
+            if(!activeSchoolId) return;
+            if(confirm("Yakin mengarsipkan sekolah ini? Sekolah tidak akan muncul di dashboard utama.")) {
+                await archiveSchool(activeSchoolId);
+                alert("Sekolah berhasil diarsipkan!");
+                window.tutupPanelSekolah();
+            }
         };
 
         // 5. KALKULASI SISWA
@@ -314,15 +348,73 @@
         document.getElementById("btnKirimTugasWA").onclick = async () => { const t = document.getElementById("waTarget").value; const i = document.getElementById("waInstruksi").value; if(!i) return; await sendTugasWA(activeSchoolId, t, document.getElementById("waGambar").value, i); alert("Tugas WA Dibuat!"); document.getElementById("waInstruksi").value=""; };
         document.getElementById("btnSendChat").onclick = async () => { const m = document.getElementById("inputChat").value; if(!m) return; await sendGlobalChat(activeSchoolId, sessionStorage.getItem("loggedInName"), m, "admin"); document.getElementById("inputChat").value=""; };
 
-        // 8. GLOBAL TUTOR
+        // 8. GLOBAL TUTOR (EDIT & HAPUS)
         onSnapshot(collection(db, "users"), (snap) => {
             const tbody = document.getElementById("listUsersTable"); tbody.innerHTML = "";
-            snap.forEach(d => { const ud = d.data(); if(ud.role === 'mentor') tbody.innerHTML += `<tr><td class="fw-bold">${d.id}</td><td>${ud.julukan}</td><td class="text-danger fw-bold">${ud.pin}</td><td><span class="badge bg-primary">${ud.assignedSchool||'Belum ada'}</span></td><td>${ud.status.toUpperCase()}</td></tr>`; });
+            snap.forEach(d => { 
+                const ud = d.data(); 
+                if(ud.role === 'mentor') {
+                    tbody.innerHTML += `<tr>
+                        <td class="fw-bold">${d.id}</td>
+                        <td>${ud.julukan}</td>
+                        <td class="text-danger fw-bold">${ud.pin}</td>
+                        <td><span class="badge bg-primary">${ud.assignedSchool||'Belum ada'}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-warning py-0 px-2 shadow-sm" onclick="window.editUser('${d.id}', '${ud.julukan}', '${ud.pin}', '${ud.assignedSchool||''}')" title="Edit"><i class="bi bi-pencil-square"></i></button>
+                            <button class="btn btn-sm btn-danger py-0 px-2 shadow-sm" onclick="window.hapusUser('${d.id}')" title="Hapus"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>`; 
+                }
+            });
         });
-        document.getElementById("btnAddUser").onclick = async () => {
-            const u = document.getElementById("newUser").value.toLowerCase().trim(); const p = document.getElementById("newPin").value; const n = document.getElementById("newName").value; const s = document.getElementById("newSchool").value.toLowerCase().trim();
-            if(!u || !p || !n) return alert("Isi form!"); await setDoc(doc(db, "users", u), { pin: p, julukan: n, role: "mentor", assignedSchool: s, status: "aktif" }, { merge: true }); alert("Tersimpan!");
+
+        window.editUser = (id, julukan, pin, school) => {
+            document.getElementById("newUser").value = id;
+            document.getElementById("newUser").readOnly = true;
+            document.getElementById("newName").value = julukan;
+            document.getElementById("newPin").value = pin;
+            document.getElementById("newSchool").value = school;
+            
+            document.getElementById("btnAddUser").innerText = "UPDATE DATA";
+            document.getElementById("btnAddUser").classList.replace("btn-danger", "btn-warning");
+            document.getElementById("btnBatalEdit").classList.remove("d-none");
+            
+            // Auto scroll ke atas ben enak
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         };
+
+        window.hapusUser = async (id) => {
+            if(confirm("Yakin ingin menghapus Tutor '" + id + "' permanen?")) {
+                await deleteDoc(doc(db, "users", id));
+                alert("Tutor berhasil dihapus!");
+            }
+        };
+
+        document.getElementById("btnBatalEdit").onclick = () => {
+            document.getElementById("newUser").value = "";
+            document.getElementById("newUser").readOnly = false;
+            document.getElementById("newName").value = "";
+            document.getElementById("newPin").value = "";
+            document.getElementById("newSchool").value = "";
+            
+            document.getElementById("btnAddUser").innerText = "SIMPAN";
+            document.getElementById("btnAddUser").classList.replace("btn-warning", "btn-danger");
+            document.getElementById("btnBatalEdit").classList.add("d-none");
+        };
+
+        document.getElementById("btnAddUser").onclick = async () => {
+            const u = document.getElementById("newUser").value.toLowerCase().trim(); 
+            const p = document.getElementById("newPin").value; 
+            const n = document.getElementById("newName").value; 
+            const s = document.getElementById("newSchool").value; // Saiki njupuk teko dropdown
+            
+            if(!u || !p || !n) return alert("Isi form username, nama, dan PIN!"); 
+            
+            await setDoc(doc(db, "users", u), { pin: p, julukan: n, role: "mentor", assignedSchool: s, status: "aktif" }, { merge: true }); 
+            alert("Data Tutor Tersimpan!");
+            document.getElementById("btnBatalEdit").click(); // reset form
+        };
+        
         document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); window.location.replace("index.html"); };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
