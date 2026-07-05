@@ -71,14 +71,6 @@
     <script type="module">
         import { verifyLogin } from './script.js?v=13';
 
-        // 1. SISTEM AUTO-REDIRECT (Mencegah user yang sudah login disuruh login lagi)
-        const activeRole = sessionStorage.getItem("userRole");
-        if (activeRole) {
-            if (activeRole === "admin") window.location.replace("superuser.html");
-            else if (activeRole === "direktur") window.location.replace("direktur.html");
-            else window.location.replace("mentor.html");
-        }
-
         // MESIN POP-UP MODERN
         window.showPopup = function(pesan, tipe = "error") {
             const toastEl = document.getElementById('liveToast');
@@ -116,24 +108,19 @@
 
             try {
                 const userData = await verifyLogin(u, p);
+                showPopup(`Login Sukses! Sugeng rawuh, ${userData.julukan}...`, "success");
                 
                 // SIMPAN DATA LOGIN
                 sessionStorage.setItem("loggedInUser", u);
                 sessionStorage.setItem("loggedInName", userData.julukan);
                 sessionStorage.setItem("userRole", userData.role);
 
-                // 2. REDIRECT INSTAN KHUSUS ADMIN
-                if (userData.role === "admin") {
-                    // Bypass popup & delay, langsung hajar ke Control Panel
-                    window.location.replace("superuser.html");
-                } else {
-                    // Untuk Direktur & Mentor tetap tampilkan notif & delay halus
-                    showPopup(`Login Sukses! Sugeng rawuh, ${userData.julukan}...`, "success");
-                    setTimeout(() => {
-                        if (userData.role === "direktur") window.location.replace("direktur.html");
-                        else window.location.replace("mentor.html");
-                    }, 1500);
-                }
+                // REDIRECT BERDASARKAN ROLE
+                setTimeout(() => {
+                    if (userData.role === "admin") window.location.replace("superuser.html");
+                    else if (userData.role === "direktur") window.location.replace("direktur.html");
+                    else window.location.replace("mentor.html");
+                }, 1500);
 
             } catch (error) {
                 showPopup(error.message, "error");
