@@ -24,14 +24,14 @@
     </nav>
 
     <div class="container pb-5">
-        <!-- DASHBOARD SEKOLAH (TAMPIL AWAL) -->
+        <!-- DASHBOARD SEKOLAH -->
         <div id="dashboardView">
             <h5 class="fw-bold mb-3"><i class="bi bi-buildings"></i> Daftar Handle School</h5>
             <div class="row g-3" id="schoolListContainer"></div>
             <button class="btn btn-primary w-100 mt-4 fw-bold shadow-sm" onclick="window.tambahSekolah()">+ BUAT HANDLE SCHOOL BARU</button>
         </div>
 
-        <!-- PANEL MANAJEMEN (TAMPIL PAS SEKOLAH DIPILIH) -->
+        <!-- PANEL MANAJEMEN -->
         <div id="managementView" style="display:none;">
             <button class="btn btn-sm btn-secondary mb-3 fw-bold shadow-sm" onclick="location.reload()"><i class="bi bi-arrow-left"></i> Kembali ke Daftar</button>
             <h5 class="fw-bold mb-3 text-primary" id="selectedSchoolName">Memuat...</h5>
@@ -131,19 +131,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
-        // --- CATATAN PAK GEMONO: ---
-        // Karena ini UI baru, logika JS (simpan setup/siswa ke Firebase) 
-        // akan kita sambungkan nanti di script.js setelah UI ini fix.
-        
-        import { db, listenToSchools, listenToLogbooks } from './script.js?v=14.1';
-        import { collection, onSnapshot, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { db, listenToSchools, listenToLogbooks, listenToSingleSchool } from './script.js?v=14.1';
+        import { doc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Cek Otorisasi Admin
         const activeRole = sessionStorage.getItem("userRole");
         if (activeRole !== "admin") {
             alert("Akses Ditolak! Hanya untuk Superadmin.");
             window.location.replace("index.html");
         }
+
+        let currentSchoolId = "";
 
         // 1. TAMPIL DAFTAR SEKOLAH
         listenToSchools((schools) => {
@@ -160,24 +157,80 @@
             });
         });
 
+        // 2. MASUK KE PANEL SEKOLAH (AUTO-LOAD DATA)
         window.masukSekolah = (sid, sName) => {
+            currentSchoolId = sid;
             document.getElementById("dashboardView").style.display = "none";
             document.getElementById("managementView").style.display = "block";
             document.getElementById("selectedSchoolName").innerText = "Kelola: " + sName;
             
-            // ... panggil fungsi load data logbook/tutor per sekolah ...
-            // (Logika load data form akan dimasukkan saat script.js dibedah)
+            // Tarik data sekolah saat ini ke dalam Form Setup & Form Siswa
+            listenToSingleSchool(sid, (data) => {
+                if(!data) return;
+                document.getElementById("setupNamaSekolah").value = data.namaSekolah || "";
+                document.getElementById("setupTotalHari").value = data.totalHari || "";
+                document.getElementById("setupHariBerjalan").value = data.hariBerjalan || "";
+                document.getElementById("setupMasterKelas").value = data.masterKelas || "";
+                document.getElementById("setupJadwal").value = data.jadwal || "";
+                document.getElementById("setupBriefing").value = data.briefing || "";
+                document.getElementById("setupMasterSiswa").value = data.masterSiswa || "";
+            });
+
+            // Tarik data Logbook (sementara render dummy)
             listenToLogbooks(sid, (logs) => { 
-                // Render dummy dulu untuk UI
-                document.getElementById("adminLogbookList").innerHTML = `<div class="alert alert-info border-0 text-sm">Menampilkan ${logs.length} logbook (Render UI menyusul)</div>`;
+                document.getElementById("adminLogbookList").innerHTML = `<div class="alert alert-info border-0 text-sm">Menampilkan ${logs.length} logbook sekolah ini.</div>`;
             });
         };
         
-        window.tambahSekolah = () => { alert("Fungsi buat ID sekolah baru di Firebase akan ditambahkan."); };
+        // 3. FUNGSI BUAT SEKOLAH BARU
+        window.tambahSekolah = async () => { 
+            const newId = prompt("Masukkan ID Sekolah Baru (Tanpa spasi. Contoh: sman1jatirogo):");
+            if(newId) {
+                try {
+                    await setDoc(doc(db, "schools", newId), {
+                        id: newId,
+                        namaSekolah: "Sekolah Baru",
+                        masterKelas: "Kelas A",
+                        totalHari: 14,
+                        hariBerjalan: 1
+                    });
+                    alert("Sip, Sekolah baru berhasil dibuat!");
+                } catch(e) { alert("Error: " + e.message); }
+            }
+        };
         
-        // Dummy aksi tombol (akan dihubungkan ke script.js nanti)
-        document.getElementById("btnSaveSetup").onclick = () => { alert("Fungsi simpan Setup sedang dirakit."); };
-        document.getElementById("btnSaveSiswa").onclick = () => { alert("Fungsi simpan Data Siswa sedang dirakit."); };
+        // 4. EKSEKUSI SIMPAN SETUP SEKOLAH
+        document.getElementById("btnSaveSetup").onclick = async () => {
+            if(!currentSchoolId) return alert("Pilih sekolah dulu!");
+            const btn = document.getElementById("btnSaveSetup");
+            btn.innerHTML = "Menyimpan..."; btn.disabled = true;
+            try {
+                await updateDoc(doc(db, "schools", currentSchoolId), {
+                    namaSekolah: document.getElementById("setupNamaSekolah").value,
+                    totalHari: parseInt(document.getElementById("setupTotalHari").value) || 0,
+                    hariBerjalan: parseInt(document.getElementById("setupHariBerjalan").value) || 0,
+                    masterKelas: document.getElementById("setupMasterKelas").value,
+                    jadwal: document.getElementById("setupJadwal").value,
+                    briefing: document.getElementById("setupBriefing").value
+                });
+                alert("Konfigurasi Setup berhasil disimpan ke Firebase!");
+            } catch (e) { alert("Gagal menyimpan: " + e.message); }
+            btn.innerHTML = `<i class="bi bi-cloud-arrow-up-fill"></i> Simpan Konfigurasi Sekolah`; btn.disabled = false;
+        };
+
+        // 5. EKSEKUSI SIMPAN DATA SISWA
+        document.getElementById("btnSaveSiswa").onclick = async () => {
+            if(!currentSchoolId) return alert("Pilih sekolah dulu!");
+            const btn = document.getElementById("btnSaveSiswa");
+            btn.innerHTML = "Menyimpan..."; btn.disabled = true;
+            try {
+                await updateDoc(doc(db, "schools", currentSchoolId), {
+                    masterSiswa: document.getElementById("setupMasterSiswa").value
+                });
+                alert("Database Siswa berhasil diperbarui!");
+            } catch (e) { alert("Gagal menyimpan: " + e.message); }
+            btn.innerHTML = `<i class="bi bi-save2-fill"></i> Simpan Database Siswa`; btn.disabled = false;
+        };
 
         document.getElementById("btnLogout").onclick = () => { sessionStorage.clear(); location.replace("index.html"); };
     </script>
